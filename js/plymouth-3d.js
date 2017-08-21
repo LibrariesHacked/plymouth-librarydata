@@ -1,6 +1,11 @@
-﻿mapboxgl.accessToken = 'pk.eyJ1IjoiZGF2ZXJvd2V1ayIsImEiOiJjajRuemx4Mnoxc2lyMzJvNGYxZjVjdnVpIn0.9aupfG_tYU0SHx3S6ZUqvw';
+﻿
+////////////////////////////////////////////////////////////////////
+// Map Setup
+////////////////////////////////////////////////////////////////////
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiZGF2ZXJvd2V1ayIsImEiOiJjajRuemx4Mnoxc2lyMzJvNGYxZjVjdnVpIn0.9aupfG_tYU0SHx3S6ZUqvw';
 var map = new mapboxgl.Map({
-    style: 'mapbox://styles/mapbox/light-v9',
+    style: 'mapbox://styles/daveroweuk/cj6jj9udl6aa62spb93wjrshv', // Using custom 'designer' map style for nautical maps
     center: [-4.1427, 50.4755],
     zoom: 13,
     pitch: 45,
@@ -8,36 +13,28 @@ var map = new mapboxgl.Map({
     container: 'map'
 });
 
-// the 'building' layer in the mapbox-streets vector source contains building-height
-// data from OpenStreetMap.
+// Have to wait for the map to load before doing anything else.
 map.on('load', function () {
     map.addLayer({
         'id': '3d-buildings',
-        'source': 'composite',
-        'source-layer': 'building',
-        'filter': ['==', 'extrude', 'true'],
+        'source': {
+            'type': 'vector',
+            'url': 'mapbox://daveroweuk.9uj2a4uw'
+        },
+        'source-layer': 'PlymouthBuildings-5m5usp',
         'type': 'fill-extrusion',
         'minzoom': 13,
         'paint': {
-            'fill-extrusion-color': {
-                'property': 'building_type',
-                'type': 'categorical',
-                'stops': [['restaurant', '#ccc']]
-            },
+            'fill-extrusion-color': '#ccc',
             'fill-extrusion-height': {
                 'type': 'identity',
-                'property': 'height'
+                'property': 'max'
             },
-            'fill-extrusion-base': {
-                'type': 'identity',
-                'property': 'min_height'
-            },
-            'fill-extrusion-opacity': .6
+            'fill-extrusion-opacity': 0.6
         }
     });
 
-    // When a click event occurs on a feature in the places layer, open a popup at the
-    // location of the feature, with description HTML from its properties.
+    // When a click event occurs on a feature in the building layer
     map.on('click', '3d-buildings', function (e) {
         new mapboxgl.Popup()
             .setLngLat(e.lngLat)
@@ -46,13 +43,7 @@ map.on('load', function () {
     });
 
     // Change the cursor to a pointer when the mouse is over the places layer.
-    //map.on('mouseenter', '3d-buildings', function () {
-    //    map.getCanvas().style.cursor = 'pointer';
-    //});
-
+    map.on('mouseenter', '3d-buildings', function () { map.getCanvas().style.cursor = 'pointer'; });
     // Change it back to a pointer when it leaves.
-    //map.on('mouseleave', '3d-buildings', function () {
-    //    map.getCanvas().style.cursor = '';
-    //});
-
+    map.on('mouseleave', '3d-buildings', function () { map.getCanvas().style.cursor = ''; });
 });
