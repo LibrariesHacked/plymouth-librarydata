@@ -2,14 +2,45 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Plymouth 3D</title>
+    <title>Plymouth Libraries</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="node_modules/bootswatch/dist/sandstone/bootstrap.min.css" rel="stylesheet" />
     <link href="node_modules/mapbox-gl/dist/mapbox-gl.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="map"></div>
+    <div id='map'></div>
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="container">
+                <p class="lead"><i class="fa fa-times menu-toggle float-right" data-toggle="collapse" data-target="#sidebar" aria-hidden="true" aria-expanded="false" aria-controls="sidebar"></i></p>
+                <hr />
+                <h5>Search options</h5>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="jumbotron">
+                    <p class="lead">Enter a postcode or use GPS to find nearest Plymouth library</p>
+                    <div class="form-inline">
+                        <input class="form-control form-control-lg" id="txt-postcode" placeholder="Postcode" autocomplete="off" type="text">&nbsp;<button id="btn-search" class="btn btn-success btn-lg"><i class="fa fa-search"></i>&nbsp;Go</button>
+                    </div><br />
+                    <p class="lead">
+                        <a class="btn btn-primary btn-sm menu-toggle" role="button" href="#menu-toggle">Options</a>
+                        <a class="btn btn-primary btn-sm" role="button" href="#">Use GPS</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="node_modules/@turf/turf/turf.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/papaparse/papaparse.min.js"></script>
+    <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="node_modules/mapbox-gl/dist/mapbox-gl.js"></script>
-    <script src="js/plymouth-3d.js"></script>
+    <script src="js/libraries.js"></script>
+    <script src="js/plymouth.js"></script>
 </body>
 </html>

@@ -1,0 +1,13 @@
+Library name,address line 1,address line 2,address line 3,Postcode,Latitude,Longitude,Monday ,Tuesday,Wednesday,Thursday ,Friday ,Saturday ,Sunday 
+Central Library,167 - 171 Armada Way ,,Plymouth ,PL1 1HZ,50.373002,-4.1429763,08:30-18:00,08:30-18:00,08.30:18:00,08:30-20:00,08:30-18:00,09:00-17:00,closed
+Crownhill Library,Cross Park Road ,Crownhill,Plymouth,PL6 5AN,50.406669,-4.1316598,08:30-18:00,08:30-18:00,08.30:18:00,08:30-20:00,08:30-18:00,09:00-17:00,closed
+Devonport Library,Chapel Street,Devonport,Plymouth ,PL1 4DP,50.3721133,-4.1748468,08:30-18:00,08:30-18:00,08.30:18:00,14:00-20:00,08:30-18:00,09:00-17:00,closed
+Efford Library,19 Torridge Way,Efford ,Plymouth ,PL3 6JQ,50.3873895,-4.1092284,10:00-17:00,10:00-17:00,10:00-17:00,10:00-17:00,10:00-17:00,10:00-13:00,closed
+Estover Library,"Tor Bridge High School, Miller Way",Estover,Plymouth ,PL6 8UN,50.4106361,-4.1009854,09:30-17:00,09:30-17:00,closed,09:30-17:00,09:30-17:00,10:00-13:00,closed
+North Prospect Library,"The Beacon, 163 North Prospect Road",North Prospect ,Plymouth ,PL2 2ND,50.3919523,-4.1658357,09:00-17:00,14:00-17:00,09:00-17:00,14:00-17:00,09:00-17:00,10:00-13:00,closed
+Peverell Library,242A Peverell Park Road,Peverell ,Plymouth ,PL3 4QF,50.393474,-4.1448845,10:00-17:00,10:00-17:00,10:00-17:00,10:00-17:00,10:00-17:00,10:00-13:00,closed
+Plympton Library,Harewood ,Plympton ,Plymouth ,PL7 2AS,50.3900512,-4.0555331,08:30-18:00,08:30-18:00,08.30:18:00,08:30-20:00,08:30-18:00,09:00-17:00,closed
+Plymstock Library,"Horn Cross Road, Plymstock",Plymstock ,Plymouth ,PL9 9BU,50.3600407,-4.0889189,08:30-18:00,08:30-18:00,08.30:18:00,08:30-20:00,08:30-18:00,09:00-17:00,closed
+Southway Library,351 Southway Drive,Southway ,Plymouth ,PL6 6QR,50.4297958,-4.1261228,08:30-18:00,08:30-18:00,08.30:18:00,08:30-20:00,08:30-18:100,09:00-17:00,closed
+St Budeaux Library,"The Square, Victoria Road",St Budeaux ,Plymouth ,PL5 1RQ,50.4025162,-4.1867369,08:30-18:00,08:30-18:00,08.30:18:00,08:30-20:00,08:30-18:00,09:00-17:00,closed
+West Park Library,"423 - 425 Crownhill Road, West Park",West Park,Plymouth ,PL5 2LJ,50.4125776,-4.1667342,09:00-17:00,14:00-17:00,09:00-17:00,14:00-17:00,09:00-17:00,10:00-13:00,closed
