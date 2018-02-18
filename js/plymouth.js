@@ -1,12 +1,26 @@
 ﻿$(function () {
+
+    var colours = {
+        central: 'rgb(143,212,0)',
+        crownhill: 'rgb(236,0,140)',
+        devonport: 'rgb(244,170,0)',
+        efford: 'rgb(0,120,201)',
+        estover: 'rgb(147,37,178)',
+        northprospect: 'rgb(39,189,190)',
+        peverell: 'rgb(0,105,62)',
+        plympton: 'rgb(158,27,50)',
+        plymstock: 'rgb(239,130,0)',
+        southway: 'rgb(0,58,105)',
+        stbudeaux: 'rgb(77,48,145)',
+        westpark: 'rgb(233,85,37)'
+    };
+
     ////////////////////////////////////////////////////////////////////
     // Map Setup
     ////////////////////////////////////////////////////////////////////
-
-
     mapboxgl.accessToken = 'pk.eyJ1IjoiZGF2ZXJvd2V1ayIsImEiOiJjajRuemx4Mnoxc2lyMzJvNGYxZjVjdnVpIn0.9aupfG_tYU0SHx3S6ZUqvw';
     var map = new mapboxgl.Map({
-        style: 'mapbox://styles/daveroweuk/cj6jj9udl6aa62spb93wjrshv', // Using custom 'designer' map style for nautical maps
+        style: 'mapbox://styles/daveroweuk/cj6jj9udl6aa62spb93wjrshv', // Using custom 'designer' map style for nautical maps (plymouth)
         center: [-4.1, 50.4],
         zoom: 13,
         pitch: 45,
@@ -14,7 +28,7 @@
         container: 'map'
     });
 
-    // Sidebar
+    // Sidebar toggling
     $(".menu-toggle").click(function (e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
@@ -56,29 +70,62 @@
             'type': 'fill-extrusion',
             'minzoom': 15,
             'paint': {
-                'fill-extrusion-color': '#ccc',
-                'fill-extrusion-height': {
-                    'type': 'identity',
-                    'property': 'max'
-                },
+                'fill-extrusion-color': [
+                    'match',
+                    ['get', 'ID'],
+                    '0D4F70BCC1FF27B3E050A00A568A259B', colours['central'],
+                    '0D4F70BCBC7027B3E050A00A568A259B', colours['crownhill'],
+                    '0D4F70C26C6927B3E050A00A568A259B', colours['devonport'],
+                    '0D4F70C2790C27B3E050A00A568A259B', colours['efford'],
+                    '0D4F70C2B4AB27B3E050A00A568A259B', colours['estover'],
+                    '0D4F70C2D6BB27B3E050A00A568A259B', colours['northprospect'],
+                    '0D4F70C2715927B3E050A00A568A259B', colours['peverell'],
+                    '0D4F70B79EFA27B3E050A00A568A259B', colours['plympton'],
+                    '0D4F70C31D6E27B3E050A00A568A259B', colours['plymstock'],
+                    '0D4F70C2862A27B3E050A00A568A259B', colours['southway'],
+                    '0D4F7098AB3527B3E050A00A568A259B', colours['stbudeaux'],
+                    '0D4F70C21F9327B3E050A00A568A259B', colours['westpark'],
+                    '#CCC'
+                ],
+                "fill-extrusion-height": [
+                    "interpolate", ["linear"], ["zoom"],
+                    15, 0,
+                    15.05, ["max", ["get", "max"]]
+                ],
                 'fill-extrusion-opacity': 0.8
             }
         });
 
+        map.on('click', '3d-buildings', function (e) {
+            console.log(e.features[0].properties.ID);
+        });
 
         // add the libraries layer
         Libraries.load(function () {
             $.each(Libraries.libraries, function (x, library) {
                 // create a HTML element for each feature
-                var el = document.createElement('div');
-                el.className = 'marker';
-                el.innerHTML = '<p><i class="fa fa-building"></i>&nbsp;<span class="badge badge-success">' + library['Library name'] + '</span></p>'
-
+                var card = document.createElement('div');
+                card.className = 'card';
+                var cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+                var cardTitle = document.createElement('h4');
+                cardTitle.className = 'card-title';
+                cardTitle.innerText = library['Library name'];
+                var cardSubtitle = document.createElement('h6');
+                cardSubtitle.className = 'card-subtitle mb-2 text-muted';
+                cardSubtitle.innerText = library.status;
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(cardSubtitle);
+                card.appendChild(cardBody);
                 // make a marker for each feature and add to the map
-                new mapboxgl.Marker(el)
+                new mapboxgl.Marker(card)
                     .setLngLat([library.Longitude, library.Latitude])
                     .addTo(map);
             });
+            // Set up opening hours updates
+            setTimeout(function () {
+                Libraries.setOpenStatus();
+            }, 15000)
         });
     });
 });
