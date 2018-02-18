@@ -47,33 +47,33 @@ def run():
                         'Cafe': 'No'
                     }
                     for service in service_list:
-                        if ('Computers for public use' in service.text):
+                        if ('Computers' in service.text):
                             services['Computers'] = 'Yes'
-                        if ('Free Wi-Fi' in service.text):
+                        if ('Wi-Fi' in service.text):
                             services['WiFi'] = 'Yes'
-                        if ('Printers (colour and black/white)' in service.text):
+                        if ('Printer' in service.text):
                             services['Printers'] = 'Yes'
-                        if ('Photocopiers (colour and black/white)' in service.text):
+                        if ('Photocopier' in service.text):
                             services['Photocopiers'] = 'Yes'
-                        if ('Scanners' in service.text):
+                        if ('Scanner' in service.text):
                             services['Scanners'] = 'Yes'
-                        if ('Meeting rooms for hire' in service.text):
+                        if ('Meeting room' in service.text):
                             services['MeetingRooms'] = 'Yes'
-                        if ('Local and family history collection' in service.text):
+                        if ('Local and family history' in service.text):
                             services['LocalAndFamilyHistory'] = 'Yes'
-                        if ('Naval history collection' in service.text):
+                        if ('Naval history' in service.text):
                             services['NavalHistory'] = 'Yes'
-                        if ('Microfilm scanners' in service.text):
+                        if ('Microfilm' in service.text):
                             services['MicrofilmScanners'] = 'Yes'
-                        if ('Roof terrace' in service.text):
+                        if ('Roof' in service.text):
                             services['RoofTerrace'] = 'Yes'
-                        if ('Books for loan' in service.text):
+                        if ('Books' in service.text):
                             services['Books'] = 'Yes'
-                        if ('DVDs for hire' in service.text):
+                        if ('DVDs' in service.text):
                             services['DVDs'] = 'Yes'
                         if ('Audiobooks' in service.text):
                             services['Audiobooks'] = 'Yes'
-                        if ('Request service' in service.text):
+                        if ('Request' in service.text):
                             services['RequestService'] = 'Yes'
                         if ('Café' in service.text):
                             services['Cafe'] = 'Yes'

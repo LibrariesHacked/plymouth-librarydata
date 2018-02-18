@@ -1,13 +1,13 @@
 Library,Computers,WiFi,Printers,Photocopiers,Scanners,MeetingRooms,LocalAndFamilyHistory,NavalHistory,MicrofilmScanners,RoofTerrace,Books,DVDs,Audiobooks,RequestService,Cafe,Website
 Central Library,Yes,Yes,Yes,Yes,Yes,Yes,Yes,No,Yes,Yes,Yes,Yes,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/centrallibrary
-Crownhill Library,No,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/crownhilllibrary
-Devonport Library,Yes,Yes,No,No,No,No,No,Yes,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/devonportlibrary
-Efford Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/effordlibrary
-Estover Library,Yes,No,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/estoverlibrary
-North Prospect Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/northprospectlibrary
-Peverell Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/peverelllibrary
-Plympton Library,No,Yes,No,No,No,No,No,No,No,No,Yes,Yes,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/plymptonlibrary
-Plymstock Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,Yes,Yes,Yes,Yes,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/plymstocklibrary
-Southway Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/southwaylibrary
-St Budeaux Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/stbudeauxlibrary
-West Park Library,Yes,Yes,No,No,No,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/westparklibrary
+Crownhill Library,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/crownhilllibrary
+Devonport Library,Yes,Yes,Yes,Yes,Yes,No,No,Yes,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/devonportlibrary
+Efford Library,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/effordlibrary
+Estover Library,Yes,No,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/estoverlibrary
+North Prospect Library,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/northprospectlibrary
+Peverell Library,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/peverelllibrary
+Plympton Library,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,Yes,Yes,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/plymptonlibrary
+Plymstock Library,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,Yes,Yes,Yes,Yes,Yes,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/plymstocklibrary
+Southway Library,Yes,Yes,Yes,Yes,Yes,No,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/southwaylibrary
+St Budeaux Library,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/stbudeauxlibrary
+West Park Library,Yes,Yes,Yes,Yes,Yes,Yes,No,No,No,No,Yes,No,Yes,Yes,No,https://www.plymouth.gov.uk/libraries/findlibraryandopeninghours/westparklibrary
