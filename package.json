@@ -1,31 +1,17 @@
 {
-  "name": "plymouth-3d",
-  "version": "1.0.0",
-  "description": "3D map of Plymouth using Mapbox GL and Open Street Map data",
-  "main": "index.js",
-  "dependencies": {
-    "@turf/turf": "^5.1.6",
-    "bootstrap": "^4.0.0",
-    "bootswatch": "^4.0.0",
-    "font-awesome": "^4.7.0",
-    "jquery": "^3.3.1",
-    "mapbox-gl": "^0.44.1",
-    "moment": "^2.20.1",
-    "papaparse": "^4.3.7",
-    "popper.js": "^1.13.0"
-  },
-  "devDependencies": {},
+  "name": "workspace",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DaveBathnes/Plymouth-3D.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/DaveBathnes/Plymouth-3D/issues"
-  },
-  "homepage": "https://github.com/DaveBathnes/Plymouth-3D#readme"
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5"
+  }
 }
