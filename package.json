@@ -4,10 +4,10 @@
   "description": "3D map of Plymouth using Mapbox GL and Open Street Map data",
   "main": "index.js",
   "dependencies": {
+    "@fortawesome/fontawesome-free-webfonts": "^1.0.3",
     "@turf/turf": "^5.1.6",
     "bootstrap": "^4.0.0",
     "bootswatch": "^4.0.0",
-    "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "mapbox-gl": "^0.44.1",
     "moment": "^2.20.1",

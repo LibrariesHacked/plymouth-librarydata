@@ -1,5 +1,24 @@
 ﻿$(function () {
 
+    var services_lookup = {
+        Computers: { name: 'Computers', icon: '' },
+        WiFi: { name: 'WiFi', icon: '' },
+        Printers: { name: 'Computers', icon: '' },
+        Photocopiers: { name: 'Photocopiers', icon: '' },
+        Scanners: { name: 'Scanners', icon: '' },
+        MeetingRooms: { name: 'Meeting rooms', icon: '' },
+        LocalAndFamilyHistory: { name: 'Computers', icon: '' },
+        NavalHistory: { name: 'Computers', icon: '' },
+        MicrofilmScanners: { name: 'Computers', icon: '' },
+        RoofTerrace: { name: 'Computers', icon: '' },
+        Books: { name: 'Computers', icon: '' },
+        DVDs: { name: 'Computers', icon: '' },
+        Audiobooks: { name: 'Computers', icon: '' },
+        RequestService: { name: 'Computers', icon: '' },
+        Cafe: { name: 'Computers', icon: '' },
+        Website: { name: 'Computers', icon: '' }
+    };
+
     var colours = {
         central: 'rgb(143,212,0)',
         crownhill: 'rgb(236,0,140)',
@@ -34,24 +53,35 @@
         $("#wrapper").toggleClass("toggled");
     });
 
+    $('#btn-gps').on('click', function () {
+        navigator.geolocation.getCurrentPosition(function (location) {
+            goToNearest(location.coords.longitude, location.coords.latitude);
+        });
+    });
+
+    // Go to nearest
+    var goToNearest = function (longitude, latitude) {
+        var point = turf.point([longitude, latitude]);
+        var lib_points = $.map(Libraries.libraries, function (library) {
+            return turf.point([parseFloat(library.Longitude), parseFloat(library.Latitude)])
+        });
+        var library_points = turf.featureCollection(lib_points);
+        var nearest = turf.nearestPoint(point, library_points);
+        map.flyTo({
+            center: nearest.geometry.coordinates,
+            zoom: 17,
+            bearing: 360,
+            speed: 0.8,
+            curve: 1
+        });
+    };
+
     // Find nearest
     $('#btn-search').on('click', function () {
         var postcode = $('#txt-postcode').val();
         if (postcode.length > 3) {
             $.getJSON('https://api.postcodes.io/postcodes/' + postcode, function (data) {
-                var postcode_point = turf.point([data.result.longitude, data.result.latitude]);
-                var lib_points = $.map(Libraries.libraries, function (library) {
-                    return turf.point([parseFloat(library.Longitude), parseFloat(library.Latitude)])
-                });
-                var library_points = turf.featureCollection(lib_points);
-                var nearest = turf.nearestPoint(postcode_point, library_points);
-                map.flyTo({
-                    center: nearest.geometry.coordinates,
-                    zoom: 17,
-                    bearing: 360,
-                    speed: 0.8,
-                    curve: 1
-                });
+                goToNearest(data.result.longitude, data.result.latitude);
             });
         }
     });
@@ -90,12 +120,13 @@
                 "fill-extrusion-height": [
                     "interpolate", ["linear"], ["zoom"],
                     15, 0,
-                    15.05, ["max", ["get", "max"]]
+                    15.05, ["get", "max"]
                 ],
                 'fill-extrusion-opacity': 0.8
             }
         });
 
+        // 
         map.on('click', '3d-buildings', function (e) {
             console.log(e.features[0].properties.ID);
         });
@@ -103,6 +134,12 @@
         // add the libraries layer
         Libraries.load(function () {
             $.each(Libraries.libraries, function (x, library) {
+
+
+                // Services icons
+                var icons = '';
+
+
                 // create a HTML element for each feature
                 var card = document.createElement('div');
                 card.className = 'card';
@@ -114,8 +151,12 @@
                 var cardSubtitle = document.createElement('h6');
                 cardSubtitle.className = 'card-subtitle mb-2 text-muted';
                 cardSubtitle.innerText = library.status;
+                var eventsList = document.createElement('h6');
+                eventsList.className = 'card-subtitle mb-2 text-muted';
+                eventsList.innerText = 'Events: ' + library.events.join(', ');
                 cardBody.appendChild(cardTitle);
                 cardBody.appendChild(cardSubtitle);
+                if (library.events && library.events.length > 0) cardBody.appendChild(eventsList);
                 card.appendChild(cardBody);
                 // make a marker for each feature and add to the map
                 new mapboxgl.Marker(card)

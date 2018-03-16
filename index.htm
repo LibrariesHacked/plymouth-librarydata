@@ -4,31 +4,33 @@
     <meta charset="utf-8" />
     <title>Plymouth Libraries</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="node_modules/bootswatch/dist/sandstone/bootstrap.min.css" rel="stylesheet" />
     <link href="node_modules/mapbox-gl/dist/mapbox-gl.css" rel="stylesheet" />
+    <link href="node_modules/@fortawesome/fontawesome-free-webfonts/css/fontawesome.css" rel="stylesheet" />
+    <link href="node_modules/@fortawesome/fontawesome-free-webfonts/css/fa-solid.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
 </head>
 <body>
     <div id='map'></div>
     <div id="wrapper">
         <div id="sidebar-wrapper">
-            <div class="container">
-                <p class="lead"><i class="fa fa-times menu-toggle float-right" data-toggle="collapse" data-target="#sidebar" aria-hidden="true" aria-expanded="false" aria-controls="sidebar"></i></p>
-                <hr />
-                <h5>Search options</h5>
+            <div class="transparent">
+                <p class="lead"><i class="fas fa-times menu-toggle float-right" data-toggle="collapse" data-target="#sidebar" aria-hidden="true" aria-expanded="false" aria-controls="sidebar"></i></p>
+                <p class="lead">Open status</p>
+                <p class="lead">Facilities</p>
+                <p class="lead">Display options</p>
             </div>
         </div>
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <div class="jumbotron">
-                    <p class="lead">Use a postcode or GPS to find nearest Plymouth library</p>
+                    <p class="lead">Use postcode or GPS to find nearest Plymouth library</p>
                     <div class="form-inline">
-                        <input class="form-control form-control-lg" id="txt-postcode" placeholder="Postcode" autocomplete="off" type="text">&nbsp;<button id="btn-search" class="btn btn-success btn-lg"><i class="fa fa-search"></i>&nbsp;Go</button>
+                        <input class="form-control form-control-lg" id="txt-postcode" placeholder="Postcode" autocomplete="off" type="text">&nbsp;<button id="btn-search" class="btn btn-success btn-lg"><i class="fas fa-search"></i>&nbsp;Go</button>
                     </div><br />
                     <p class="lead">
                         <a class="btn btn-primary btn-sm menu-toggle" role="button" href="#menu-toggle">Options</a>
-                        <a class="btn btn-primary btn-sm" role="button" href="#">Use GPS</a>
+                        <button id="btn-gps" class="btn btn-primary btn-sm" role="button"><i class="fas fa-location-arrow"></i>&nbsp;Use GPS</button>
                     </p>
                 </div>
             </div>
