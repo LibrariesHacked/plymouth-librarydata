@@ -48,20 +48,14 @@ const colours = {
 };
 
 class LibraryMap extends Component {
-	// constructor: 
-	constructor(props) {
-		super(props);
-		this.state = {
-			poi_filter: ['in', 'type'],
-			poi_icons: [],
-			maxBounds: bounds,
-			fitBounds: [],
-			center: [-4.1432586, 50.3732736],
-			zoom: [14],
-			pitch: [90],
-			bearing: [0]
-		};
-	}
+	state = {
+		maxBounds: bounds,
+		fitBounds: [],
+		center: [-4.1432586, 50.3732736],
+		zoom: [14],
+		pitch: [90],
+		bearing: [0]
+	};
 	render() {
 		return (
 			<div>
