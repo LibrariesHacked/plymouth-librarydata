@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
 // Mapbox GL
-import ReactMapboxGl, { Layer } from 'react-mapbox-gl';
+import ReactMapboxGl from 'react-mapbox-gl';
 import { Cluster } from 'react-mapbox-gl';
+import { Layer } from 'react-mapbox-gl';
 import { Marker } from 'react-mapbox-gl';
 import { RotationControl } from 'react-mapbox-gl';
 import { Source } from 'react-mapbox-gl';
@@ -25,11 +26,10 @@ const Map = ReactMapboxGl({
 });
 
 const map_url = 'mapbox://styles/daveroweuk/cj6jj9udl6aa62spb93wjrshv';
-const building_url = 'mapbox://daveroweuk.9uj2a4uw';
 
 const bounds = [
-	[46.3274725451, 28.4927040071],
-	[48.4202256861, 30.1042577774]
+	[-4.204694, 50.346906],
+	[-4.087277, 50.411567]
 ];
 
 const colours = {
@@ -54,11 +54,10 @@ class LibraryMap extends Component {
 		this.state = {
 			poi_filter: ['in', 'type'],
 			poi_icons: [],
-			show_buildings: this.props.show_buildings,
 			maxBounds: bounds,
 			fitBounds: [],
-			center: [47.9774, 29.3759],
-			zoom: [17],
+			center: [-4.1432586, 50.3732736],
+			zoom: [14],
 			pitch: [90],
 			bearing: [0]
 		};
@@ -78,25 +77,18 @@ class LibraryMap extends Component {
 					onClick={this.handleMapClick}
 				>
 					<Source
-						id='poi_source'
-						tileJsonSource={{
-							type: 'vector',
-							url: 'mapbox://mapbox.mapbox-streets-v7'
-						}}
-					/>
-					{this.state.show_buildings ? <Source
 						id='buildings_source'
 						tileJsonSource={{
 							type: 'vector',
-							url: building_url
+							url: 'mapbox://daveroweuk.9uj2a4uw'
 						}}
-					/> : ''}
-					{this.state.show_buildings ? <Layer
+					/>
+					<Layer
 						id='3d-buildings'
 						type='fill-extrusion'
 						sourceId='buildings_source'
+						sourceLayer='PlymouthBuildings-5m5usp'
 						layerOptions={{
-							'source-layer': 'PlymouthBuildings-5m5usp',
 							'minzoom': 14
 						}}
 						paint={{
@@ -121,7 +113,7 @@ class LibraryMap extends Component {
 							'fill-extrusion-base': { 'type': 'identity', 'property': 'MIN_HEIGHT' },
 							'fill-extrusion-opacity': 0.8
 						}}
-					/> : ''}
+					/>
 				</Map>
 			</div>
 		);
