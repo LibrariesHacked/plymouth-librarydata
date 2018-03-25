@@ -10,7 +10,8 @@ import IconButton from 'material-ui/IconButton';
 import { withStyles } from 'material-ui/styles';
 
 // Material Icons
-import Filter from 'material-ui-icons/Filter';
+import FilterList from 'material-ui-icons/FilterList';
+import LocationOn from 'material-ui-icons/LocationOn';
 import MoreVert from 'material-ui-icons/MoreVert';
 import Sort from 'material-ui-icons/Sort';
 
@@ -29,21 +30,36 @@ class LibraryList extends React.Component {
 		return (
 			<div>
 				<Button className={classes.button} color="secondary">Sort<Sort className={classes.rightIcon} /></Button>
-				<Button className={classes.button} color="secondary">Filter<Filter className={classes.rightIcon} /></Button>
-				<Card className={classes.card} elevation={0}>
-					<CardHeader
-						avatar={
-							<Avatar aria-label="Recipe" className={classes.avatar}>PC</Avatar>
-						}
-						action={
-							<IconButton>
-								<MoreVert />
-							</IconButton>
-						}
-						title="Shrimp and Chorizo Paella"
-						subheader="September 14, 2016"
-					/>
-				</Card>
+				<Button className={classes.button} color="secondary">Filter<FilterList className={classes.rightIcon} /></Button>
+				{this.props.libraries
+					.sort((lib_a, lib_b) => {
+
+					})
+					.filter(library => {
+						return true;
+					})
+					.map(library => {
+						<Card className={classes.card} elevation={0}>
+							<CardHeader
+								avatar={
+									<Avatar aria-label={library.name} className={classes.avatar}>PC</Avatar>
+								}
+								action={
+									<div>
+										<IconButton>
+											<LocationOn />
+										</IconButton>
+										<IconButton>
+											<MoreVert />
+										</IconButton>
+									</div>
+								}
+								title={library.name}
+								subheader={library.address}
+							/>
+						</Card>
+					})}
+
 			</div>
 		);
 	}
@@ -51,6 +67,7 @@ class LibraryList extends React.Component {
 
 LibraryList.propTypes = {
 	classes: PropTypes.object.isRequired,
+	libraries: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(LibraryList);

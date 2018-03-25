@@ -101,10 +101,9 @@ class LibraryMap extends Component {
 								'0D4F70C2862A27B3E050A00A568A259B', colours['southway'],
 								'0D4F7098AB3527B3E050A00A568A259B', colours['stbudeaux'],
 								'0D4F70C21F9327B3E050A00A568A259B', colours['westpark'],
-								'#CCC'
+								'#CCCCCC'
 							],
-							'fill-extrusion-height': { 'type': 'identity', 'property': 'HEIGHT' },
-							'fill-extrusion-base': { 'type': 'identity', 'property': 'MIN_HEIGHT' },
+							'fill-extrusion-height': { 'type': 'identity', 'property': 'max' },
 							'fill-extrusion-opacity': 0.8
 						}}
 					/>

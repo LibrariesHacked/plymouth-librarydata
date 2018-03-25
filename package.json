@@ -1,31 +1,33 @@
 {
-  "name": "plymouth-3d",
+  "name": "plymouth-librarydata",
   "version": "1.0.0",
   "description": "3D map of Plymouth using Mapbox GL and Open Street Map data",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
-    "@fortawesome/fontawesome-free-webfonts": "^1.0.3",
     "@turf/turf": "^5.1.6",
-    "bootstrap": "^4.0.0",
-    "bootswatch": "^4.0.0",
-    "jquery": "^3.3.1",
-    "mapbox-gl": "^0.44.1",
-    "moment": "^2.20.1",
-    "papaparse": "^4.3.7",
-    "popper.js": "^1.13.0"
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "csvtojson": "^1.1.9",
+    "debug": "^3.1.0",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "pug": "^2.0.3",
+    "serve-favicon": "^2.4.5"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
+    "quick-build": "cd client && npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DaveBathnes/Plymouth-3D.git"
+    "url": "git+https://github.com/librarieshacked/plymouth-librarydata.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/DaveBathnes/Plymouth-3D/issues"
+    "url": "https://github.com/librarieshacked/plymouth-librarydata/issues"
   },
-  "homepage": "https://github.com/DaveBathnes/Plymouth-3D#readme"
+  "homepage": "https://github.com/librarieshacked/plymouth-librarydata#readme"
 }

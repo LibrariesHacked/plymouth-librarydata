@@ -21,6 +21,9 @@ import LibraryList from './LibraryList';
 import LibraryMap from './LibraryMap';
 import PostcodeSearch from './PostcodeSearch';
 
+// Helpers
+import * as libraries from './helpers/libraries';
+
 const drawerWidth = 350;
 
 const theme = createMuiTheme({
@@ -64,8 +67,22 @@ const styles = {
 
 class App extends Component {
 	state = {
-		drawer_open: false
+		location_update_interval: '',
+		drawer_open: false,
+		libraries: []
 	}
+	// componentDidMount: sets up data and any logging
+	componentDidMount = () => {
+		this.logLocation();
+		// Repeat every 30 seconds.
+		let location_update_interval = setInterval(this.logLocation, 30000);
+		this.setState({ location_update_interval: location_update_interval });
+	};
+	// 
+	logLocation = () => {
+		libraries.getAllLibraries([], libraries => this.setState({ libraries: libraries }));
+	}
+	// 
 	handleGPS = (e) => {
 
 	}
@@ -98,7 +115,7 @@ class App extends Component {
 						}}
 					>
 						<div className={classes.toolbar} />
-						<LibraryList />
+						<LibraryList libraries={this.state.libraries} />
 					</Drawer>
 					<main className={classes.content}>
 						<div className={classes.libraryMap}>
