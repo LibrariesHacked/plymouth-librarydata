@@ -52,10 +52,20 @@ class LibraryMap extends Component {
 		maxBounds: bounds,
 		fitBounds: [],
 		center: [-4.1432586, 50.3732736],
-		zoom: [14],
+		zoom: [16],
 		pitch: [90],
 		bearing: [0]
 	};
+	componentWillReceiveProps = (nextProps) => {
+		if (nextProps.location.length > 0 && nextProps.location !== this.state.center) {
+			this.setState({
+				center: nextProps.location,
+				zoom: [20],
+				pitch: 160,
+				bearing: [90]
+			});
+		}
+	}
 	render() {
 		return (
 			<div>

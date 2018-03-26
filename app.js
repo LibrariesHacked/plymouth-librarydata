@@ -53,7 +53,7 @@ app.use(function (err, req, res, next) {
 
 // 
 app.get('*', function (req, res) {
-	res.sendFile(path.join(__dirname + '/client/build/index.html'));
+	res.sendFile(path.join(__dirname + '/library-finder/build/index.html'));
 });
 
 // 

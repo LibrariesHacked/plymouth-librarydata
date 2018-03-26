@@ -68,6 +68,7 @@ const styles = {
 class App extends Component {
 	state = {
 		location_update_interval: '',
+		map_location: [],
 		drawer_open: false,
 		libraries: []
 	}
@@ -111,15 +112,18 @@ class App extends Component {
 						variant="persistent"
 						open={this.state.drawer_open}
 						classes={{
-							paper: classes.drawerPaper,
+							paper: classes.drawerPaper
 						}}
 					>
 						<div className={classes.toolbar} />
-						<LibraryList libraries={this.state.libraries} />
+						<LibraryList
+							libraries={this.state.libraries}
+							goTo={(location) => this.setState({ map_location: location })} />
 					</Drawer>
 					<main className={classes.content}>
 						<div className={classes.libraryMap}>
-							<LibraryMap />
+							<LibraryMap
+								location={this.state.map_location} />
 						</div>
 					</main>
 				</div>

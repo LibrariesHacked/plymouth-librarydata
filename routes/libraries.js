@@ -9,7 +9,7 @@ router.get('/', function (req, res, next) {
 	csv()
 		.fromFile(libraries_path)
 		.on("end_parsed", function (libraries) {
-			res.send(libraries);
+			res.json(libraries);
 		})
 });
 
