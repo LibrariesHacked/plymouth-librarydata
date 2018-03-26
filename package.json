@@ -17,8 +17,8 @@
   "devDependencies": {},
   "scripts": {
     "start": "node app.js",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
-    "quick-build": "cd client && npm run build"
+    "heroku-postbuild": "cd library-finder && npm install --only=dev && npm install && npm run build",
+    "quick-build": "cd library-finder && npm run build"
   },
   "repository": {
     "type": "git",
