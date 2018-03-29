@@ -84,7 +84,7 @@ class LibraryMap extends Component {
 						id='buildings_source'
 						tileJsonSource={{
 							type: 'vector',
-							url: 'mapbox://daveroweuk.9uj2a4uw'
+							url: 'mapbox://styles/mapbox/streets-v9'
 						}}
 					/>
 					<Layer
