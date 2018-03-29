@@ -22,12 +22,16 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '/client/build')));
+
+// Web service routes
 app.use('/api/libraries', libraries);
 
-// 
+// React app for all other requests
 app.get('*', function (req, res) {
 	res.sendFile(path.join(__dirname + '/library-finder/build/index.html'));
 });
 
-// 
+// Listen for requests
 app.listen(port);
