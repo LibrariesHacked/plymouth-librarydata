@@ -26,7 +26,7 @@ const Map = ReactMapboxGl({
 	attributionControl: true
 });
 
-const map_url = 'mapbox://styles/mapbox/streets-v9';
+const map_url = 'mapbox://styles/mapbox/light-v9';
 
 const bounds = [
 	[-4.204694, 50.346906],
