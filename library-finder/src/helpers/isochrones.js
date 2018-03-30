@@ -1,0 +1,12 @@
+// Axios for making requests
+import axios from 'axios';
+import moment from 'moment';
+
+// getLibraryIsochrone:
+export function getLibraryIsochrone(library, travel, callback) {
+	axios.get('/api/isochrones?library=' + library + '&travel=' + travel)
+		.then(response => {
+			callback(response.data);
+		})
+		.catch(error => callback([]));
+};

@@ -2,6 +2,7 @@
 import axios from 'axios';
 import moment from 'moment';
 
+// getAllLibraries: 
 export function getAllLibraries(location, callback) {
 	axios.get('/api/libraries')
 		.then(response => {
@@ -10,6 +11,7 @@ export function getAllLibraries(location, callback) {
 		.catch(error => callback([]));
 };
 
+// checkLibraryOpen: 
 export function checkLibraryOpen(library) {
 	let open = false;
 	let current = moment();

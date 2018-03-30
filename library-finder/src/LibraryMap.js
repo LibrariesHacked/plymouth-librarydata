@@ -7,6 +7,7 @@ import { withStyles } from 'material-ui/styles';
 // Mapbox GL
 import ReactMapboxGl from 'react-mapbox-gl';
 import { Cluster } from 'react-mapbox-gl';
+import { GeoJSONLayer } from 'react-mapbox-gl';
 import { Layer } from 'react-mapbox-gl';
 import { Marker } from 'react-mapbox-gl';
 import { RotationControl } from 'react-mapbox-gl';
@@ -25,7 +26,7 @@ const Map = ReactMapboxGl({
 	attributionControl: true
 });
 
-const map_url = 'mapbox://styles/daveroweuk/cj6jj9udl6aa62spb93wjrshv';
+const map_url = 'mapbox://styles/mapbox/streets-v9';
 
 const bounds = [
 	[-4.204694, 50.346906],
@@ -84,7 +85,7 @@ class LibraryMap extends Component {
 						id='buildings_source'
 						tileJsonSource={{
 							type: 'vector',
-							url: 'mapbox://styles/mapbox/streets-v9'
+							url: 'mapbox://daveroweuk.9uj2a4uw'
 						}}
 					/>
 					<Layer
@@ -117,6 +118,15 @@ class LibraryMap extends Component {
 							'fill-extrusion-opacity': 0.8
 						}}
 					/>
+					{Object.keys(this.props.isochrones).map(library => { // Each library
+						return Object.keys(this.props.isochrones[library]).map(travel => { // Each travel method
+							return (this.props.isochrones[library][travel].selected ?
+								<GeoJSONLayer
+									data={this.props.isochrones[library][travel].iso}
+									lineLayout={{
+									}} /> : null)
+						})
+					})}
 				</Map>
 			</div>
 		);

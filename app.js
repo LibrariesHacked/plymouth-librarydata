@@ -5,7 +5,9 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+// 
 const libraries = require('./routes/libraries');
+const isochrones = require('./routes/isochrones');
 
 const app = express();
 
@@ -19,6 +21,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
+// 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -27,6 +30,7 @@ app.use(express.static(path.join(__dirname, '/library-finder/build')));
 
 // Web service routes
 app.use('/api/libraries', libraries);
+app.use('/api/isochrones', isochrones);
 
 // React app for all other requests
 app.get('*', function (req, res) {

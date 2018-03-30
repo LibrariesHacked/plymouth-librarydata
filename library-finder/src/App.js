@@ -22,7 +22,8 @@ import LibraryMap from './LibraryMap';
 import PostcodeSearch from './PostcodeSearch';
 
 // Helpers
-import * as libraries from './helpers/libraries';
+import * as libHelper from './helpers/libraries';
+import * as isoHelper from './helpers/isochrones';
 
 const drawerWidth = 350;
 
@@ -70,23 +71,41 @@ class App extends Component {
 		location_update_interval: '',
 		map_location: [],
 		drawer_open: false,
-		libraries: []
+		libraries: [],
+		isochrones: {}
 	}
 	// componentDidMount: sets up data and any logging
 	componentDidMount = () => {
 		this.logLocation();
-		// Repeat every 30 seconds.
+		// Repeat every 30 seconds
 		let location_update_interval = setInterval(this.logLocation, 30000);
 		this.setState({ location_update_interval: location_update_interval });
 	};
-	// 
+	// logLocation:
 	logLocation = () => {
-		libraries.getAllLibraries([], libraries => this.setState({ libraries: libraries }));
+		libHelper.getAllLibraries([], libraries => this.setState({ libraries: libraries }));
 	}
-	// 
+	// handleGPS:
 	handleGPS = (e) => {
 
 	}
+	// toggleIsochrone: turns a particular library and travel type on or off
+	toggleIsochrone = (library, travel) => {
+		let isochrones = this.state.isochrones;
+		if (!isochrones[library]) isochrones[library] = {};
+		if (!isochrones[library][travel]) {
+			isochrones[library][travel] = { retrieved: false, selected: true, iso: null };
+			this.setState({ isochrones: isochrones });
+			isoHelper.getLibraryIsochrone(library, travel, iso => {
+				isochrones[library][travel] = { retrieved: true, selected: true, iso: iso };
+				this.setState({ isochrones: isochrones });
+			});
+		} else {
+			isochrones[library][travel].selected = !isochrones[library][travel].selected;
+			this.setState({ isochrones: isochrones });
+		}
+	}
+	// Renders the main app
 	render() {
 		const { classes } = this.props;
 		return (
@@ -118,12 +137,15 @@ class App extends Component {
 						<div className={classes.toolbar} />
 						<LibraryList
 							libraries={this.state.libraries}
+							isochrones={this.state.isochrones}
+							toggleIsochrone={this.toggleIsochrone}
 							goTo={(location) => this.setState({ map_location: location })} />
 					</Drawer>
 					<main className={classes.content}>
 						<div className={classes.libraryMap}>
 							<LibraryMap
-								location={this.state.map_location} />
+								location={this.state.map_location}
+								isochrones={this.state.isochrones} />
 						</div>
 					</main>
 				</div>
