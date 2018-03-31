@@ -26,16 +26,16 @@ def run():
     for library in libraries:
         
         # Check if we already have a file
-        if os.path.isfile(OUTPUT_DIR + '/' + library['library'] + '_isochrone_walking.json') == False:
+        if os.path.isfile(OUTPUT_DIR + '/' + library['library'] + '_isochrone_cycling.json') == False:
             # Example: https://api.openrouteservice.org/isochrones?locations=-3.18801%2C51.0611&profile=driving-car&range_type=time&range=3600&interval=600&location_type=start&intersections=false&api_key=58d904a497c67e00015b45fc42337203b9d0468561ab2f37e26ecb76
             url = (
                 'https://api.openrouteservice.org/isochrones?locations=' + library['lng'] + '%2C' + library['lat'] +
-                '&profile=foot-walking&range_type=time&range=1800&interval=300&location_type=destination&intersections=false&api_key=' + API_KEY
+                '&profile=cycling-regular&range_type=time&range=1800&interval=300&location_type=destination&intersections=false&api_key=' + API_KEY
             )
             print(url)
             data = requests.get(url)
             data = json.loads(data.text)
-            with open(OUTPUT_DIR + '/' + library['library'] + '_isochrone_walking.json', 'w') as outfile:
+            with open(OUTPUT_DIR + '/' + library['library'] + '_isochrone_cycling.json', 'w') as outfile:
                 json.dump(data, outfile)
             time.sleep(10)
 run()

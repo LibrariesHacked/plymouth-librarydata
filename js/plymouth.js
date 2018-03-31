@@ -146,7 +146,7 @@
 				cardBody.className = 'card-body';
 				var cardTitle = document.createElement('h4');
 				cardTitle.className = 'card-title';
-				cardTitle.innerText = library['Library name'];
+				cardTitle.innerText = library.name;
 				var cardSubtitle = document.createElement('h6');
 				cardSubtitle.className = 'card-subtitle mb-2 text-muted';
 				cardSubtitle.innerText = library.status;

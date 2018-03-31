@@ -36,16 +36,16 @@
                 });
 
                 $.each(library_services, function (y, serv) {
-                    if (serv['Library'] === library['Library name']) library.services = serv;
+                    if (serv['Library'] === library.name) library.services = serv;
                 });
 
                 var event_list = [];
                 $.each(events.query.results.item, function (x, result) {
-                    if (library['Library name'] == result.title.split(': ')[1]) event_list.push(result.title.split(': ')[0]);
+                    if (library.name == result.title.split(': ')[1]) event_list.push(result.title.split(': ')[0]);
                 });
 
-                library['opening_hours'] = opening_hours;
-                library['events'] = event_list;
+                library.opening_hours = opening_hours;
+                library.events = event_list;
             });
             this.libraries = library_data;
             this.setOpenStatus();

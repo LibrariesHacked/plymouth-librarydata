@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const csv = require("csvtojson");
 
-const libraries_path = './data/libraries.csv';
+const libHelper = require('../helpers/libraries');
+const geoHelper = require('../helpers/geo');
 
 // 
-router.get('/', function (req, res, next) {
-	csv()
-		.fromFile(libraries_path)
-		.on("end_parsed", function (libraries) {
-			res.json(libraries);
-		})
+router.get('/', (req, res, next) => {
+	let location = [req.query.longitude, req.query.latitude];
+	let libraries = libHelper.getAllLibraries();
+	geoHelper.getLocationDistances(location, libraries, libs => {
+		res.json(libs);
+	});
 });
 
 module.exports = router;

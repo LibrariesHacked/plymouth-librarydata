@@ -23,6 +23,7 @@ import PostcodeSearch from './PostcodeSearch';
 
 // Helpers
 import * as libHelper from './helpers/libraries';
+import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 
 const drawerWidth = 350;
@@ -83,7 +84,7 @@ class App extends Component {
 	};
 	// logLocation:
 	logLocation = () => {
-		libHelper.getAllLibraries([], libraries => this.setState({ libraries: libraries }));
+		geoHelper.getCurrentLocation(location => libHelper.getAllLibraries(location, libraries => this.setState({ libraries: libraries })));
 	}
 	// handleGPS:
 	handleGPS = (e) => {
