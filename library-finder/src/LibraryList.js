@@ -36,11 +36,14 @@ const styles = theme => ({
 	button: {
 		margin: theme.spacing.unit,
 	},
+	leftIcon: {
+		marginRight: theme.spacing.unit,
+	},
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
 	},
 	progress: {
-		margin: theme.spacing.unit * 2,
+		marginRight: theme.spacing.unit
 	},
 });
 
@@ -110,30 +113,57 @@ class LibraryList extends React.Component {
 									<CardContent>
 										<Typography>{libraries.checkLibraryOpen(library, this.state.current_time).message}</Typography>
 									</CardContent>
-									<IconButton className={classes.button} aria-label="Directions Isochrone" onClick={(e) => this.props.toggleIsochrone(library.name, 'walking')}>
+									<Button
+										color={
+											this.props.isochrones &&
+												this.props.isochrones[library.name] &&
+												this.props.isochrones[library.name]['walking'] &&
+												this.props.isochrones[library.name]['walking'].selected ? 'primary' : 'secondary'}
+										className={classes.button}
+										aria-label="Directions Isochrone"
+										onClick={(e) => this.props.toggleIsochrone(library.name, 'walking')}>
 										{this.props.isochrones &&
 											this.props.isochrones[library.name] &&
 											this.props.isochrones[library.name]['walking'] ?
 											(this.props.isochrones[library.name]['walking'].retrieved ?
-												(this.props.isochrones[library.name]['walking'].selected ? <DirectionsWalk color="primary" /> : <DirectionsWalk />) : <CircularProgress className={classes.progress} size={30} />
-											) : <DirectionsWalk />}
-									</IconButton>
-									<IconButton className={classes.button} aria-label="Directions Isochrone" onClick={(e) => this.props.toggleIsochrone(library.name, 'cycling')}>
+												<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
+											) : <DirectionsWalk className={classes.leftIcon} />}
+										{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
+									</Button>
+									<Button
+										color={
+											this.props.isochrones &&
+												this.props.isochrones[library.name] &&
+												this.props.isochrones[library.name]['cycling'] &&
+												this.props.isochrones[library.name]['cycling'].selected ? 'primary' : 'secondary'}
+										className={classes.button}
+										aria-label="Directions Isochrone"
+										onClick={(e) => this.props.toggleIsochrone(library.name, 'cycling')}>
 										{this.props.isochrones &&
 											this.props.isochrones[library.name] &&
 											this.props.isochrones[library.name]['cycling'] ?
 											(this.props.isochrones[library.name]['cycling'].retrieved ?
-												(this.props.isochrones[library.name]['cycling'].selected ? <DirectionsBike color="primary" /> : <DirectionsBike />) : <CircularProgress className={classes.progress} size={30} />
-											) : <DirectionsBike />}
-									</IconButton>
-									<IconButton className={classes.button} aria-label="Directions Isochrone" onClick={(e) => this.props.toggleIsochrone(library.name, 'driving')}>
+												<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
+											) : <DirectionsBike className={classes.leftIcon} />}
+										{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
+									</Button>
+									<Button
+										color={
+											this.props.isochrones &&
+												this.props.isochrones[library.name] &&
+												this.props.isochrones[library.name]['driving'] &&
+												this.props.isochrones[library.name]['driving'].selected ? 'primary' : 'secondary'}
+										className={classes.button}
+										aria-label="Directions Isochrone"
+										onClick={(e) => this.props.toggleIsochrone(library.name, 'driving')}>
 										{this.props.isochrones &&
 											this.props.isochrones[library.name] &&
 											this.props.isochrones[library.name]['driving'] ?
 											(this.props.isochrones[library.name]['driving'].retrieved ?
-												(this.props.isochrones[library.name]['driving'].selected ? <DirectionsCar color="primary" /> : <DirectionsCar />) : <CircularProgress className={classes.progress} size={30} />
-											) : <DirectionsCar />}
-									</IconButton>
+												<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
+											) : <DirectionsCar className={classes.leftIcon} />}
+										{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
+									</Button>
 								</Card>
 								<Divider />
 							</div>)

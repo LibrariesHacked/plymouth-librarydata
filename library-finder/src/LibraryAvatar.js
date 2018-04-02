@@ -30,7 +30,7 @@ class LibraryAvatar extends React.Component {
 				aria-label={library.name}
 				className={classes.avatar}
 				style={{
-					backgroundColor: theme.libraries.central
+					backgroundColor: theme.libraries[library.name.replace(' Library', '').replace(/ /g, '').toLowerCase()]
 				}}>
 				{this.getLibraryInitials(library.name)}
 			</Avatar>

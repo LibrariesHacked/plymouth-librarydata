@@ -77,7 +77,7 @@ class LibraryMap extends Component {
 						sourceId='buildings_source'
 						sourceLayer='PlymouthBuildings-5m5usp'
 						layerOptions={{
-							'minzoom': 14
+							'minzoom': 19
 						}}
 						paint={{
 							'fill-extrusion-color': [
@@ -110,7 +110,7 @@ class LibraryMap extends Component {
 									}} /> : null)
 						})
 					})}
-					<Cluster ClusterMarkerFactory={this.clusterMarker}>
+					<Cluster ClusterMarkerFactory={this.clusterLibraries}>
 						{
 							this.props.libraries.map((library, key) =>
 								<Marker
