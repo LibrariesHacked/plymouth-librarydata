@@ -77,7 +77,7 @@ class LibraryMap extends Component {
 						sourceId='buildings_source'
 						sourceLayer='PlymouthBuildings-5m5usp'
 						layerOptions={{
-							'minzoom': 19
+							'minzoom': 5
 						}}
 						paint={{
 							'fill-extrusion-color': [

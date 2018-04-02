@@ -128,7 +128,7 @@ class LibraryList extends React.Component {
 											(this.props.isochrones[library.name]['walking'].retrieved ?
 												<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 											) : <DirectionsWalk className={classes.leftIcon} />}
-										{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
+										{library.walking_duration ? Math.round(library.walking_duration / 60) : ''}
 									</Button>
 									<Button
 										color={
@@ -145,7 +145,7 @@ class LibraryList extends React.Component {
 											(this.props.isochrones[library.name]['cycling'].retrieved ?
 												<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 											) : <DirectionsBike className={classes.leftIcon} />}
-										{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
+										{library.cycling_duration ? Math.round(library.cycling_duration / 60) : ''}
 									</Button>
 									<Button
 										color={

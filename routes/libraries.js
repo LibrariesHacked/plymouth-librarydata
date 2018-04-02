@@ -11,7 +11,6 @@ router.get('/', (req, res, next) => {
 	let libraries = libHelper.getAllLibraries();
 	geoHelper.getLocationDistances(location, libraries, libs => {
 		if (libs) {
-			console.log(libs);
 			res.json(libs);
 		} else {
 			res.json([]);

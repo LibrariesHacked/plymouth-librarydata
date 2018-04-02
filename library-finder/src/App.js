@@ -85,7 +85,7 @@ class App extends Component {
 	state = {
 		location_update_interval: '',
 		map_location: [],
-		drawer_open: false,
+		drawer_open: true,
 		libraries: [],
 		isochrones: {}
 	}

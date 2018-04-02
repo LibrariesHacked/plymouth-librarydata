@@ -20,7 +20,6 @@ module.exports.getDistances = (postcode_object, location, destinations) => {
 	oas.forEach(oa => oa_points.push(turf.point([oa.X, oa.Y], { oa_code: oa.oa11cd })));
 	let nearest = turf.nearestPoint(point, turf.featureCollection(oa_points));
 	let oa_code = nearest.properties.oa_code;
-	oa_code = 'E00075894';
 	let path_driving = path.join(__dirname, oa_path + oa_code + '_driving.json');
 	let path_cycling = path.join(__dirname, oa_path + oa_code + '_cycling.json');
 	let path_walking = path.join(__dirname, oa_path + oa_code + '_walking.json');
@@ -39,12 +38,32 @@ module.exports.getDistances = (postcode_object, location, destinations) => {
 		}
 	}
 	if (fs.existsSync(path_cycling)) {
-		let cycling_csv = fs.readFileSync(path_cycling, { encoding: 'utf8' });
-		let cycling = csvjson.toObject(cycling_csv, {});
+		let cycling_text = fs.readFileSync(path_cycling, { encoding: 'utf8' });
+		let cycling_json = JSON.parse(cycling_text);
+		if (!cycling_json.error) {
+			destinations.forEach(destination => {
+				cycling_json.forEach(cycle => {
+					if (cycle.library === destination.name) {
+						destination.cycling_duration = cycle.duration;
+						destination.cycling_distance = cycle.distance;
+					}
+				});
+			});
+		}
 	}
 	if (fs.existsSync(path_walking)) {
-		let walking_csv = fs.readFileSync(path_walking, { encoding: 'utf8' });
-		let walking = csvjson.toObject(walking_csv, {});
+		let walking_text = fs.readFileSync(path_walking, { encoding: 'utf8' });
+		let walking_json = JSON.parse(walking_text);
+		if (!walking_json.error) {
+			destinations.forEach(destination => {
+				walking_json.forEach(walk => {
+					if (walk.library === destination.name) {
+						destination.walking_duration = walk.duration;
+						destination.walking_distance = walk.distance;
+					}
+				});
+			});
+		}
 	}
 	return destinations;
 }
