@@ -3,8 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import withWidth, { isWidthUp } from 'material-ui/utils/withWidth';
-
 import { fade } from 'material-ui/styles/colorManipulator';
 import { withStyles } from 'material-ui/styles';
 
@@ -58,7 +56,7 @@ const styles = theme => ({
 
 class PostcodeSearch extends React.Component {
 	render() {
-		const { classes, width } = this.props;
+		const { classes } = this.props;
 		return (
 			<div className={classes.root}>
 				<div className={classes.search}>

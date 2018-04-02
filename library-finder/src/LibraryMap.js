@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
+import Avatar from 'material-ui/Avatar';
 import { withStyles } from 'material-ui/styles';
 
 // Mapbox GL
@@ -13,6 +14,8 @@ import { Marker } from 'react-mapbox-gl';
 import { RotationControl } from 'react-mapbox-gl';
 import { Source } from 'react-mapbox-gl';
 import { ZoomControl } from 'react-mapbox-gl';
+
+import LibraryAvatar from './LibraryAvatar';
 
 const styles = {};
 
@@ -26,31 +29,8 @@ const Map = ReactMapboxGl({
 	attributionControl: true
 });
 
-const map_url = 'mapbox://styles/mapbox/light-v9';
-
-const bounds = [
-	[-4.204694, 50.346906],
-	[-4.087277, 50.411567]
-];
-
-const colours = {
-	central: 'rgb(143,212,0)',
-	crownhill: 'rgb(236,0,140)',
-	devonport: 'rgb(244,170,0)',
-	efford: 'rgb(0,120,201)',
-	estover: 'rgb(147,37,178)',
-	northprospect: 'rgb(39,189,190)',
-	peverell: 'rgb(0,105,62)',
-	plympton: 'rgb(158,27,50)',
-	plymstock: 'rgb(239,130,0)',
-	southway: 'rgb(0,58,105)',
-	stbudeaux: 'rgb(77,48,145)',
-	westpark: 'rgb(233,85,37)'
-};
-
 class LibraryMap extends Component {
 	state = {
-		maxBounds: bounds,
 		fitBounds: [],
 		center: [-4.1432586, 50.3732736],
 		zoom: [16],
@@ -67,16 +47,19 @@ class LibraryMap extends Component {
 			});
 		}
 	}
+	clusterLibraries = (coordinates) => (
+		<Marker coordinates={coordinates}>C</Marker>
+	);
 	render() {
+		const { theme, classes } = this.props;
 		return (
 			<div>
 				<Map
-					style={map_url}
+					style='mapbox://styles/mapbox/light-v9'
 					center={this.state.center}
 					zoom={this.state.zoom}
 					pitch={this.state.pitch}
 					bearing={this.state.bearing}
-					maxBounds={this.state.maxBounds}
 					fitBounds={this.state.bounds}
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
 					onClick={this.handleMapClick}
@@ -100,18 +83,18 @@ class LibraryMap extends Component {
 							'fill-extrusion-color': [
 								'match',
 								['get', 'ID'],
-								'0D4F70BCC1FF27B3E050A00A568A259B', colours['central'],
-								'0D4F70BCBC7027B3E050A00A568A259B', colours['crownhill'],
-								'0D4F70C26C6927B3E050A00A568A259B', colours['devonport'],
-								'0D4F70C2790C27B3E050A00A568A259B', colours['efford'],
-								'0D4F70C2B4AB27B3E050A00A568A259B', colours['estover'],
-								'0D4F70C2D6BB27B3E050A00A568A259B', colours['northprospect'],
-								'0D4F70C2715927B3E050A00A568A259B', colours['peverell'],
-								'0D4F70B79EFA27B3E050A00A568A259B', colours['plympton'],
-								'0D4F70C31D6E27B3E050A00A568A259B', colours['plymstock'],
-								'0D4F70C2862A27B3E050A00A568A259B', colours['southway'],
-								'0D4F7098AB3527B3E050A00A568A259B', colours['stbudeaux'],
-								'0D4F70C21F9327B3E050A00A568A259B', colours['westpark'],
+								'0D4F70BCC1FF27B3E050A00A568A259B', theme.libraries.central,
+								'0D4F70BCBC7027B3E050A00A568A259B', theme.libraries.crownhill,
+								'0D4F70C26C6927B3E050A00A568A259B', theme.libraries.devonport,
+								'0D4F70C2790C27B3E050A00A568A259B', theme.libraries.efford,
+								'0D4F70C2B4AB27B3E050A00A568A259B', theme.libraries.estover,
+								'0D4F70C2D6BB27B3E050A00A568A259B', theme.libraries.northprospect,
+								'0D4F70C2715927B3E050A00A568A259B', theme.libraries.peverell,
+								'0D4F70B79EFA27B3E050A00A568A259B', theme.libraries.plympton,
+								'0D4F70C31D6E27B3E050A00A568A259B', theme.libraries.plymstock,
+								'0D4F70C2862A27B3E050A00A568A259B', theme.libraries.southway,
+								'0D4F7098AB3527B3E050A00A568A259B', theme.libraries.stbudeaux,
+								'0D4F70C21F9327B3E050A00A568A259B', theme.libraries.westpark,
 								'#CCCCCC'
 							],
 							'fill-extrusion-height': { 'type': 'identity', 'property': 'max' },
@@ -127,6 +110,20 @@ class LibraryMap extends Component {
 									}} /> : null)
 						})
 					})}
+					<Cluster ClusterMarkerFactory={this.clusterMarker}>
+						{
+							this.props.libraries.map((library, key) =>
+								<Marker
+									key={'lib_' + key}
+									style={styles.marker}
+									coordinates={[library.longitude, library.latitude]}>
+									<LibraryAvatar library={library} />
+								</Marker>
+							)
+						}
+					</Cluster>
+					<ZoomControl />
+					<RotationControl />
 				</Map>
 			</div>
 		);
@@ -135,6 +132,7 @@ class LibraryMap extends Component {
 
 LibraryMap.propTypes = {
 	classes: PropTypes.object.isRequired,
+	theme: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LibraryMap);
+export default withStyles(styles, { withTheme: true })(LibraryMap);

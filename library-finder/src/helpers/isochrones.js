@@ -1,6 +1,5 @@
 // Axios for making requests
 import axios from 'axios';
-import moment from 'moment';
 
 // getLibraryIsochrone:
 export function getLibraryIsochrone(library, travel, callback) {

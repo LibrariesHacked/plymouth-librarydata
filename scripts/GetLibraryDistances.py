@@ -4,9 +4,13 @@ import os.path
 import json
 import time
 
-DATA_SOURCE_OAS = '../data/oa_centroids.csv'
+# Done Plymouth E06000026 
+# Doing Wiltshire E06000054
+# To do Devon E07000041
+
+DATA_SOURCE_OAS = '../data/oa_centroids/oa_centroids_lad11cd_E06000054.shp.csv'
 DATA_SOURCE_LIBS = '../data/libraries.csv'
-OUTPUT_DIR = '../data/oadistances/'
+OUTPUT_DIR = '../data/oa_distances/'
 ORS_KEY = '58d904a497c67e00015b45fc42337203b9d0468561ab2f37e26ecb76'
 MB_TOKEN = 'pk.eyJ1IjoiZHhyb3dlIiwiYSI6ImNqOTBlOWF3cjJidDEyeG43MDBmNDBxaGwifQ.gduXtiwaIi4xLdZpHCzVHA'
 MAPQUEST = '0kYuW0J0ggz5GEFEFKdwtl1ZrpPE0OYg'
@@ -44,7 +48,34 @@ def run():
             locations = locations + '|' + library['lng'] + '%2C' + library['lat']
             destinations.append(str(idx + 1))
 
-        if not os.path.isfile(OUTPUT_DIR + oa['oa'] + '.json'):
+		# Cycling
+        if not os.path.isfile(OUTPUT_DIR + oa['oa'] + '_cycling.json'):
+            oa_data = []
+            url = (
+                'https://api.openrouteservice.org/matrix?profile=cycling-regular&locations=' +
+                locations + '&sources=0&destinations=' + (','.join(destinations)) +
+                '&metrics=distance|duration|weight&api_key=' + ORS_KEY)
+            print(url)
+            data = requests.get(url)
+            data = json.loads(data.text)
+            print(data)
+            if not 'error' in data:
+                for (idx, library) in enumerate(libraries):
+                    oa_data.append(
+                        {'library': library['library'], 'distance': data['distances'][0][idx], 'duration': data['durations'][0][idx], 'weight': data['weights'][0][idx]}
+                        )
+
+                with open(OUTPUT_DIR + oa['oa'] + '_cycling.json', 'w') as outfile:
+                    json.dump(oa_data, outfile)
+            else:
+                if data['error']['code'] == 6099:
+                    with open(OUTPUT_DIR + oa['oa'] + '_cycling.json', 'w') as outfile:
+                        json.dump({ 'error': data['error']['message'] }, outfile)
+
+            time.sleep(5)
+
+		# Driving
+        if not os.path.isfile(OUTPUT_DIR + oa['oa'] + '_driving.json'):
             oa_data = []
             url = (
                 'https://api.openrouteservice.org/matrix?profile=driving-car&locations=' +
@@ -53,14 +84,44 @@ def run():
             print(url)
             data = requests.get(url)
             data = json.loads(data.text)
+            print(data)
+            if not 'error' in data:
+                for (idx, library) in enumerate(libraries):
+                    oa_data.append(
+                        {'library': library['library'], 'distance': data['distances'][0][idx], 'duration': data['durations'][0][idx], 'weight': data['weights'][0][idx]}
+                        )
 
-            for (idx, library) in enumerate(libraries):
-                oa_data.append(
-                    {'library': library['library'], 'distance': data['distances'][0][idx], 'duration': data['durations'][0][idx], 'weight': data['weights'][0][idx]}
-                    )
+                with open(OUTPUT_DIR + oa['oa'] + '_driving.json', 'w') as outfile:
+                    json.dump(oa_data, outfile)
+            else:
+                if data['error']['code'] == 6099:
+                    with open(OUTPUT_DIR + oa['oa'] + '_driving.json', 'w') as outfile:
+                        json.dump({ 'error': data['error']['message'] }, outfile)
+            time.sleep(5)
 
-            with open(OUTPUT_DIR + oa['oa'] + '_driving.json', 'w') as outfile:
-                json.dump(oa_data, outfile)
+		# Walking
+        if not os.path.isfile(OUTPUT_DIR + oa['oa'] + '_walking.json'):
+            oa_data = []
+            url = (
+                'https://api.openrouteservice.org/matrix?profile=foot-walking&locations=' +
+                locations + '&sources=0&destinations=' + (','.join(destinations)) +
+                '&metrics=distance|duration|weight&api_key=' + ORS_KEY)
+            print(url)
+            data = requests.get(url)
+            data = json.loads(data.text)
+            print(data)
+            if not 'error' in data:
+                for (idx, library) in enumerate(libraries):
+                    oa_data.append(
+                        {'library': library['library'], 'distance': data['distances'][0][idx], 'duration': data['durations'][0][idx], 'weight': data['weights'][0][idx]}
+                        )
+
+                with open(OUTPUT_DIR + oa['oa'] + '_walking.json', 'w') as outfile:
+                    json.dump(oa_data, outfile)
+            else:
+                if data['error']['code'] == 6099:
+                    with open(OUTPUT_DIR + oa['oa'] + '_walking.json', 'w') as outfile:
+                        json.dump({ 'error': data['error']['message'] }, outfile)
             time.sleep(5)
 
 run()

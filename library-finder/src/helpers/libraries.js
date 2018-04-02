@@ -27,13 +27,19 @@ export function checkLibraryOpen(library, current) {
 	if (open) {
 		message = 'Closing ' + current.to(test_end);
 	} else {
-		// We have to get the next day the library is opening
+		// We have to get the next time the library is opening
 		for (let x = 0; x < 7; x++) {
-			let test_date = current.add(1, 'day');
-			let test_day = test_date.format('dddd');
-			let hours = library[day];
-			if (hours !== 'Closed') {
-				message = 'Opening ' + current.to((moment(test_date.format('YYYYMMDD') + ' ' + hours.split('-')[0]), 'YYYYMMDD HH:mm'));
+			let test_date = moment(current.format('YYYYMMDD'), 'YYYYMMDD').add(x, 'days');
+			let test_day = test_date.format('dddd').toLowerCase();
+			let hours = library[test_day];
+			if (hours && hours !== 'closed') {
+				let test_day = test_date.format('dddd').toLowerCase();
+				let test_date_str = test_date.format('YYYYMMDD');
+				let test_hours = library[test_day];
+				let test_start = test_hours.split('-')[0];
+				let date_time_str = test_date_str + ' ' + test_start;
+				let date_time_test = moment(date_time_str, 'YYYYMMDD HH:mm');
+				message = 'Opening ' + current.to(date_time_test);
 				x = 7;
 			}
 		}

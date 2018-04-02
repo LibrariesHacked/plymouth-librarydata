@@ -32,6 +32,20 @@ const theme = createMuiTheme({
 	palette: {
 		primary: { main: 'rgb(143,212,0)', contrastText: '#fff' },
 		secondary: { main: 'rgb(0,120,201)', contrastText: '#fff' }
+	},
+	libraries: {
+		central: 'rgb(143,212,0)',
+		crownhill: 'rgb(236,0,140)',
+		devonport: 'rgb(244,170,0)',
+		efford: 'rgb(0,120,201)',
+		estover: 'rgb(147,37,178)',
+		northprospect: 'rgb(39,189,190)',
+		peverell: 'rgb(0,105,62)',
+		plympton: 'rgb(158,27,50)',
+		plymstock: 'rgb(239,130,0)',
+		southway: 'rgb(0,58,105)',
+		stbudeaux: 'rgb(77,48,145)',
+		westpark: 'rgb(233,85,37)'
 	}
 });
 
@@ -146,7 +160,8 @@ class App extends Component {
 						<div className={classes.libraryMap}>
 							<LibraryMap
 								location={this.state.map_location}
-								isochrones={this.state.isochrones} />
+								isochrones={this.state.isochrones}
+								libraries={this.state.libraries} />
 						</div>
 					</main>
 				</div>

@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import Avatar from 'material-ui/Avatar';
-import Chip from 'material-ui/Chip';
 import { CircularProgress } from 'material-ui/Progress';
 import Button from 'material-ui/Button';
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
+import Card, { CardHeader, CardContent } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import { withStyles } from 'material-ui/styles';
@@ -22,6 +21,9 @@ import Sort from 'material-ui-icons/Sort';
 import DirectionsBike from 'material-ui-icons/DirectionsBike';
 import DirectionsCar from 'material-ui-icons/DirectionsCar';
 import DirectionsWalk from 'material-ui-icons/DirectionsWalk';
+
+// Our custom avatars
+import LibraryAvatar from './LibraryAvatar';
 
 // Helpers
 import * as libraries from './helpers/libraries';
@@ -46,16 +48,18 @@ class LibraryList extends React.Component {
 	state = {
 		open_tab: 0,
 		sort: 'name',
-		current_time: moment()
+		current_time: moment(),
+		time_int: ''
 	}
 	setCurrentTime = () => {
 		this.setState({ current_time: moment() });
 	}
 	componentDidMount = () => {
-		let time_int = setInterval(this.setCurrentTime, 1000);
+		let time_int = setInterval(this.setCurrentTime, 15000);
+		this.setState({ time_int: time_int });
 	}
 	render() {
-		const { classes, width } = this.props;
+		const { classes } = this.props;
 		return (
 			<div>
 				<Tabs
@@ -87,7 +91,8 @@ class LibraryList extends React.Component {
 								<Card className={classes.card} elevation={0}>
 									<CardHeader
 										avatar={
-											<Avatar aria-label={library.name} className={classes.avatar}>{library.name.replace(' Library', '').split(' ').map(word => { return word.substring(0, 1) }).join('')}</Avatar>
+											<LibraryAvatar
+												library={library} />
 										}
 										action={
 											<div>
