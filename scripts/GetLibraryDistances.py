@@ -5,10 +5,10 @@ import json
 import time
 
 # Done Plymouth E06000026 
-# Doing Wiltshire E06000054
-# To do Devon E07000041
+# Doing Wiltshire E06000054 Devon E07000041
+# To do 
 
-DATA_SOURCE_OAS = '../data/oa_centroids/oa_centroids_lad11cd_E06000054.shp.csv'
+DATA_SOURCE_OAS = '../data/oa_centroids/oa_centroids_lad11cd_E07000041.shp.csv'
 DATA_SOURCE_LIBS = '../data/libraries.csv'
 OUTPUT_DIR = '../data/oa_distances/'
 ORS_KEY = '58d904a497c67e00015b45fc42337203b9d0468561ab2f37e26ecb76'

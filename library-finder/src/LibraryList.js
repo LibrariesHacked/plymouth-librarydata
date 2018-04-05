@@ -9,6 +9,7 @@ import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent } from 'material-ui/Card';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
+import Menu, { MenuItem } from 'material-ui/Menu';
 import { withStyles } from 'material-ui/styles';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import Typography from 'material-ui/Typography';
@@ -51,6 +52,13 @@ class LibraryList extends React.Component {
 	state = {
 		open_tab: 0,
 		sort: 'name',
+		sort_menu: false,
+		sort_menu_anchor: null,
+		actions_menu: false,
+		actions_menu_anchor: null,
+		filter: '',
+		filter_menu: false,
+		filter_menu_anchor: null,
 		current_time: moment(),
 		time_int: ''
 	}
@@ -65,6 +73,37 @@ class LibraryList extends React.Component {
 		const { classes } = this.props;
 		return (
 			<div>
+				<Menu // Menu used to sort libraries
+					id="menu-librarysort"
+					anchorEl={this.state.sort_menu_anchor}
+					open={this.state.sort_menu}
+					onClose={(e) => this.setState({ sort_menu: false, sort_menu_anchor: null })}
+				>
+					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'name' })}>Library name</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'walking' })}>Walking time</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'cycling' })}>Cycling time</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'driving' })}>Driving time</MenuItem>
+				</Menu>
+				<Menu // Menu used for actions on the library list 
+					id="menu-libraryactions"
+					anchorEl={this.state.actions_menu_anchor}
+					open={this.state.actions_menu}
+					onClose={(e) => this.setState({ actions_menu: false, actions_menu_anchor: null })}
+				>
+					<MenuItem>View details</MenuItem>
+				</Menu>
+				<Menu // Menu used for filtering the library list
+					id="menu-libraryfilter"
+					anchorEl={this.state.filter_menu_anchor}
+					open={this.state.filter_menu}
+					onClose={this.handleCloseFilterMenu}
+				>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>All</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'meetingrooms' })}>Meeting Rooms</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'localandfamilyhistory' })}>Local and Family History</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'navalhistory' })}>Naval History</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'microfilmscanners' })}>Microfilm Scanners</MenuItem>
+				</Menu>
 				<Tabs
 					fullWidth
 					value={this.state.open_tab}
@@ -75,15 +114,20 @@ class LibraryList extends React.Component {
 					<Tab label="Open" />
 					<Tab label="Closed" />
 				</Tabs>
-				<Button className={classes.button} color="secondary">Sort<Sort className={classes.rightIcon} /></Button>
-				<Button className={classes.button} color="secondary">Filter<FilterList className={classes.rightIcon} /></Button>
+				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
+				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.libraries
 					.sort((lib_a, lib_b) => {
-						if (this.state.sort === 'name') return lib_a.name.localeCompare(lib_b.name)
+						if (this.state.sort === 'name') return lib_a.name.localeCompare(lib_b.name);
+						if (this.state.sort === 'walking') return lib_a.walking_duration - lib_b.walking_duration;
+						if (this.state.sort === 'cycling') return lib_a.cycling_duration - lib_b.cycling_duration;
+						if (this.state.sort === 'driving') return lib_a.driving_duration - lib_b.driving_duration;
 						return -1;
 					})
 					.filter(library => {
 						let show = true;
+						// May be filtered out
+						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
 						if (this.state.open_tab === 0 && !libraries.checkLibraryOpen(library, this.state.current_time).open) show = false;
 						if (this.state.open_tab === 1 && libraries.checkLibraryOpen(library, this.state.current_time).open) show = false;
 						return show;
@@ -102,7 +146,7 @@ class LibraryList extends React.Component {
 												<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
 													<LocationOn />
 												</IconButton>
-												<IconButton>
+												<IconButton onClick={(e) => this.setState({ actions_menu: true, actions_menu_anchor: e.currentTarget })}>
 													<MoreVert />
 												</IconButton>
 											</div>
