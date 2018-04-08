@@ -91,13 +91,17 @@ class App extends Component {
 	}
 	// componentDidMount: sets up data and any logging
 	componentDidMount = () => {
-		this.logLocation();
-		// Repeat every 30 seconds
-		let location_update_interval = setInterval(this.logLocation, 30000);
+		this.getLibrariesStart();
+		// Repeat every minute
+		let location_update_interval = setInterval(this.logLocation, 60000);
 		this.setState({ location_update_interval: location_update_interval });
 	};
 	// logLocation:
 	logLocation = () => {
+		geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries })));
+	}
+	// getLibrariesStart:
+	getLibrariesStart = () => {
 		geoHelper.getCurrentLocation(location => libHelper.getAllLibraries(location, libraries => this.setState({ libraries: libraries })));
 	}
 	// handleGPS:

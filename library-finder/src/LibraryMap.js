@@ -47,9 +47,15 @@ class LibraryMap extends Component {
 			});
 		}
 	}
+	// clusterLibraries
 	clusterLibraries = (coordinates) => (
 		<Marker coordinates={coordinates}>C</Marker>
-	);
+	)
+	// mapClick
+	mapClick = (map, e) => {
+		const features = map.queryRenderedFeatures(e.point);
+	}
+	// render
 	render() {
 		const { theme, classes } = this.props;
 		return (
@@ -62,7 +68,7 @@ class LibraryMap extends Component {
 					bearing={this.state.bearing}
 					fitBounds={this.state.bounds}
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
-					onClick={this.handleMapClick}
+					onClick={this.mapClick}
 				>
 					<Source
 						id='buildings_source'
@@ -76,29 +82,27 @@ class LibraryMap extends Component {
 						type='fill-extrusion'
 						sourceId='buildings_source'
 						sourceLayer='PlymouthBuildings-5m5usp'
-						layerOptions={{
-							'minzoom': 5
-						}}
+						minzoom='16'
 						paint={{
 							'fill-extrusion-color': [
 								'match',
 								['get', 'ID'],
 								'0D4F70BCC1FF27B3E050A00A568A259B', theme.libraries.central,
-								'0D4F70BCBC7027B3E050A00A568A259B', theme.libraries.crownhill,
-								'0D4F70C26C6927B3E050A00A568A259B', theme.libraries.devonport,
-								'0D4F70C2790C27B3E050A00A568A259B', theme.libraries.efford,
-								'0D4F70C2B4AB27B3E050A00A568A259B', theme.libraries.estover,
-								'0D4F70C2D6BB27B3E050A00A568A259B', theme.libraries.northprospect,
-								'0D4F70C2715927B3E050A00A568A259B', theme.libraries.peverell,
-								'0D4F70B79EFA27B3E050A00A568A259B', theme.libraries.plympton,
+								'0D4F70C084A527B3E050A00A568A259B', theme.libraries.crownhill,
+								'0D4F70C2C5A727B3E050A00A568A259B', theme.libraries.devonport,
+								'0D4F70C2790D27B3E050A00A568A259B', theme.libraries.efford,
+								'0D4F70B79A2A27B3E050A00A568A259B', theme.libraries.estover,
+								'0D4F70C2440A27B3E050A00A568A259B', theme.libraries.northprospect,
+								'0D4F70C2EEE527B3E050A00A568A259B', theme.libraries.peverell,
+								'0D4F70B7594D27B3E050A00A568A259B', theme.libraries.plympton,
 								'0D4F70C31D6E27B3E050A00A568A259B', theme.libraries.plymstock,
 								'0D4F70C2862A27B3E050A00A568A259B', theme.libraries.southway,
-								'0D4F7098AB3527B3E050A00A568A259B', theme.libraries.stbudeaux,
+								'0D4F709BDA5D27B3E050A00A568A259B', theme.libraries.stbudeaux,
 								'0D4F70C21F9327B3E050A00A568A259B', theme.libraries.westpark,
 								'#CCCCCC'
 							],
 							'fill-extrusion-height': { 'type': 'identity', 'property': 'max' },
-							'fill-extrusion-opacity': 0.8
+							'fill-extrusion-opacity': 0.7
 						}}
 					/>
 					{Object.keys(this.props.isochrones).map(library => { // Each library

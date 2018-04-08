@@ -11,6 +11,15 @@ export function getAllLibraries(location, callback) {
 		.catch(error => callback([]));
 };
 
+// updateLibraryLocations: 
+export function updateLibraryLocations(location, libraries, callback) {
+	axios.post('/api/libraries/updatelibrarylocations', { location: location, libraries: libraries })
+		.then(response => {
+			callback(response.data);
+		})
+		.catch(error => callback([]));
+};
+
 // checkLibraryOpen: 
 export function checkLibraryOpen(library, current) {
 	let open = false;
@@ -26,9 +35,10 @@ export function checkLibraryOpen(library, current) {
 	let message = '';
 	if (open) {
 		message = 'Closing ' + current.to(test_end);
+		if (moment.duration(test_end.diff(current, 'minutes')) < 5) message = 'Quick! ' + message;
 	} else {
 		// We have to get the next time the library is opening
-		for (let x = 0; x < 7; x++) {
+		for (let x = 1; x < 8; x++) {
 			let test_date = moment(current.format('YYYYMMDD'), 'YYYYMMDD').add(x, 'days');
 			let test_day = test_date.format('dddd').toLowerCase();
 			let hours = library[test_day];

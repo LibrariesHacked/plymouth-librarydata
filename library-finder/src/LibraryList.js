@@ -66,7 +66,7 @@ class LibraryList extends React.Component {
 		this.setState({ current_time: moment() });
 	}
 	componentDidMount = () => {
-		let time_int = setInterval(this.setCurrentTime, 15000);
+		let time_int = setInterval(this.setCurrentTime, 5000);
 		this.setState({ time_int: time_int });
 	}
 	render() {
@@ -103,6 +103,10 @@ class LibraryList extends React.Component {
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'localandfamilyhistory' })}>Local and Family History</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'navalhistory' })}>Naval History</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'microfilmscanners' })}>Microfilm Scanners</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'dvds' })}>DVDs</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'wifi' })}>WiFi</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'roofterrace' })}>Roof Terrace</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'cafe' })}>Cafe</MenuItem>
 				</Menu>
 				<Tabs
 					fullWidth
