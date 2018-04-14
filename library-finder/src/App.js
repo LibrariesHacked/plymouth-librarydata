@@ -16,9 +16,13 @@ import Typography from 'material-ui/Typography';
 import MenuIcon from 'material-ui-icons/Menu';
 import MyLocation from 'material-ui-icons/MyLocation';
 
+// Use moment for opening hours
+import moment from 'moment';
+
 // Custom components
 import LibraryList from './LibraryList';
 import LibraryMap from './LibraryMap';
+import LibraryView from './LibraryView';
 import PostcodeSearch from './PostcodeSearch';
 
 // Helpers
@@ -86,8 +90,13 @@ class App extends Component {
 		location_update_interval: '',
 		map_location: [],
 		drawer_open: true,
+		list_drawer_open: true,
+		library_drawer_open: false,
 		libraries: [],
-		isochrones: {}
+		library_name: '',
+		isochrones: {},
+		current_time: moment(),
+		time_int: ''
 	}
 	// componentDidMount: sets up data and any logging
 	componentDidMount = () => {
@@ -95,7 +104,12 @@ class App extends Component {
 		// Repeat every minute
 		let location_update_interval = setInterval(this.logLocation, 60000);
 		this.setState({ location_update_interval: location_update_interval });
+		let time_int = setInterval(this.setCurrentTime, 1000);
+		this.setState({ time_int: time_int });
 	};
+	setCurrentTime = () => {
+		this.setState({ current_time: moment() });
+	}
 	// logLocation:
 	logLocation = () => {
 		geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries })));
@@ -133,7 +147,7 @@ class App extends Component {
 					<CssBaseline />
 					<AppBar position="absolute" color="primary" elevation={0} className={classes.appBar}>
 						<Toolbar>
-							<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open })} >
+							<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ list_drawer_open: !this.state.list_drawer_open })} >
 								<MenuIcon />
 							</IconButton>
 							<Typography variant="title" color="inherit" className={classes.flex}>Libraries</Typography>
@@ -154,11 +168,22 @@ class App extends Component {
 						}}
 					>
 						<div className={classes.toolbar} />
-						<LibraryList
-							libraries={this.state.libraries}
-							isochrones={this.state.isochrones}
-							toggleIsochrone={this.toggleIsochrone}
-							goTo={(location) => this.setState({ map_location: location })} />
+						{this.state.list_drawer_open ?
+							<LibraryList
+								libraries={this.state.libraries}
+								isochrones={this.state.isochrones}
+								toggleIsochrone={this.toggleIsochrone}
+								current_time={this.state.current_time}
+								goTo={(location) => this.setState({ map_location: location })}
+								viewLibrary={(library_name) => this.setState({ library_drawer_open: true, library_name: library_name, list_drawer_open: false })} /> : null}
+						{this.state.library_drawer_open ?
+							<LibraryView
+								library={this.state.libraries.find(library => { return library.name === this.state.library_name })}
+								isochrones={this.state.isochrones}
+								toggleIsochrone={this.toggleIsochrone}
+								current_time={this.state.current_time}
+								goTo={(location) => this.setState({ map_location: location })}
+							/> : null}
 					</Drawer>
 					<main className={classes.content}>
 						<div className={classes.libraryMap}>

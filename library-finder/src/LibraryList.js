@@ -3,7 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import Avatar from 'material-ui/Avatar';
 import { CircularProgress } from 'material-ui/Progress';
 import Button from 'material-ui/Button';
 import Card, { CardHeader, CardContent } from 'material-ui/Card';
@@ -23,15 +22,10 @@ import DirectionsBike from 'material-ui-icons/DirectionsBike';
 import DirectionsCar from 'material-ui-icons/DirectionsCar';
 import DirectionsWalk from 'material-ui-icons/DirectionsWalk';
 
-// Our custom avatars
-import LibraryAvatar from './LibraryAvatar';
+import LibraryCard from './LibraryCard';
 
 // Helpers
 import * as libraries from './helpers/libraries';
-
-// Use moment for opening hours
-import moment from 'moment';
-
 
 const styles = theme => ({
 	button: {
@@ -59,15 +53,7 @@ class LibraryList extends React.Component {
 		filter: '',
 		filter_menu: false,
 		filter_menu_anchor: null,
-		current_time: moment(),
-		time_int: ''
-	}
-	setCurrentTime = () => {
-		this.setState({ current_time: moment() });
-	}
-	componentDidMount = () => {
-		let time_int = setInterval(this.setCurrentTime, 5000);
-		this.setState({ time_int: time_int });
+		library_name: ''
 	}
 	render() {
 		const { classes } = this.props;
@@ -83,14 +69,6 @@ class LibraryList extends React.Component {
 					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'walking' })}>Walking time</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'cycling' })}>Cycling time</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'driving' })}>Driving time</MenuItem>
-				</Menu>
-				<Menu // Menu used for actions on the library list 
-					id="menu-libraryactions"
-					anchorEl={this.state.actions_menu_anchor}
-					open={this.state.actions_menu}
-					onClose={(e) => this.setState({ actions_menu: false, actions_menu_anchor: null })}
-				>
-					<MenuItem>View details</MenuItem>
 				</Menu>
 				<Menu // Menu used for filtering the library list
 					id="menu-libraryfilter"
@@ -132,87 +110,22 @@ class LibraryList extends React.Component {
 						let show = true;
 						// May be filtered out
 						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
-						if (this.state.open_tab === 0 && !libraries.checkLibraryOpen(library, this.state.current_time).open) show = false;
-						if (this.state.open_tab === 1 && libraries.checkLibraryOpen(library, this.state.current_time).open) show = false;
+						if (this.state.open_tab === 0 && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+						if (this.state.open_tab === 1 && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						return show;
 					})
 					.map(library => {
 						return (
 							<div>
-								<Card className={classes.card} elevation={0}>
-									<CardHeader
-										avatar={
-											<LibraryAvatar
-												library={library} />
-										}
-										action={
-											<div>
-												<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
-													<LocationOn />
-												</IconButton>
-												<IconButton onClick={(e) => this.setState({ actions_menu: true, actions_menu_anchor: e.currentTarget })}>
-													<MoreVert />
-												</IconButton>
-											</div>
-										}
-										title={library.name}
-										subheader={library.address_1}
-									/>
-									<CardContent>
-										<Typography>{libraries.checkLibraryOpen(library, this.state.current_time).message}</Typography>
-									</CardContent>
-									<Button
-										color={
-											this.props.isochrones &&
-												this.props.isochrones[library.name] &&
-												this.props.isochrones[library.name]['walking'] &&
-												this.props.isochrones[library.name]['walking'].selected ? 'primary' : 'secondary'}
-										className={classes.button}
-										aria-label="Directions Isochrone"
-										onClick={(e) => this.props.toggleIsochrone(library.name, 'walking')}>
-										{this.props.isochrones &&
-											this.props.isochrones[library.name] &&
-											this.props.isochrones[library.name]['walking'] ?
-											(this.props.isochrones[library.name]['walking'].retrieved ?
-												<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-											) : <DirectionsWalk className={classes.leftIcon} />}
-										{library.walking_duration ? Math.round(library.walking_duration / 60) : ''}
-									</Button>
-									<Button
-										color={
-											this.props.isochrones &&
-												this.props.isochrones[library.name] &&
-												this.props.isochrones[library.name]['cycling'] &&
-												this.props.isochrones[library.name]['cycling'].selected ? 'primary' : 'secondary'}
-										className={classes.button}
-										aria-label="Directions Isochrone"
-										onClick={(e) => this.props.toggleIsochrone(library.name, 'cycling')}>
-										{this.props.isochrones &&
-											this.props.isochrones[library.name] &&
-											this.props.isochrones[library.name]['cycling'] ?
-											(this.props.isochrones[library.name]['cycling'].retrieved ?
-												<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-											) : <DirectionsBike className={classes.leftIcon} />}
-										{library.cycling_duration ? Math.round(library.cycling_duration / 60) : ''}
-									</Button>
-									<Button
-										color={
-											this.props.isochrones &&
-												this.props.isochrones[library.name] &&
-												this.props.isochrones[library.name]['driving'] &&
-												this.props.isochrones[library.name]['driving'].selected ? 'primary' : 'secondary'}
-										className={classes.button}
-										aria-label="Directions Isochrone"
-										onClick={(e) => this.props.toggleIsochrone(library.name, 'driving')}>
-										{this.props.isochrones &&
-											this.props.isochrones[library.name] &&
-											this.props.isochrones[library.name]['driving'] ?
-											(this.props.isochrones[library.name]['driving'].retrieved ?
-												<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-											) : <DirectionsCar className={classes.leftIcon} />}
-										{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
-									</Button>
-								</Card>
+								<LibraryCard
+									library={library}
+									current_time={this.props.current_time}
+									more_option={true}
+									isochrones={this.props.isochrones}
+									toggleIsochrone={this.props.toggleIsochrone}
+									goTo={this.props.goTo}
+									viewLibrary={this.props.viewLibrary}
+								/>
 								<Divider />
 							</div>)
 					})}

@@ -2,7 +2,7 @@ const csvjson = require('csvjson');
 const fs = require('fs');
 const path = require('path');
 
-const libraries_path = '../data/libraries.csv';
+const libraries_path = '../data/libraries/libraries.csv';
 
 // getAllLibraries: 
 module.exports.getAllLibraries = () => {
