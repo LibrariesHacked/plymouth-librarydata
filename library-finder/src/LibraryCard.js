@@ -76,15 +76,15 @@ class LibraryCard extends React.Component {
 					color={
 						this.props.isochrones &&
 							this.props.isochrones[library.name] &&
-							this.props.isochrones[library.name]['walking'] &&
-							this.props.isochrones[library.name]['walking'].selected ? 'primary' : 'secondary'}
+							this.props.isochrones[library.name]['foot-walking'] &&
+							this.props.isochrones[library.name]['foot-walking'].selected ? 'primary' : 'secondary'}
 					className={classes.button}
 					aria-label="Directions Isochrone"
-					onClick={(e) => this.props.toggleIsochrone(library.name, 'walking')}>
+					onClick={(e) => this.props.toggleIsochrone(library.name, 'foot-walking')}>
 					{this.props.isochrones &&
 						this.props.isochrones[library.name] &&
-						this.props.isochrones[library.name]['walking'] ?
-						(this.props.isochrones[library.name]['walking'].retrieved ?
+						this.props.isochrones[library.name]['foot-walking'] ?
+						(this.props.isochrones[library.name]['foot-walking'].retrieved ?
 							<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 						) : <DirectionsWalk className={classes.leftIcon} />}
 					{library.walking_duration ? Math.round(library.walking_duration / 60) : ''}
@@ -93,11 +93,11 @@ class LibraryCard extends React.Component {
 					color={
 						this.props.isochrones &&
 							this.props.isochrones[library.name] &&
-							this.props.isochrones[library.name]['cycling'] &&
-							this.props.isochrones[library.name]['cycling'].selected ? 'primary' : 'secondary'}
+							this.props.isochrones[library.name]['cycling-regular'] &&
+							this.props.isochrones[library.name]['cycling-regular'].selected ? 'primary' : 'secondary'}
 					className={classes.button}
 					aria-label="Directions Isochrone"
-					onClick={(e) => this.props.toggleIsochrone(library.name, 'cycling')}>
+					onClick={(e) => this.props.toggleIsochrone(library.name, 'cycling-regular')}>
 					{this.props.isochrones &&
 						this.props.isochrones[library.name] &&
 						this.props.isochrones[library.name]['cycling'] ?
@@ -110,15 +110,15 @@ class LibraryCard extends React.Component {
 					color={
 						this.props.isochrones &&
 							this.props.isochrones[library.name] &&
-							this.props.isochrones[library.name]['driving'] &&
-							this.props.isochrones[library.name]['driving'].selected ? 'primary' : 'secondary'}
+							this.props.isochrones[library.name]['driving-car'] &&
+							this.props.isochrones[library.name]['driving-car'].selected ? 'primary' : 'secondary'}
 					className={classes.button}
 					aria-label="Directions Isochrone"
-					onClick={(e) => this.props.toggleIsochrone(library.name, 'driving')}>
+					onClick={(e) => this.props.toggleIsochrone(library.name, 'driving-car')}>
 					{this.props.isochrones &&
 						this.props.isochrones[library.name] &&
-						this.props.isochrones[library.name]['driving'] ?
-						(this.props.isochrones[library.name]['driving'].retrieved ?
+						this.props.isochrones[library.name]['driving-car'] ?
+						(this.props.isochrones[library.name]['driving-car'].retrieved ?
 							<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 						) : <DirectionsCar className={classes.leftIcon} />}
 					{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}

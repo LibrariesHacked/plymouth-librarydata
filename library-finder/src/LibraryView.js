@@ -13,6 +13,8 @@ import Menu, { MenuItem } from 'material-ui/Menu';
 import { withStyles } from 'material-ui/styles';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
+import ArrowBack from 'material-ui-icons/ArrowBack';
+
 import LibraryCard from './LibraryCard';
 
 // Helpers
@@ -46,6 +48,9 @@ class LibraryView extends React.Component {
 		const { classes, library, theme } = this.props;
 		return (
 			<div>
+				<IconButton className={classes.button} aria-label="Back" onClick={this.props.close}>
+					<ArrowBack />
+				</IconButton>
 				<LibraryCard
 					library={library}
 					current_time={this.props.current_time}

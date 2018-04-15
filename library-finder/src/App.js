@@ -13,6 +13,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 // Material Icons
+import LocationSearching from 'material-ui-icons/LocationSearching';
 import MenuIcon from 'material-ui-icons/Menu';
 import MyLocation from 'material-ui-icons/MyLocation';
 
@@ -96,6 +97,8 @@ class App extends Component {
 		library_name: '',
 		isochrones: {},
 		current_time: moment(),
+		current_location: [],
+		search_type: 'gps',
 		time_int: ''
 	}
 	// componentDidMount: sets up data and any logging
@@ -112,7 +115,7 @@ class App extends Component {
 	}
 	// logLocation:
 	logLocation = () => {
-		geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries })));
+		geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries, current_location: location })));
 	}
 	// getLibrariesStart:
 	getLibrariesStart = () => {
@@ -147,8 +150,8 @@ class App extends Component {
 					<CssBaseline />
 					<AppBar position="absolute" color="primary" elevation={0} className={classes.appBar}>
 						<Toolbar>
-							<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ list_drawer_open: !this.state.list_drawer_open })} >
-								<MenuIcon />
+							<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })} >
+								{this.state.list_drawer_open ? <MenuIcon /> : <MenuIcon />}
 							</IconButton>
 							<Typography variant="title" color="inherit" className={classes.flex}>Libraries</Typography>
 							<PostcodeSearch />
@@ -156,7 +159,7 @@ class App extends Component {
 								onClick={this.handleGPS}
 								color="inherit"
 							>
-								<MyLocation />
+								{this.state.current_location.length > 0 ? <MyLocation /> : <LocationSearching />}
 							</IconButton>
 						</Toolbar>
 					</AppBar>
@@ -183,6 +186,7 @@ class App extends Component {
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
 								goTo={(location) => this.setState({ map_location: location })}
+								close={() => this.setState({ library_drawer_open: false, list_drawer_open: true })}
 							/> : null}
 					</Drawer>
 					<main className={classes.content}>
@@ -194,7 +198,7 @@ class App extends Component {
 						</div>
 					</main>
 				</div>
-			</MuiThemeProvider>
+			</MuiThemeProvider >
 		);
 	}
 }
