@@ -3,24 +3,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import { CircularProgress } from 'material-ui/Progress';
-import Button from 'material-ui/Button';
-import Card, { CardHeader, CardContent } from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
-import IconButton from 'material-ui/IconButton';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { withStyles } from 'material-ui/styles';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import Typography from 'material-ui/Typography';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 
 // Material Icons
-import FilterList from 'material-ui-icons/FilterList';
-import LocationOn from 'material-ui-icons/LocationOn';
-import MoreVert from 'material-ui-icons/MoreVert';
-import Sort from 'material-ui-icons/Sort';
-import DirectionsBike from 'material-ui-icons/DirectionsBike';
-import DirectionsCar from 'material-ui-icons/DirectionsCar';
-import DirectionsWalk from 'material-ui-icons/DirectionsWalk';
+import FilterList from '@material-ui/icons/FilterList';
+import Sort from '@material-ui/icons/Sort';
 
 import LibraryCard from './LibraryCard';
 

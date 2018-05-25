@@ -10,7 +10,6 @@ module.exports.getFeed = (library_list, callback) => {
 			results.query.results.item.forEach(result => {
 				if (library.name == result.title.split(': ')[1]) {
 					let event = { title: result.title.split(': ')[0], date: result.date };
-					console.log(result);
 					library.events.push(event);
 				}
 			});

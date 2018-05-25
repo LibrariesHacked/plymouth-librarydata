@@ -3,28 +3,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import { CircularProgress } from 'material-ui/Progress';
-import Button from 'material-ui/Button';
-import Card, { CardHeader, CardContent } from 'material-ui/Card';
-import IconButton from 'material-ui/IconButton';
-import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent  from '@material-ui/core/CardContent';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 // Material Icons
-import LocationOn from 'material-ui-icons/LocationOn';
-import MoreHoriz from 'material-ui-icons/MoreHoriz';
-import DirectionsBike from 'material-ui-icons/DirectionsBike';
-import DirectionsCar from 'material-ui-icons/DirectionsCar';
-import DirectionsWalk from 'material-ui-icons/DirectionsWalk';
+import LocationOn from '@material-ui/icons/LocationOn';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import DirectionsBike from '@material-ui/icons/DirectionsBike';
+import DirectionsCar from '@material-ui/icons/DirectionsCar';
+import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
 
 // Our custom avatars
 import LibraryAvatar from './LibraryAvatar';
 
 // Helpers
 import * as libraries from './helpers/libraries';
-
-// Use moment for opening hours
-import moment from 'moment';
 
 const styles = theme => ({
 	button: {

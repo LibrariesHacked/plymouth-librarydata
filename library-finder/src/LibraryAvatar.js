@@ -3,8 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import Avatar from 'material-ui/Avatar';
-import { withStyles } from 'material-ui/styles';
+import Avatar from '@material-ui/core/Avatar';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	avatar: {

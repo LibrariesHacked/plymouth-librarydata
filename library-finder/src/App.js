@@ -3,19 +3,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import AppBar from 'material-ui/AppBar';
-import CssBaseline from 'material-ui/CssBaseline';
-import Drawer from 'material-ui/Drawer';
-import IconButton from 'material-ui/IconButton';
-import { withStyles } from 'material-ui/styles';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
 // Material Icons
-import LocationSearching from 'material-ui-icons/LocationSearching';
-import MenuIcon from 'material-ui-icons/Menu';
-import MyLocation from 'material-ui-icons/MyLocation';
+import LocationSearching from '@material-ui/icons/LocationSearching';
+import MenuIcon from '@material-ui/icons/Menu';
+import MyLocation from '@material-ui/icons/MyLocation';
 
 // Use moment for opening hours
 import moment from 'moment';

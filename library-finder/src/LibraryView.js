@@ -3,25 +3,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import Avatar from 'material-ui/Avatar';
-import { CircularProgress } from 'material-ui/Progress';
-import Button from 'material-ui/Button';
-import Card, { CardHeader, CardContent } from 'material-ui/Card';
-import Divider from 'material-ui/Divider';
-import IconButton from 'material-ui/IconButton';
-import Menu, { MenuItem } from 'material-ui/Menu';
-import { withStyles } from 'material-ui/styles';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 
-import ArrowBack from 'material-ui-icons/ArrowBack';
+// Material UI Icons
+import ArrowBack from '@material-ui/icons/ArrowBack';
 
+// Our components
 import LibraryCard from './LibraryCard';
 
 // Helpers
 import * as libraries from './helpers/libraries';
-
-// Use moment for opening hours
-import moment from 'moment';
 
 const styles = theme => ({
 	button: {

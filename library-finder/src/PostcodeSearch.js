@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import { fade } from 'material-ui/styles/colorManipulator';
-import { withStyles } from 'material-ui/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import { withStyles } from '@material-ui/core/styles';
 
 // Material Icons
-import SearchIcon from 'material-ui-icons/Search';
+import SearchIcon from '@material-ui/icons/Search';
 
 const styles = theme => ({
 	root: {
