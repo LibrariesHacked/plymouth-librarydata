@@ -7,14 +7,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardContent  from '@material-ui/core/CardContent';
+import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
 import LocationOn from '@material-ui/icons/LocationOn';
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import MoreVert from '@material-ui/icons/MoreVert';
 import DirectionsBike from '@material-ui/icons/DirectionsBike';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
@@ -56,21 +56,21 @@ class LibraryCard extends React.Component {
 					}
 					action={
 						<div>
+							{this.props.more_option ?
+								<div>
+									<IconButton onClick={() => this.props.viewLibrary(library.name)}>
+										<MoreVert />
+									</IconButton>
+									<br />
+								</div> : null}
 							<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
 								<LocationOn />
 							</IconButton>
-							{this.props.more_option ?
-								<IconButton onClick={() => this.props.viewLibrary(library.name)}>
-									<MoreHoriz />
-								</IconButton> : null}
 						</div>
 					}
 					title={library.name}
-					subheader={library.address_1}
+					subheader={library.address_1 + '. ' + libraries.checkLibraryOpen(library, this.props.current_time).message}
 				/>
-				<CardContent>
-					<Typography>{libraries.checkLibraryOpen(library, this.props.current_time).message}</Typography>
-				</CardContent>
 				<Button
 					color={
 						this.props.isochrones &&

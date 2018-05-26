@@ -2,6 +2,9 @@
 import axios from 'axios';
 import moment from 'moment';
 
+// Days of the week
+const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
 // getAllLibraries: 
 export function getAllLibraries(location, callback) {
 	axios.get('/api/libraries?latitude=' + location[1] + '&longitude=' + location[0])
@@ -56,3 +59,12 @@ export function checkLibraryOpen(library, current) {
 	}
 	return { open: open, message: message };
 };
+
+// getLibraryOpeningHours:
+export function getLibraryOpeningHours(library) {
+	let opening_hours = {};
+	days.forEach(day => {
+		opening_hours[day] = library[day];
+	});
+	return opening_hours;
+}

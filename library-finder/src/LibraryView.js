@@ -12,11 +12,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
-// Material UI Icons
-import ArrowBack from '@material-ui/icons/ArrowBack';
-
 // Our components
 import LibraryCard from './LibraryCard';
+import OpeningHours from './OpeningHours';
 
 // Helpers
 import * as libraries from './helpers/libraries';
@@ -46,9 +44,6 @@ class LibraryView extends React.Component {
 		const { classes, library, theme } = this.props;
 		return (
 			<div>
-				<IconButton className={classes.button} aria-label="Back" onClick={this.props.close}>
-					<ArrowBack />
-				</IconButton>
 				<LibraryCard
 					library={library}
 					current_time={this.props.current_time}
@@ -68,6 +63,15 @@ class LibraryView extends React.Component {
 					<Tab label="Details" />
 					<Tab label="Stats" />
 				</Tabs>
+				<OpeningHours
+						library={library}
+					/>
+				{this.state.open_tag === 0 ?
+					<OpeningHours
+						library={library}
+					/>
+					: null}
+				{this.state.open_tag === 1 ? null : null}
 			</div>
 		);
 	}

@@ -13,6 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import LocationSearching from '@material-ui/icons/LocationSearching';
 import MenuIcon from '@material-ui/icons/Menu';
 import MyLocation from '@material-ui/icons/MyLocation';
@@ -150,9 +151,16 @@ class App extends Component {
 					<CssBaseline />
 					<AppBar position="absolute" color="primary" elevation={0} className={classes.appBar}>
 						<Toolbar>
-							<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })} >
-								{this.state.list_drawer_open ? <MenuIcon /> : <MenuIcon />}
-							</IconButton>
+							{this.state.list_drawer_open ?
+								<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })} >
+									<MenuIcon />
+								</IconButton> : null
+							}
+							{this.state.library_drawer_open ?
+								<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={() => this.setState({ drawer_open: true, library_drawer_open: false, list_drawer_open: true })} >
+									<ArrowBackIcon />
+								</IconButton> : null
+							}
 							<Typography variant="title" color="inherit" className={classes.flex}>Libraries</Typography>
 							<PostcodeSearch />
 							<IconButton

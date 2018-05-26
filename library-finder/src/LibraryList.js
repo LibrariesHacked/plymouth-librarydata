@@ -69,7 +69,8 @@ class LibraryList extends React.Component {
 					open={this.state.filter_menu}
 					onClose={this.handleCloseFilterMenu}
 				>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>All</MenuItem>
+					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>All  Libraries</MenuItem>
+					<Divider />
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'meetingrooms' })}>Meeting Rooms</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'localandfamilyhistory' })}>Local and Family History</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'navalhistory' })}>Naval History</MenuItem>
