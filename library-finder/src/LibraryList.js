@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
+import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
@@ -33,6 +34,9 @@ const styles = theme => ({
 	progress: {
 		marginRight: theme.spacing.unit
 	},
+	padding: {
+		padding: `0 ${theme.spacing.unit * 2}px`,
+	}
 });
 
 class LibraryList extends React.Component {
@@ -50,6 +54,14 @@ class LibraryList extends React.Component {
 	}
 	render() {
 		const { classes } = this.props;
+		let open_libraries = this.props.libraries
+			.filter(library => {
+				return libraries.checkLibraryOpen(library, this.props.current_time).open
+			});
+		let closed_libraries = this.props.libraries
+			.filter(library => {
+				return !libraries.checkLibraryOpen(library, this.props.current_time).open
+			});
 		return (
 			<div>
 				<Menu // Menu used to sort libraries
@@ -87,8 +99,16 @@ class LibraryList extends React.Component {
 					textColor="primary"
 					onChange={(event, value) => this.setState({ open_tab: value })}
 				>
-					<Tab label="Open" />
-					<Tab label="Closed" />
+					<Tab label={
+						<Badge className={classes.padding} color="primary" badgeContent={open_libraries.length}>
+							Open
+						</Badge>
+					} />
+					<Tab label={
+						<Badge className={classes.padding} color="secondary" badgeContent={closed_libraries.length}>
+							Closed
+						</Badge>
+					} />
 				</Tabs>
 				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
 				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
@@ -102,7 +122,7 @@ class LibraryList extends React.Component {
 					})
 					.filter(library => {
 						let show = true;
-						// May be filtered out
+						// Apply our filter
 						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
 						if (this.state.open_tab === 0 && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						if (this.state.open_tab === 1 && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;

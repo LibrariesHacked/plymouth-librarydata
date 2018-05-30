@@ -1,9 +1,8 @@
 // Axios for making requests
 import axios from 'axios';
-import moment from 'moment';
 
-// Days of the week
-const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+// Moment for using dates and times
+import moment from 'moment';
 
 // getAllLibraries: 
 export function getAllLibraries(location, callback) {
@@ -62,9 +61,18 @@ export function checkLibraryOpen(library, current) {
 
 // getLibraryOpeningHours:
 export function getLibraryOpeningHours(library) {
-	let opening_hours = {};
-	days.forEach(day => {
-		opening_hours[day] = library[day];
-	});
+	let opening_hours = [];
+	let date = moment();
+	for (let x = 0; x < 7; x++) {
+		date.add('day', 1);
+		opening_hours.push(
+			{
+				full: date.format('DD/MM/YYYY'),
+				day: date.format('dddd'),
+				date: date.format('DD'),
+				hours: library[date.format('dddd').toLowerCase()]
+			}
+		)
+	}
 	return opening_hours;
 }

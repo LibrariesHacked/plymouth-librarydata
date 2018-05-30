@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
+import Avatar from '@material-ui/core/Avatar';
 import Collapse from '@material-ui/core/Collapse';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -19,6 +20,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 // Helpers
 import * as libraries from './helpers/libraries';
+import { ListItemSecondaryAction } from '@material-ui/core';
 
 const styles = theme => ({
 
@@ -45,14 +47,12 @@ class OpeningHours extends React.Component {
 				</ListItem>
 				<Collapse in={this.state.opening_hours_open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding dense={true}>
-						{Object.keys(days).map(day => {
+						{opening_hours.map(day => {
 							return (
 								<ListItem>
-									{opening_hours[days[day]] !== 'closed' ?
-										<EventAvailable color="primary" /> : <EventBusy />}
+									<Avatar>{day.date}</Avatar>
 									<ListItemText
-										primary={days[day].charAt(0).toUpperCase() + days[day].slice(1)}
-										secondary={opening_hours[days[day]]}
+										primary={day.day.charAt(0).toUpperCase() + day.day.slice(1) + '. ' + day.hours}
 									/>
 								</ListItem>
 							)

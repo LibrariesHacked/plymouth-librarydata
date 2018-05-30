@@ -77,7 +77,7 @@ class LibraryMap extends Component {
 						type='fill-extrusion'
 						sourceId='buildings_source'
 						sourceLayer='PlymouthBuildings-5m5usp'
-						minzoom='16'
+						minZoom={16}
 						paint={{
 							'fill-extrusion-color': [
 								'match',
@@ -107,19 +107,9 @@ class LibraryMap extends Component {
 									data={this.props.isochrones[library][travel].iso}
 									lineLayout={{
 									}}
-									linePaint={{
-										"line-color": {
-											property: 'value',
-											stops: [
-												[300, theme.libraries.central], // 5 minutes
-												[600, theme.libraries.crownhill], // 10 minutes
-												[900, theme.libraries.devonport], // 15 minutes
-												[1200, theme.libraries.efford], // 20 minutes
-												[1500, theme.libraries.estover], // 25 minutes
-												[1800, theme.libraries.northprospect] // 30 minutes
-											]
-										},
-										"line-width": 3
+									fillPaint={{
+										"fill-color": theme.libraries.peverell,
+										"fill-opacity": 0.2
 									}}
 								/> : null)
 						})
