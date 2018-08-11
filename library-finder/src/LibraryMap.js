@@ -10,10 +10,9 @@ import { Cluster } from 'react-mapbox-gl';
 import { GeoJSONLayer } from 'react-mapbox-gl';
 import { Layer } from 'react-mapbox-gl';
 import { Marker } from 'react-mapbox-gl';
-import { RotationControl } from 'react-mapbox-gl';
 import { Source } from 'react-mapbox-gl';
-import { ZoomControl } from 'react-mapbox-gl';
 
+// Custom components
 import LibraryAvatar from './LibraryAvatar';
 
 const styles = {};
@@ -56,7 +55,7 @@ class LibraryMap extends Component {
 		return (
 			<div>
 				<Map
-					style='mapbox://styles/mapbox/light-v9'
+					style='https://s3-eu-west-1.amazonaws.com/tiles.os.uk/styles/open-zoomstack-light/style.json'
 					center={this.state.center}
 					zoom={this.state.zoom}
 					pitch={this.state.pitch}
@@ -126,8 +125,6 @@ class LibraryMap extends Component {
 							)
 						}
 					</Cluster>
-					<ZoomControl />
-					<RotationControl />
 				</Map>
 			</div>
 		);

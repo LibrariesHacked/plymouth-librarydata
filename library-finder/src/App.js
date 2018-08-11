@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
@@ -25,7 +26,6 @@ import moment from 'moment';
 import LibraryList from './LibraryList';
 import LibraryMap from './LibraryMap';
 import LibraryView from './LibraryView';
-import PostcodeSearch from './PostcodeSearch';
 
 // Helpers
 import * as libHelper from './helpers/libraries';
@@ -61,6 +61,10 @@ const styles = {
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
+		backgroundColor: 'rgba(255, 255, 255, 0)'
+	},
+	toolBar: {
+		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
 	content: {
 		flexGrow: 1,
@@ -70,15 +74,17 @@ const styles = {
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
+		backgroundColor: 'rgba(255, 255, 255, 0.7)'
+
 	},
 	flex: {
 		flex: 1,
 	},
 	libraryMap: {
 		position: 'absolute',
-		top: 63,
+		top: 0,
 		width: '100%',
-		height: 'calc(100% - 63px)'
+		height: 'calc(100%)'
 	},
 	menuButton: {
 		marginLeft: -12,
@@ -149,26 +155,27 @@ class App extends Component {
 			<MuiThemeProvider theme={theme}>
 				<div className={classes.root}>
 					<CssBaseline />
-					<AppBar position="absolute" color="primary" elevation={0} className={classes.appBar}>
-						<Toolbar>
+					<AppBar position="absolute" color="default" elevation={0} className={classes.appBar}>
+						<Toolbar className={classes.toolBar}>
 							{this.state.list_drawer_open ?
-								<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })} >
+								<Button variant="fab" mini color="secondary" className={classes.menuButton} aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })} >
 									<MenuIcon />
-								</IconButton> : null
+								</Button> : null
 							}
 							{this.state.library_drawer_open ?
-								<IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={() => this.setState({ drawer_open: true, library_drawer_open: false, list_drawer_open: true })} >
+								<Button variant="fab" mini color="secondary" className={classes.menuButton} aria-label="Menu" onClick={() => this.setState({ drawer_open: true, library_drawer_open: false, list_drawer_open: true })} >
 									<ArrowBackIcon />
-								</IconButton> : null
+								</Button> : null
 							}
-							<Typography variant="title" color="inherit" className={classes.flex}>Libraries</Typography>
-							<PostcodeSearch />
-							<IconButton
+							<Typography variant="title" color="inherit" className={classes.flex}></Typography>
+							<Button
+								variant="fab"
+								mini
 								onClick={this.handleGPS}
-								color="inherit"
+								color="primary"
 							>
 								{this.state.current_location.length > 0 ? <MyLocation /> : <LocationSearching />}
-							</IconButton>
+							</Button>
 						</Toolbar>
 					</AppBar>
 					<Drawer

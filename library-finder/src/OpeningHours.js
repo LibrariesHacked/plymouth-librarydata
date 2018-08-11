@@ -13,28 +13,22 @@ import { withStyles } from '@material-ui/core/styles';
 
 // Material Icons
 import Event from '@material-ui/icons/Event';
-import EventAvailable from '@material-ui/icons/EventAvailable';
-import EventBusy from '@material-ui/icons/EventBusy';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 // Helpers
 import * as libraries from './helpers/libraries';
-import { ListItemSecondaryAction } from '@material-ui/core';
 
 const styles = theme => ({
 
 });
-
-// Days of the week
-const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 
 class OpeningHours extends React.Component {
 	state = {
 		opening_hours_open: false
 	}
 	render() {
-		const { classes, library } = this.props;
+		const { library } = this.props;
 		const opening_hours = libraries.getLibraryOpeningHours(library);
 		return (
 			<List dense={true}>
@@ -42,7 +36,7 @@ class OpeningHours extends React.Component {
 					<ListItemIcon>
 						<Event />
 					</ListItemIcon>
-					<ListItemText inset primary="View opening hours" />
+					<ListItemText inset primary="Next week opening hours" />
 					{this.state.opening_hours_open ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
 				<Collapse in={this.state.opening_hours_open} timeout="auto" unmountOnExit>

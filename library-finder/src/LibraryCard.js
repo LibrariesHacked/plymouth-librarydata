@@ -7,10 +7,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 
 // Material Icons
 import LocationOn from '@material-ui/icons/LocationOn';
@@ -38,6 +36,11 @@ const styles = theme => ({
 	progress: {
 		marginRight: theme.spacing.unit
 	},
+	card: {
+		border: '1px solid #e5e5e5',
+		margin: '5px',
+		borderRadius: '3px'
+	}
 });
 
 class LibraryCard extends React.Component {
@@ -61,7 +64,6 @@ class LibraryCard extends React.Component {
 									<IconButton onClick={() => this.props.viewLibrary(library.name)}>
 										<MoreVert />
 									</IconButton>
-									<br />
 								</div> : null}
 							<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
 								<LocationOn />

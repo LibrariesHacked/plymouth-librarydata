@@ -3,11 +3,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -15,9 +10,6 @@ import Tabs from '@material-ui/core/Tabs';
 // Our components
 import LibraryCard from './LibraryCard';
 import OpeningHours from './OpeningHours';
-
-// Helpers
-import * as libraries from './helpers/libraries';
 
 const styles = theme => ({
 	button: {
@@ -41,7 +33,7 @@ class LibraryView extends React.Component {
 	componentDidMount = () => {
 	}
 	render() {
-		const { classes, library, theme } = this.props;
+		const { library } = this.props;
 		return (
 			<div>
 				<LibraryCard
