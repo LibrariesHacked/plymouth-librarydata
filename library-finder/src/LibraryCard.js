@@ -3,19 +3,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 
 // Material Icons
-import LocationOn from '@material-ui/icons/LocationOn';
-import MoreVert from '@material-ui/icons/MoreVert';
 import DirectionsBike from '@material-ui/icons/DirectionsBike';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
+import LocationOn from '@material-ui/icons/LocationOn';
+import MoreVert from '@material-ui/icons/MoreVert';
 
 // Our custom avatars
 import LibraryAvatar from './LibraryAvatar';
@@ -55,7 +55,8 @@ class LibraryCard extends React.Component {
 				<CardHeader
 					avatar={
 						<LibraryAvatar
-							library={library} />
+							library={library}
+							selectLibrary={this.props.more_option ? (() => this.props.viewLibrary(library.name)) : null} />
 					}
 					action={
 						<div>

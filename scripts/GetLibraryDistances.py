@@ -15,7 +15,6 @@ ORS_KEY = '58d904a497c67e00015b45fc42337203b9d0468561ab2f37e26ecb76'
 MB_TOKEN = 'pk.eyJ1IjoiZHhyb3dlIiwiYSI6ImNqOTBlOWF3cjJidDEyeG43MDBmNDBxaGwifQ.gduXtiwaIi4xLdZpHCzVHA'
 MAPQUEST = '0kYuW0J0ggz5GEFEFKdwtl1ZrpPE0OYg'
 
-
 def run():
     oas = []
     with open(DATA_SOURCE_OAS, 'r') as oa_file:
@@ -77,6 +76,5 @@ def run():
                                 {'error': data['error']['message']}, outfile)
 
                 time.sleep(5)
-
 
 run()

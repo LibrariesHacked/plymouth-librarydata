@@ -10,6 +10,21 @@ import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
 const styles = theme => ({
+	input: {
+		font: 'inherit',
+		padding: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit * 9}px`,
+		border: 0,
+		display: 'block',
+		verticalAlign: 'middle',
+		whiteSpace: 'normal',
+		background: 'none',
+		margin: 0,
+		color: 'inherit',
+		width: '100%',
+		'&:focus': {
+			outline: 0,
+		}
+	},
 	root: {
 		fontFamily: theme.typography.fontFamily,
 		position: 'relative',
@@ -37,21 +52,6 @@ const styles = theme => ({
 		alignItems: 'center',
 		justifyContent: 'center'
 	},
-	input: {
-		font: 'inherit',
-		padding: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit * 9}px`,
-		border: 0,
-		display: 'block',
-		verticalAlign: 'middle',
-		whiteSpace: 'normal',
-		background: 'none',
-		margin: 0,
-		color: 'inherit',
-		width: '100%',
-		'&:focus': {
-			outline: 0,
-		}
-	}
 });
 
 class PostcodeSearch extends React.Component {
@@ -70,7 +70,6 @@ class PostcodeSearch extends React.Component {
 					className={classes.input}
 				/>
 			</div>
-
 		);
 	}
 }

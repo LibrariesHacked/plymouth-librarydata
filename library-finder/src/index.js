@@ -6,8 +6,8 @@ import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 
 // Typeface and style to use throughout app
-import 'typeface-roboto'
 import './App.css';
+import 'typeface-roboto'
 
 // Our main app dashboard
 import App from './App';

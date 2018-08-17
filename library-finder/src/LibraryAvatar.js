@@ -1,4 +1,4 @@
-// React
+// React and additional
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -8,10 +8,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	avatar: {
-		margin: 10,
+		margin: 10
 	},
 	colorDefault: {
-		backgroundColor: '#FFFFFF',
+		backgroundColor: '#FFFFFF'
 	}
 });
 
@@ -31,7 +31,8 @@ class LibraryAvatar extends React.Component {
 				className={classes.avatar}
 				style={{
 					backgroundColor: theme.libraries[library.name.replace(' Library', '').replace(/ /g, '').toLowerCase()]
-				}}>
+				}}
+				onClick={this.props.selectLibrary}>
 				{this.getLibraryInitials(library.name)}
 			</Avatar>
 		);

@@ -7,9 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import { withStyles } from '@material-ui/core/styles';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -56,14 +54,8 @@ const theme = createMuiTheme({
 });
 
 const styles = {
-	root: {
-		height: '100%'
-	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
-		backgroundColor: 'rgba(255, 255, 255, 0)'
-	},
-	toolBar: {
 		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
 	content: {
@@ -75,7 +67,6 @@ const styles = {
 		position: 'relative',
 		width: drawerWidth,
 		backgroundColor: 'rgba(255, 255, 255, 0.7)'
-
 	},
 	flex: {
 		flex: 1,
@@ -90,21 +81,27 @@ const styles = {
 		marginLeft: -12,
 		marginRight: 20,
 	},
+	root: {
+		height: '100%'
+	},
+	toolBar: {
+		backgroundColor: 'rgba(255, 255, 255, 0)'
+	},
 	toolbar: theme.mixins.toolbar
 };
 
 class App extends Component {
 	state = {
-		location_update_interval: '',
-		map_location: [],
+		current_time: moment(),
+		current_location: [],
 		drawer_open: true,
-		list_drawer_open: true,
+		isochrones: {},
 		library_drawer_open: false,
 		libraries: [],
 		library_name: '',
-		isochrones: {},
-		current_time: moment(),
-		current_location: [],
+		list_drawer_open: true,
+		location_update_interval: '',
+		map_location: [],
 		search_type: 'gps',
 		time_int: ''
 	}
@@ -117,17 +114,12 @@ class App extends Component {
 		let time_int = setInterval(this.setCurrentTime, 1000);
 		this.setState({ time_int: time_int });
 	};
-	setCurrentTime = () => {
-		this.setState({ current_time: moment() });
-	}
+	// setCurrentTime: 
+	setCurrentTime = () => this.setState({ current_time: moment() });
 	// logLocation:
-	logLocation = () => {
-		geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries, current_location: location })));
-	}
+	logLocation = () => geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries, current_location: location })));
 	// getLibrariesStart:
-	getLibrariesStart = () => {
-		geoHelper.getCurrentLocation(location => libHelper.getAllLibraries(location, libraries => this.setState({ libraries: libraries })));
-	}
+	getLibrariesStart = () => geoHelper.getCurrentLocation(location => libHelper.getAllLibraries(location, libraries => this.setState({ libraries: libraries })));
 	// handleGPS:
 	handleGPS = (e) => {
 

@@ -9,7 +9,7 @@ const oa_path = '../data/oa_distances/';
 
 const _this = this;
 
-// getDistances
+// GetDistances: 
 module.exports.getDistances = (postcode_object, location, destinations) => {
 	let district = postcode_object.codes.admin_district;
 	// We have a file for each district
@@ -68,7 +68,7 @@ module.exports.getDistances = (postcode_object, location, destinations) => {
 	return destinations;
 }
 
-// getLocationDistances: 
+// GetLocationDistances: 
 module.exports.getLocationDistances = (location, destinations, callback) => {
 	request('https://api.postcodes.io/postcodes?lon=' + location[0] + '&lat=' + location[1], (error, response, body) => {
 		let json_result = JSON.parse(body);
@@ -81,7 +81,7 @@ module.exports.getLocationDistances = (location, destinations, callback) => {
 	})
 }
 
-// getPostcodeDistances: 
+// GetPostcodeDistances: 
 module.exports.getPostcodeDistances = (postcode, destinations, callback) => {
 	request('https://api.postcodes.io/postcodes/' + postcode, (error, response, body) => {
 		let json_result = JSON.parse(body);

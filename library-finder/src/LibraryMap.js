@@ -120,7 +120,9 @@ class LibraryMap extends Component {
 									key={'lib_' + key}
 									style={styles.marker}
 									coordinates={[library.longitude, library.latitude]}>
-									<LibraryAvatar library={library} />
+									<LibraryAvatar
+										library={library}
+										selectLibrary={() => this.selectLibrary(library)} />
 								</Marker>
 							)
 						}

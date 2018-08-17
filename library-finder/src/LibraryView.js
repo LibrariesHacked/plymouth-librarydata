@@ -11,6 +11,7 @@ import Tabs from '@material-ui/core/Tabs';
 import LibraryCard from './LibraryCard';
 import OpeningHours from './OpeningHours';
 
+// Style: 
 const styles = theme => ({
 	button: {
 		margin: theme.spacing.unit,

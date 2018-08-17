@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
 import Collapse from '@material-ui/core/Collapse';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core/styles';
 
 // Material Icons
@@ -19,8 +19,8 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 // Helpers
 import * as libraries from './helpers/libraries';
 
+// Style: 
 const styles = theme => ({
-
 });
 
 class OpeningHours extends React.Component {
