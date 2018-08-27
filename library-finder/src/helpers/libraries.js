@@ -51,7 +51,7 @@ export function checkLibraryOpen(library, current) {
 				let test_start = test_hours.split('-')[0];
 				let date_time_str = test_date_str + ' ' + test_start;
 				let date_time_test = moment(date_time_str, 'YYYYMMDD HH:mm');
-				message = 'Opening ' + current.to(date_time_test);
+				message = 'Open ' + current.to(date_time_test);
 				x = 7;
 			}
 		}
@@ -69,10 +69,36 @@ export function getLibraryOpeningHours(library) {
 			{
 				full: date.format('DD/MM/YYYY'),
 				day: date.format('dddd'),
+				day_code: date.format('ddd'),
 				date: date.format('DD'),
+				date_ordinal: date.format('Do'),
 				hours: library[date.format('dddd').toLowerCase()]
 			}
 		)
 	}
 	return opening_hours;
+}
+
+// getLibraryTotalOpeningHours:
+export function getLibraryTotalOpeningHours(library) {
+	let monday = getLibraryTotalOpeningHoursDay(library, 'monday');
+	let tuesday = getLibraryTotalOpeningHoursDay(library, 'tuesday');
+	let wednesday = getLibraryTotalOpeningHoursDay(library, 'wednesday');
+	let thursday = getLibraryTotalOpeningHoursDay(library, 'thursday');
+	let friday = getLibraryTotalOpeningHoursDay(library, 'friday');
+	let saturday = getLibraryTotalOpeningHoursDay(library, 'saturday');
+	let sunday = getLibraryTotalOpeningHoursDay(library, 'sunday');
+	return (monday + tuesday + wednesday + thursday + friday + saturday + sunday);
+}
+
+// getLibraryTotalOpeningHoursDay:
+export function getLibraryTotalOpeningHoursDay(library, day) {
+	let total = 0;
+	let hours = library[day];
+	if (hours && hours !== 'closed') {
+		let start = hours.split('-')[0];
+		let end = hours.split('-')[1];
+		total = moment.duration(moment(end, 'hh:mm').diff(moment(start, 'hh:mm'))).asHours();
+	}
+	return total;
 }

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
@@ -58,10 +59,29 @@ const styles = {
 		zIndex: theme.zIndex.drawer + 1,
 		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
+	buttonProgress: {
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -10,
+		marginLeft: -10,
+	},
 	content: {
 		flexGrow: 1,
 		backgroundColor: theme.palette.background.default,
-		minWidth: 0
+		padding: theme.spacing.unit * 3,
+		transition: theme.transitions.create('margin', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen,
+		}),
+		marginLeft: -drawerWidth,
+	},
+	contentShift: {
+		transition: theme.transitions.create('margin', {
+			easing: theme.transitions.easing.easeOut,
+			duration: theme.transitions.duration.enteringScreen,
+		}),
+		marginLeft: 0
 	},
 	drawerPaper: {
 		position: 'relative',
@@ -82,7 +102,12 @@ const styles = {
 		marginRight: 20,
 	},
 	root: {
-		height: '100%'
+		height: '100%',
+		zIndex: 1,
+		overflow: 'hidden',
+		position: 'relative',
+		display: 'flex',
+		width: '100%',
 	},
 	toolBar: {
 		backgroundColor: 'rgba(255, 255, 255, 0)'
@@ -92,6 +117,7 @@ const styles = {
 
 class App extends Component {
 	state = {
+		loading: false,
 		current_time: moment(),
 		current_location: [],
 		drawer_open: true,
@@ -117,22 +143,50 @@ class App extends Component {
 	// setCurrentTime: 
 	setCurrentTime = () => this.setState({ current_time: moment() });
 	// logLocation:
-	logLocation = () => geoHelper.getCurrentLocation(location => libHelper.updateLibraryLocations(location, this.state.libraries, libraries => this.setState({ libraries: libraries, current_location: location })));
+	logLocation = () => {
+		this.setState({ loading: true });
+		geoHelper.getCurrentLocation(location => {
+			libHelper.updateLibraryLocations(location, this.state.libraries, libraries => {
+				this.setState({ loading: false, libraries: libraries, current_location: location });
+			})
+		});
+	}
 	// getLibrariesStart:
-	getLibrariesStart = () => geoHelper.getCurrentLocation(location => libHelper.getAllLibraries(location, libraries => this.setState({ libraries: libraries })));
+	getLibrariesStart = () => {
+		this.setState({ loading: true });
+		geoHelper.getCurrentLocation(location => {
+			libHelper.getAllLibraries(location, libraries => {
+				this.setState({ loading: false, libraries: libraries });
+			});
+		});
+	};
 	// handleGPS:
 	handleGPS = (e) => {
 
 	}
+	// getLibraryIsochrone: fetches the underlying data for a library isochrone
+	getLibraryIsochrones = (library) => {
+		let isochrones = this.state.isochrones;
+		let received = [];
+		if (isochrones[library]) received = Object.keys(isochrones[library]);
+		if (!isochrones[library]) isochrones[library] = {};
+		isoHelper.getAllLibraryIsochrones(library, received, isos => {
+			isos.forEach(iso => {
+				isochrones[library][iso.travel] = { retrieved: true, selected: false, iso: iso.iso };
+			});
+			this.setState({ isochrones: isochrones });
+		});
+	}
 	// toggleIsochrone: turns a particular library and travel type on or off
 	toggleIsochrone = (library, travel) => {
 		let isochrones = this.state.isochrones;
+		let loading = this.state.loading;
 		if (!isochrones[library]) isochrones[library] = {};
 		if (!isochrones[library][travel]) {
 			isochrones[library][travel] = { retrieved: false, selected: true, iso: null };
 			this.setState({ isochrones: isochrones });
-			isoHelper.getLibraryIsochrone(library, travel, iso => {
-				isochrones[library][travel] = { retrieved: true, selected: true, iso: iso };
+			isoHelper.getLibraryIsochronesByType(library, [travel], iso => {
+				isochrones[library][travel] = { retrieved: true, selected: true, iso: iso[0].iso };
 				this.setState({ isochrones: isochrones });
 			});
 		} else {
@@ -147,11 +201,27 @@ class App extends Component {
 			<MuiThemeProvider theme={theme}>
 				<div className={classes.root}>
 					<CssBaseline />
-					<AppBar position="absolute" color="default" elevation={0} className={classes.appBar}>
+					<AppBar
+						position="absolute"
+						color="default"
+						elevation={0}
+						className={classes.appBar}>
 						<Toolbar className={classes.toolBar}>
 							{this.state.list_drawer_open ?
-								<Button variant="fab" mini color="secondary" className={classes.menuButton} aria-label="Menu" onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })} >
-									<MenuIcon />
+								<Button
+									variant="fab"
+									disabled={this.state.loading}
+									mini
+									color="secondary"
+									className={classes.menuButton}
+									aria-label="Menu"
+									onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, library_drawer_open: false })}
+								>
+									{this.state.loading ?
+										<CircularProgress
+											size={20}
+											className={classes.buttonProgress}
+										/> : <MenuIcon />}
 								</Button> : null
 							}
 							{this.state.library_drawer_open ?
@@ -163,6 +233,7 @@ class App extends Component {
 							<Button
 								variant="fab"
 								mini
+								disabled={this.state.current_location.length === 0}
 								onClick={this.handleGPS}
 								color="primary"
 							>
@@ -185,7 +256,8 @@ class App extends Component {
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
 								goTo={(location) => this.setState({ map_location: location })}
-								viewLibrary={(library_name) => this.setState({ library_drawer_open: true, library_name: library_name, list_drawer_open: false })} /> : null}
+								viewLibrary={(library_name) => this.setState({ drawer_open: true, library_drawer_open: true, library_name: library_name, list_drawer_open: false })}
+							/> : null}
 						{this.state.library_drawer_open ?
 							<LibraryView
 								library={this.state.libraries.find(library => { return library.name === this.state.library_name })}
@@ -193,17 +265,15 @@ class App extends Component {
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
 								goTo={(location) => this.setState({ map_location: location })}
-								close={() => this.setState({ library_drawer_open: false, list_drawer_open: true })}
+								close={() => this.setState({ drawer_open: true, library_drawer_open: false, list_drawer_open: true })}
 							/> : null}
 					</Drawer>
-					<main className={classes.content}>
-						<div className={classes.libraryMap}>
-							<LibraryMap
-								location={this.state.map_location}
-								isochrones={this.state.isochrones}
-								libraries={this.state.libraries} />
-						</div>
-					</main>
+					<LibraryMap
+						location={this.state.map_location}
+						isochrones={this.state.isochrones}
+						libraries={this.state.libraries}
+						viewLibrary={(library_name) => this.setState({ drawer_open: true, library_drawer_open: true, library_name: library_name, list_drawer_open: false })}
+					/>
 				</div>
 			</MuiThemeProvider >
 		);

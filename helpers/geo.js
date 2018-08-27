@@ -71,7 +71,10 @@ module.exports.getDistances = (postcode_object, location, destinations) => {
 // GetLocationDistances: 
 module.exports.getLocationDistances = (location, destinations, callback) => {
 	request('https://api.postcodes.io/postcodes?lon=' + location[0] + '&lat=' + location[1], (error, response, body) => {
-		let json_result = JSON.parse(body);
+		let json_result;
+		try {
+			json_result = JSON.parse(body);
+		} catch (e) { } // Log?
 		if (json_result && json_result.result && json_result.result.length > 0) {
 			let destinations_processed = _this.getDistances(json_result.result[0], location, destinations);
 			callback(destinations_processed);

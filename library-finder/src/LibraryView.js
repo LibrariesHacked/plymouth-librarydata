@@ -56,22 +56,19 @@ class LibraryView extends React.Component {
 					<Tab label="Details" />
 					<Tab label="Stats" />
 				</Tabs>
-				<OpeningHours
-						library={library}
-					/>
-				{this.state.open_tag === 0 ?
+				{this.state.open_tab === 0 ?
 					<OpeningHours
 						library={library}
 					/>
 					: null}
-				{this.state.open_tag === 1 ? null : null}
+				{this.state.open_tab === 1 ? null : null}
 			</div>
 		);
 	}
 }
 
 LibraryView.propTypes = {
-	classes: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles, { withTheme: true })(LibraryView);

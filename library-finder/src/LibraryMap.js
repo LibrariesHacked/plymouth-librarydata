@@ -49,6 +49,10 @@ class LibraryMap extends Component {
 	clusterLibraries = (coordinates) => (
 		<Marker coordinates={coordinates}>C</Marker>
 	)
+	// selectLibrary:
+	selectLibrary = (library) => {
+
+	}
 	// render
 	render() {
 		const { theme } = this.props;
@@ -104,11 +108,9 @@ class LibraryMap extends Component {
 							return (this.props.isochrones[library][travel].selected ?
 								<GeoJSONLayer
 									data={this.props.isochrones[library][travel].iso}
-									lineLayout={{
-									}}
 									fillPaint={{
-										"fill-color": theme.libraries.peverell,
-										"fill-opacity": 0.2
+										"fill-opacity": 0.1,
+										"fill-color": theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
 									}}
 								/> : null)
 						})
@@ -122,7 +124,7 @@ class LibraryMap extends Component {
 									coordinates={[library.longitude, library.latitude]}>
 									<LibraryAvatar
 										library={library}
-										selectLibrary={() => this.selectLibrary(library)} />
+										selectLibrary={() => this.props.viewLibrary(library.name)} />
 								</Marker>
 							)
 						}

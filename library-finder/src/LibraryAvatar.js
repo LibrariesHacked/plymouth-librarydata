@@ -8,7 +8,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
 	avatar: {
-		margin: 10
+		margin: 0,
+		cursor: 'pointer'
 	},
 	colorDefault: {
 		backgroundColor: '#FFFFFF'

@@ -105,14 +105,15 @@ class LibraryList extends React.Component {
 					onChange={(event, value) => this.setState({ open_tab: value })}
 				>
 					<Tab
-						disabled
+						disabled={open_libraries.length === 0}
 						label={
 							<Badge className={classes.padding} color="primary" badgeContent={open_libraries.length}>
 								Open
 							</Badge>
-						} 
+						}
 					/>
 					<Tab
+						disabled={closed_libraries.length === 0}
 						label={
 							<Badge className={classes.padding} color="secondary" badgeContent={closed_libraries.length}>
 								Closed
@@ -140,17 +141,16 @@ class LibraryList extends React.Component {
 					})
 					.map(library => {
 						return (
-							<div>
-								<LibraryCard
-									library={library}
-									current_time={this.props.current_time}
-									more_option={true}
-									isochrones={this.props.isochrones}
-									toggleIsochrone={this.props.toggleIsochrone}
-									goTo={this.props.goTo}
-									viewLibrary={this.props.viewLibrary}
-								/>
-							</div>)
+							<LibraryCard
+								key={'crd-library' + library.name}
+								library={library}
+								current_time={this.props.current_time}
+								more_option={true}
+								isochrones={this.props.isochrones}
+								toggleIsochrone={this.props.toggleIsochrone}
+								goTo={this.props.goTo}
+								viewLibrary={this.props.viewLibrary}
+							/>)
 					})}
 			</div>
 		);

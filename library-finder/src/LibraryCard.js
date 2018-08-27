@@ -15,7 +15,6 @@ import DirectionsBike from '@material-ui/icons/DirectionsBike';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
 import LocationOn from '@material-ui/icons/LocationOn';
-import MoreVert from '@material-ui/icons/MoreVert';
 
 // Our custom avatars
 import LibraryAvatar from './LibraryAvatar';
@@ -25,16 +24,16 @@ import * as libraries from './helpers/libraries';
 
 const styles = theme => ({
 	button: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing.unit / 2,
 	},
 	leftIcon: {
-		marginRight: theme.spacing.unit,
+		marginRight: theme.spacing.unit / 2,
 	},
 	rightIcon: {
-		marginLeft: theme.spacing.unit,
+		marginLeft: theme.spacing.unit / 2,
 	},
 	progress: {
-		marginRight: theme.spacing.unit
+		marginRight: theme.spacing.unit / 2
 	},
 	card: {
 		border: '1px solid #e5e5e5',
@@ -59,17 +58,9 @@ class LibraryCard extends React.Component {
 							selectLibrary={this.props.more_option ? (() => this.props.viewLibrary(library.name)) : null} />
 					}
 					action={
-						<div>
-							{this.props.more_option ?
-								<div>
-									<IconButton onClick={() => this.props.viewLibrary(library.name)}>
-										<MoreVert />
-									</IconButton>
-								</div> : null}
-							<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
-								<LocationOn />
-							</IconButton>
-						</div>
+						<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
+							<LocationOn />
+						</IconButton>
 					}
 					title={library.name}
 					subheader={library.address_1 + '. ' + libraries.checkLibraryOpen(library, this.props.current_time).message}
