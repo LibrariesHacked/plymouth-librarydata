@@ -33,12 +33,12 @@ class OpeningHours extends React.Component {
 			<div>
 				<ListSubheader>{'Open ' + hours_total + ' hours per week'}</ListSubheader>
 				<Divider />
-				{opening_hours.map(day => {
+				{opening_hours.map((day, x) => {
 					return (
 						<Chip
 							className={classes.chip}
 							label={day.day_code + ' ' + day.hours}
-							color="primary"
+							color={x === 0 ? 'primary' : 'secondary'}
 							avatar={<Avatar>{day.date}</Avatar>}
 						/>
 					)

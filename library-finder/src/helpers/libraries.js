@@ -64,7 +64,6 @@ export function getLibraryOpeningHours(library) {
 	let opening_hours = [];
 	let date = moment();
 	for (let x = 0; x < 7; x++) {
-		date.add('day', 1);
 		opening_hours.push(
 			{
 				full: date.format('DD/MM/YYYY'),
@@ -75,6 +74,7 @@ export function getLibraryOpeningHours(library) {
 				hours: library[date.format('dddd').toLowerCase()]
 			}
 		)
+		date.add('day', 1);
 	}
 	return opening_hours;
 }

@@ -65,7 +65,6 @@ class LibraryList extends React.Component {
 			.filter(library => {
 				return !libraries.checkLibraryOpen(library, this.props.current_time).open
 			});
-		let tab = (open_libraries.length === 0 ? 1 : this.state.open_tab);
 		return (
 			<div>
 				<Menu // Menu used to sort libraries
@@ -99,7 +98,7 @@ class LibraryList extends React.Component {
 				</Menu>
 				<Tabs
 					fullWidth
-					value={tab}
+					value={this.state.open_tab}
 					indicatorColor="primary"
 					textColor="primary"
 					onChange={(event, value) => this.setState({ open_tab: value })}
@@ -122,7 +121,7 @@ class LibraryList extends React.Component {
 					/>
 				</Tabs>
 				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
-				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter : 'All Libraries'}<FilterList className={classes.rightIcon} /></Button>
+				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 8) : 'All Libraries'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.libraries
 					.sort((lib_a, lib_b) => {
 						if (this.state.sort === 'name') return lib_a.name.localeCompare(lib_b.name);
@@ -135,8 +134,8 @@ class LibraryList extends React.Component {
 						let show = true;
 						// Apply our filter
 						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
-						if (this.state.tab === 0 && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
-						if (this.state.tab === 1 && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+						if (this.state.open_tab === 0 && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+						if (this.state.open_tab === 1 && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						return show;
 					})
 					.map(library => {
