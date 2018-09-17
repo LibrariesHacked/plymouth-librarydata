@@ -103,46 +103,53 @@ class LibraryMap extends Component {
 							'fill-extrusion-opacity': 0.7
 						}}
 					/>
-					{Object.keys(this.props.isochrones).map(library => { // Each library
-						return Object.keys(this.props.isochrones[library]).map(travel => { // Each travel method
-							return (this.props.isochrones[library][travel].selected ?
-								<span>
-									<GeoJSONLayer
-										data={this.props.isochrones[library][travel].iso}
-										fillPaint={{
-											'fill-opacity': 0.1,
-											'fill-antialias': true,
-											'fill-color': theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
-										}}
-									/>
-									<GeoJSONLayer
-										data={this.props.isochrones[library][travel].iso}
-										linePaint={{
-											'line-opacity': 0.4,
-											'line-width': 2,
-											'line-color': theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
-										}}
-									/>
-									<GeoJSONLayer
-										data={this.props.isochrones[library][travel].iso}
-										symbolLayout={{
-											'text-field': '{value}',
-											'text-font': ['Source Sans Pro SemiBold'],
-											'symbol-placement': 'line',
-											'text-allow-overlap': false,
-											'text-padding': 1,
-											'text-max-angle': 90,
-											'text-size': {
-												'base': 1.2,
-												'stops': [[8, 12], [22, 30]]
-											},
-											'text-letter-spacing': 0.1
-										}}
-										symbolPaint={{
-										}}
-									/>
-								</span> : null)
-						})
+					{Object.keys(this.props.isochrones).map(library => { // Each library isochrone set
+						return Object.keys(this.props.isochrones[library])
+							.filter(travel => {
+								return this.props.isochrones[library][travel].selected
+							})
+							.map(travel => { // Each travel method
+								return (
+									<span>
+										<GeoJSONLayer
+											data={this.props.isochrones[library][travel].iso}
+											fillPaint={{
+												'fill-opacity': 0.1,
+												'fill-antialias': true,
+												'fill-color': theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
+											}}
+										/>
+										<GeoJSONLayer
+											data={this.props.isochrones[library][travel].iso}
+											linePaint={{
+												'line-opacity': 0.4,
+												'line-width': 2,
+												'line-color': theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
+											}}
+										/>
+										<GeoJSONLayer
+											data={this.props.isochrones[library][travel].iso}
+											symbolLayout={{
+												'text-field': ['concat', ['to-string', ['/', ['get', 'value'], 10]], ' mins'],
+												'text-font': ['Source Sans Pro Bold'],
+												'symbol-placement': 'line',
+												'text-allow-overlap': false,
+												'text-padding': 2,
+												'text-max-angle': 90,
+												'text-size': {
+													'base': 1.2,
+													'stops': [[8, 12], [22, 30]]
+												},
+												'text-letter-spacing': 0.1
+											}}
+											symbolPaint={{
+												'text-halo-color': 'rgba(255, 255, 255, 0.8)',
+												'text-halo-width': 8,
+												"text-color": theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
+											}}
+										/>
+									</span>)
+							})
 					})}
 					<Cluster ClusterMarkerFactory={this.clusterLibraries}>
 						{
