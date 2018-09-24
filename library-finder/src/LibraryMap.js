@@ -111,7 +111,7 @@ class LibraryMap extends Component {
 							.map(travel => { // Each travel method
 								return (
 									<span>
-										<GeoJSONLayer
+										<GeoJSONLayer // Shows the shaded polygons
 											data={this.props.isochrones[library][travel].iso}
 											fillPaint={{
 												'fill-opacity': 0.1,
@@ -119,7 +119,7 @@ class LibraryMap extends Component {
 												'fill-color': theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
 											}}
 										/>
-										<GeoJSONLayer
+										<GeoJSONLayer // Shows the outlines of the distances
 											data={this.props.isochrones[library][travel].iso}
 											linePaint={{
 												'line-opacity': 0.4,
@@ -127,10 +127,10 @@ class LibraryMap extends Component {
 												'line-color': theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
 											}}
 										/>
-										<GeoJSONLayer
+										<GeoJSONLayer // Shows the distances labels
 											data={this.props.isochrones[library][travel].iso}
 											symbolLayout={{
-												'text-field': ['concat', ['to-string', ['/', ['get', 'value'], 10]], ' mins'],
+												'text-field': ['concat', ['to-string', ['/', ['get', 'value'], 60]], ' mins'],
 												'text-font': ['Source Sans Pro Bold'],
 												'symbol-placement': 'line',
 												'text-allow-overlap': false,
@@ -145,6 +145,7 @@ class LibraryMap extends Component {
 											symbolPaint={{
 												'text-halo-color': 'rgba(255, 255, 255, 0.8)',
 												'text-halo-width': 8,
+												'text-halo-blur': 3,
 												"text-color": theme.libraries[library.replace(' Library', '').replace(/ /g, '').toLowerCase()]
 											}}
 										/>

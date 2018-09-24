@@ -98,7 +98,7 @@ class LibraryList extends React.Component {
 				</Menu>
 				<Tabs
 					fullWidth
-					value={this.state.open_tab}
+					value={open_libraries.length > 0 ? this.state.open_tab : 1}
 					indicatorColor="primary"
 					textColor="primary"
 					onChange={(event, value) => this.setState({ open_tab: value })}
@@ -134,8 +134,8 @@ class LibraryList extends React.Component {
 						let show = true;
 						// Apply our filter
 						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
-						if (this.state.open_tab === 0 && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
-						if (this.state.open_tab === 1 && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+						if ((this.state.open_tab === 0 && open_libraries.length !== 0) && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+						if ((this.state.open_tab === 1 || closed_libraries.length !== 0) && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						return show;
 					})
 					.map(library => {

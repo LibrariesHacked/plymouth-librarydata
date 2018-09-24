@@ -14,12 +14,11 @@ import { withStyles } from '@material-ui/core/styles';
 // Helpers
 import * as libraries from './helpers/libraries';
 
-
 // Style: 
 const styles = theme => ({
 	chip: {
 		margin: theme.spacing.unit / 2,
-	},
+	}
 });
 
 class OpeningHours extends React.Component {
@@ -31,7 +30,7 @@ class OpeningHours extends React.Component {
 		const hours_total = libraries.getLibraryTotalOpeningHours(library);
 		return (
 			<div>
-				<ListSubheader>{'Open ' + hours_total + ' hours per week'}</ListSubheader>
+				<ListSubheader>{'Opening hours (' + hours_total + ' per week)'}</ListSubheader>
 				<Divider />
 				{opening_hours.map((day, x) => {
 					return (

@@ -86,7 +86,7 @@ const styles = {
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
-		backgroundColor: 'rgba(255, 255, 255, 0.7)'
+		backgroundColor: 'rgba(255, 255, 255, 0.8)'
 	},
 	flex: {
 		flex: 1,
@@ -168,11 +168,11 @@ class App extends Component {
 	getLibraryIsochrones = (library) => {
 		let isochrones = this.state.isochrones;
 		let received = [];
-		if (isochrones[library]) received = Object.keys(isochrones[library]);
-		if (!isochrones[library]) isochrones[library] = {};
+		if (isochrones[library.name]) received = Object.keys(isochrones[library.name]);
+		if (!isochrones[library.name]) isochrones[library.name] = {};
 		isoHelper.getAllLibraryIsochrones(library, received, isos => {
 			isos.forEach(iso => {
-				isochrones[library][iso.travel] = { retrieved: true, selected: false, iso: iso.iso };
+				isochrones[library.name][iso.travel] = { retrieved: true, selected: false, iso: iso.iso };
 			});
 			this.setState({ isochrones: isochrones });
 		});
@@ -264,6 +264,7 @@ class App extends Component {
 								isochrones={this.state.isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
+								getIsochrones={(library) => this.getLibraryIsochrones(library)}
 								goTo={(location) => this.setState({ map_location: location })}
 								close={() => this.setState({ drawer_open: true, library_drawer_open: false, list_drawer_open: true })}
 							/> : null}

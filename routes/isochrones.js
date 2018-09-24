@@ -14,14 +14,15 @@ router.get('/', function (req, res, next) {
 
 	received.forEach(travel_received => {
 		let index = travel.indexOf(travel_received);
-		if (index !== -1) travel = travel.splice(index, 1);
+		if (index !== -1) travel.splice(index, 1);
 	});
+
+	console.log(travel);
 
 	let isochrones = [];
 	travel.forEach(travel_type => {
-		isochrones.push({ travel: travel_type, iso:  JSON.parse(fs.readFileSync('./data/isochrones/' + library + '_isochrone_' + travel + '.json', 'utf8')) })
+		isochrones.push({ travel: travel_type, iso:  JSON.parse(fs.readFileSync('./data/isochrones/' + library + '_isochrone_' + travel_type + '.json', 'utf8')) })
 	});
-
 	res.json(isochrones);
 });
 
