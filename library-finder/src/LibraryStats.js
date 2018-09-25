@@ -29,7 +29,7 @@ class LibraryStats extends React.Component {
 							return (
 								<div>
 									<ListSubheader>{(isoHelper.getIsochroneConfig())[travel].display + ' distance population'}</ListSubheader>
-									<Divider />
+									<br/>
 									<Bar
 										data={
 											{

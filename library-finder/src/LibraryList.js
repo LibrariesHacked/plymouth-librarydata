@@ -135,7 +135,7 @@ class LibraryList extends React.Component {
 						// Apply our filter
 						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
 						if ((this.state.open_tab === 0 && open_libraries.length !== 0) && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
-						if ((this.state.open_tab === 1 || closed_libraries.length !== 0) && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+						if ((this.state.open_tab === 1 && closed_libraries.length !== 0) && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						return show;
 					})
 					.map(library => {
