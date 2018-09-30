@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,6 +16,7 @@ import Tabs from '@material-ui/core/Tabs';
 
 // Material Icons
 import FilterList from '@material-ui/icons/FilterList';
+import Refresh from '@material-ui/icons/Refresh';
 import Sort from '@material-ui/icons/Sort';
 
 // Our custom components
@@ -22,11 +24,15 @@ import LibraryCard from './LibraryCard';
 
 // Helpers
 import * as libraries from './helpers/libraries';
+import { Typography } from '@material-ui/core';
 
 // Styles: 
 const styles = theme => ({
 	button: {
 		margin: theme.spacing.unit,
+	},
+	footer: {
+		padding: 10
 	},
 	leftIcon: {
 		marginRight: theme.spacing.unit,
@@ -59,11 +65,17 @@ class LibraryList extends React.Component {
 		const { classes } = this.props;
 		let open_libraries = this.props.libraries
 			.filter(library => {
-				return libraries.checkLibraryOpen(library, this.props.current_time).open
+				let show = true;
+				if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
+				if (!libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+				return show;
 			});
 		let closed_libraries = this.props.libraries
 			.filter(library => {
-				return !libraries.checkLibraryOpen(library, this.props.current_time).open
+				let show = true;
+				if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
+				if (libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
+				return show;
 			});
 		return (
 			<div>
@@ -71,7 +83,7 @@ class LibraryList extends React.Component {
 					id="menu-librarysort"
 					anchorEl={this.state.sort_menu_anchor}
 					open={this.state.sort_menu}
-					onClose={(e) => this.setState({ sort_menu: false, sort_menu_anchor: null })}
+					onClose={() => this.setState({ sort_menu: false, sort_menu_anchor: null })}
 				>
 					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'name' })}>Library name</MenuItem>
 					<MenuItem onClick={(e) => this.setState({ sort_menu: false, sort: 'walking' })}>Walking time</MenuItem>
@@ -82,19 +94,19 @@ class LibraryList extends React.Component {
 					id="menu-libraryfilter"
 					anchorEl={this.state.filter_menu_anchor}
 					open={this.state.filter_menu}
-					onClose={this.handleCloseFilterMenu}
+					onClose={() => this.setState({ filter_menu: false, filter_menu_anchor: null })}
 				>
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>All Libraries</MenuItem>
 					<Divider />
 					<ListSubheader>Filter by Facilities</ListSubheader>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'meetingrooms' })}>Meeting Rooms</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'localandfamilyhistory' })}>Local and Family History</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'navalhistory' })}>Naval History</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'microfilmscanners' })}>Microfilm Scanners</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'dvds' })}>DVDs</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'wifi' })}>WiFi</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'roofterrace' })}>Roof Terrace</MenuItem>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: 'cafe' })}>Cafe</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'meetingrooms' })}>Meeting Rooms</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'localandfamilyhistory' })}>Local and Family History</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'navalhistory' })}>Naval History</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'microfilmscanners' })}>Microfilm Scanners</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'dvds' })}>DVDs</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'wifi' })}>WiFi</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'roofterrace' })}>Roof Terrace</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'cafe' })}>Cafe</MenuItem>
 				</Menu>
 				<Tabs
 					fullWidth
@@ -120,8 +132,9 @@ class LibraryList extends React.Component {
 						}
 					/>
 				</Tabs>
-				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
-				<Button className={classes.button} color="secondary" onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 8) : 'All Libraries'}<FilterList className={classes.rightIcon} /></Button>
+				<IconButton><Refresh /></IconButton>
+				<Button size="small" variant="flat" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
+				<Button size="small" variant="flat" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 15) : 'All Libraries'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.libraries
 					.sort((lib_a, lib_b) => {
 						if (this.state.sort === 'name') return lib_a.name.localeCompare(lib_b.name);
@@ -132,7 +145,6 @@ class LibraryList extends React.Component {
 					})
 					.filter(library => {
 						let show = true;
-						// Apply our filter
 						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
 						if ((this.state.open_tab === 0 && open_libraries.length !== 0) && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						if ((this.state.open_tab === 1 && closed_libraries.length !== 0) && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
@@ -151,6 +163,8 @@ class LibraryList extends React.Component {
 								viewLibrary={this.props.viewLibrary}
 							/>)
 					})}
+				<Divider />
+				<Typography variant="body1" className={classes.footer}>A #LibraryData project</Typography>
 			</div>
 		);
 	}
@@ -158,7 +172,7 @@ class LibraryList extends React.Component {
 
 LibraryList.propTypes = {
 	classes: PropTypes.object.isRequired,
-	libraries: PropTypes.object.isRequired,
+	libraries: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(LibraryList);

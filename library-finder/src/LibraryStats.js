@@ -4,7 +4,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import Divider from '@material-ui/core/Divider';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,6 +15,10 @@ const styles = theme => ({
 });
 
 class LibraryStats extends React.Component {
+	componentDidMount = () => {
+		// We need to get all the library isochrones
+		this.props.getIsochrones(this.props.library);
+	}
 	render() {
 		const { library, isochrones, theme } = this.props;
 		return (
@@ -29,7 +32,7 @@ class LibraryStats extends React.Component {
 							return (
 								<div>
 									<ListSubheader>{(isoHelper.getIsochroneConfig())[travel].display + ' distance population'}</ListSubheader>
-									<br/>
+									<br />
 									<Bar
 										data={
 											{

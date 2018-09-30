@@ -81,14 +81,12 @@ export function getLibraryOpeningHours(library) {
 
 // getLibraryTotalOpeningHours:
 export function getLibraryTotalOpeningHours(library) {
-	let monday = getLibraryTotalOpeningHoursDay(library, 'monday');
-	let tuesday = getLibraryTotalOpeningHoursDay(library, 'tuesday');
-	let wednesday = getLibraryTotalOpeningHoursDay(library, 'wednesday');
-	let thursday = getLibraryTotalOpeningHoursDay(library, 'thursday');
-	let friday = getLibraryTotalOpeningHoursDay(library, 'friday');
-	let saturday = getLibraryTotalOpeningHoursDay(library, 'saturday');
-	let sunday = getLibraryTotalOpeningHoursDay(library, 'sunday');
-	return (monday + tuesday + wednesday + thursday + friday + saturday + sunday);
+	const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+	let total = 0;
+	days.forEach(day => {
+		total += getLibraryTotalOpeningHoursDay(library, day);
+	});
+	return total;
 }
 
 // getLibraryTotalOpeningHoursDay:
@@ -101,4 +99,11 @@ export function getLibraryTotalOpeningHoursDay(library, day) {
 		total = moment.duration(moment(end, 'hh:mm').diff(moment(start, 'hh:mm'))).asHours();
 	}
 	return total;
+}
+
+// getFacilities:
+export function getFacilities(library) {
+	let facilities = [];
+	console.log(library);
+	return [];
 }

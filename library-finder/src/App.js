@@ -39,18 +39,18 @@ const theme = createMuiTheme({
 		secondary: { main: 'rgb(0,120,201)', contrastText: '#fff' }
 	},
 	libraries: {
-		central: 'rgb(143,212,0)',
-		crownhill: 'rgb(236,0,140)',
-		devonport: 'rgb(244,170,0)',
-		efford: 'rgb(0,120,201)',
-		estover: 'rgb(147,37,178)',
-		northprospect: 'rgb(39,189,190)',
-		peverell: 'rgb(0,105,62)',
-		plympton: 'rgb(158,27,50)',
-		plymstock: 'rgb(239,130,0)',
-		southway: 'rgb(0,58,105)',
-		stbudeaux: 'rgb(77,48,145)',
-		westpark: 'rgb(233,85,37)'
+		central: 'rgb(143, 212, 0)',
+		crownhill: 'rgb(236, 0, 140)',
+		devonport: 'rgb(244, 170, 0)',
+		efford: 'rgb(0, 120, 201)',
+		estover: 'rgb(147, 37, 178)',
+		northprospect: 'rgb(39, 189, 190)',
+		peverell: 'rgb(0, 105, 62)',
+		plympton: 'rgb(158, 27, 50)',
+		plymstock: 'rgb(239, 130, 0)',
+		southway: 'rgb(0, 58, 105)',
+		stbudeaux: 'rgb(77, 48, 145)',
+		westpark: 'rgb(233, 85, 37)'
 	}
 });
 
@@ -66,23 +66,6 @@ const styles = {
 		marginTop: -10,
 		marginLeft: -10,
 	},
-	content: {
-		flexGrow: 1,
-		backgroundColor: theme.palette.background.default,
-		padding: theme.spacing.unit * 3,
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-		marginLeft: -drawerWidth,
-	},
-	contentShift: {
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-		marginLeft: 0
-	},
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
@@ -90,6 +73,12 @@ const styles = {
 	},
 	flex: {
 		flex: 1,
+	},
+	header: {
+		textAlign: 'right',
+		padding: 16,
+		color: 'rgba(143, 212, 0, 0.6)',
+		fontWeight: 700
 	},
 	libraryMap: {
 		position: 'absolute',
@@ -112,7 +101,7 @@ const styles = {
 	toolBar: {
 		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
-	toolbar: theme.mixins.toolbar
+	toolbarPadding: theme.mixins.toolbar
 };
 
 class App extends Component {
@@ -127,9 +116,15 @@ class App extends Component {
 		library_name: '',
 		list_drawer_open: true,
 		location_update_interval: '',
-		map_location: [],
 		search_type: 'gps',
-		time_int: ''
+		time_int: '',
+		// Map variables, sent down to the map for updates.
+		map_max_bounds: null,
+		map_fit_bounds: null,
+		map_location: [-4.1432586, 50.3732736], // Plymouth Central Library
+		map_zoom: [12], // Starting Zoom level
+		map_pitch: [0], // Starting pitch
+		map_bearing: [0] // Starting bearing
 	}
 	// componentDidMount: sets up data and any logging
 	componentDidMount = () => {
@@ -158,14 +153,20 @@ class App extends Component {
 			libHelper.getAllLibraries(location, libraries => {
 				this.setState({ loading: false, libraries: libraries });
 			});
+			// And fit map to bounds.
+			this.fitLibraryBounds();
 		});
 	};
+	fitLibraryBounds = () => {
+
+	}
 	// handleGPS:
 	handleGPS = (e) => {
 
 	}
 	// getLibraryIsochrone: fetches the underlying data for a library isochrone
 	getLibraryIsochrones = (library) => {
+		this.setState({ loading: true });
 		let isochrones = this.state.isochrones;
 		let received = [];
 		if (isochrones[library.name]) received = Object.keys(isochrones[library.name]);
@@ -174,24 +175,24 @@ class App extends Component {
 			isos.forEach(iso => {
 				isochrones[library.name][iso.travel] = { retrieved: true, selected: false, iso: iso.iso };
 			});
-			this.setState({ isochrones: isochrones });
+			this.setState({ isochrones: isochrones, loading: false });
 		});
 	}
 	// toggleIsochrone: turns a particular library and travel type on or off
 	toggleIsochrone = (library, travel) => {
+		this.setState({ loading: true });
 		let isochrones = this.state.isochrones;
-		let loading = this.state.loading;
 		if (!isochrones[library]) isochrones[library] = {};
 		if (!isochrones[library][travel]) {
 			isochrones[library][travel] = { retrieved: false, selected: true, iso: null };
 			this.setState({ isochrones: isochrones });
 			isoHelper.getLibraryIsochronesByType(library, [travel], iso => {
 				isochrones[library][travel] = { retrieved: true, selected: true, iso: iso[0].iso };
-				this.setState({ isochrones: isochrones });
+				this.setState({ isochrones: isochrones, loading: false });
 			});
 		} else {
 			isochrones[library][travel].selected = !isochrones[library][travel].selected;
-			this.setState({ isochrones: isochrones });
+			this.setState({ isochrones: isochrones, loading: false });
 		}
 	}
 	// Renders the main app
@@ -248,7 +249,9 @@ class App extends Component {
 							paper: classes.drawerPaper
 						}}
 					>
-						<div className={classes.toolbar} />
+						<div className={classes.toolbarPadding}>
+							<Typography variant="headline" className={classes.header}>Plymouth Libraries</Typography>
+						</div>
 						{this.state.list_drawer_open ?
 							<LibraryList
 								libraries={this.state.libraries}
@@ -273,6 +276,11 @@ class App extends Component {
 						location={this.state.map_location}
 						isochrones={this.state.isochrones}
 						libraries={this.state.libraries}
+						max_bounds={this.state.map_max_bounds}
+						fit_bounds={this.state.map_fit_bounds}
+						bearing={this.state.map_bearing}
+						pitch={this.state.map_pitch}
+						zoom={this.state.map_zoom}
 						viewLibrary={(library_name) => this.setState({ drawer_open: true, library_drawer_open: true, library_name: library_name, list_drawer_open: false })}
 					/>
 				</div>

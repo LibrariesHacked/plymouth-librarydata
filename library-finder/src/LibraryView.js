@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
 // Our components
+import Facilities from './Facilities';
 import LibraryCard from './LibraryCard';
 import LibraryStats from './LibraryStats';
 import OpeningHours from './OpeningHours';
@@ -31,10 +32,6 @@ const styles = theme => ({
 class LibraryView extends React.Component {
 	state = {
 		open_tab: 0
-	}
-	componentDidMount = () => {
-		// We need to get all the library isochrones
-		this.props.getIsochrones(this.props.library);
 	}
 	render() {
 		const { library } = this.props;
@@ -60,11 +57,17 @@ class LibraryView extends React.Component {
 					<Tab label="Stats" />
 				</Tabs>
 				{this.state.open_tab === 0 ?
-					<OpeningHours
-						library={library}
-					/> : null}
+					<div>
+						<Facilities 
+							library={library}
+						/>
+						<OpeningHours
+							library={library}
+						/>
+					</div> : null}
 				{this.state.open_tab === 1 ? 
 					<LibraryStats
+						getIsochrones={this.props.getIsochrones}
 						library={this.props.library}
 						isochrones={this.props.isochrones}
 					/>: null}

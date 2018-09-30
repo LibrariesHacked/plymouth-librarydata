@@ -13,6 +13,7 @@ import { Marker } from 'react-mapbox-gl';
 import { Source } from 'react-mapbox-gl';
 
 // Custom components
+import ClusterAvatar from './ClusterAvatar';
 import LibraryAvatar from './LibraryAvatar';
 
 const styles = {};
@@ -29,30 +30,25 @@ const Map = ReactMapboxGl({
 
 class LibraryMap extends Component {
 	state = {
-		fitBounds: [],
-		center: [-4.1432586, 50.3732736],
-		zoom: [16],
-		pitch: [90],
-		bearing: [0]
+		max_bounds: this.props.max_bounds,
+		fit_bounds: this.props.fit_bounds,
+		location: this.props.location,
+		zoom: this.props.zoom,
+		pitch: this.props.pitch,
+		bearing: this.props.bearing
 	};
 	componentWillReceiveProps = (nextProps) => {
-		if (nextProps.location.length > 0 && nextProps.location !== this.state.center) {
-			this.setState({
-				center: nextProps.location,
-				zoom: [20],
-				pitch: 160,
-				bearing: [90]
-			});
-		}
+		let stateUpdate = {};
+		// If we have a new location
+		if (nextProps.location.length > 0 && nextProps.location !== this.state.center) stateUpdate.center = nextProps.location;
+		this.setState(stateUpdate);
 	}
 	// clusterLibraries
 	clusterLibraries = (coordinates) => (
-		<Marker coordinates={coordinates}>C</Marker>
+		<Marker coordinates={coordinates}>
+			<ClusterAvatar />
+		</Marker>
 	)
-	// selectLibrary:
-	selectLibrary = (library) => {
-
-	}
 	// render
 	render() {
 		const { theme } = this.props;
@@ -64,7 +60,8 @@ class LibraryMap extends Component {
 					zoom={this.state.zoom}
 					pitch={this.state.pitch}
 					bearing={this.state.bearing}
-					fitBounds={this.state.bounds}
+					maxBounds={this.state.max_bounds}
+					fitBounds={this.state.fit_bounds}
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
 					onClick={this.mapClick}
 				>
