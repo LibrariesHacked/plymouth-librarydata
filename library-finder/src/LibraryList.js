@@ -53,6 +53,7 @@ class LibraryList extends React.Component {
 		actions_menu: false,
 		actions_menu_anchor: null,
 		filter: '',
+		filter_type: '',
 		filter_menu: false,
 		filter_menu_anchor: null,
 		library_name: '',
@@ -77,6 +78,14 @@ class LibraryList extends React.Component {
 				if (libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 				return show;
 			});
+		let events = [];
+		this.props.libraries.forEach(library => {
+			if (library.events) {
+				library.events.forEach(event => {
+					if (events.indexOf(event.title) === -1) events.push(event.title);
+				});
+			}
+		});
 		return (
 			<div>
 				<Menu // Menu used to sort libraries
@@ -98,15 +107,26 @@ class LibraryList extends React.Component {
 				>
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>All Libraries</MenuItem>
 					<Divider />
-					<ListSubheader>Filter by Facilities</ListSubheader>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'meetingrooms' })}>Meeting Rooms</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'localandfamilyhistory' })}>Local and Family History</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'navalhistory' })}>Naval History</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'microfilmscanners' })}>Microfilm Scanners</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'dvds' })}>DVDs</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'wifi' })}>WiFi</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'roofterrace' })}>Roof Terrace</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'cafe' })}>Cafe</MenuItem>
+					<ListSubheader disableSticky={true}>Filter by Facilities</ListSubheader>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'meetingrooms', filter_type: 'facility' })}>Meeting Rooms</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'localandfamilyhistory', filter_type: 'facility' })}>Local and Family History</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'navalhistory', filter_type: 'facility' })}>Naval History</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'microfilmscanners', filter_type: 'facility' })}>Microfilm Scanners</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'dvds', filter_type: 'facility' })}>DVDs</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'wifi', filter_type: 'facility' })}>WiFi</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'roofterrace', filter_type: 'facility' })}>Roof Terrace</MenuItem>
+					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'cafe', filter_type: 'facility' })}>Cafe</MenuItem>
+					{events.length > 0 ? 
+						<div>
+							<ListSubheader disableSticky={true}>Filter by Events</ListSubheader>
+							<Divider/>
+							{
+								events.sort().map(event => {
+									return <MenuItem onClick={() => this.setState({ filter_menu: false, filter: event, filter_type: 'event' })}>{event}</MenuItem>
+								})
+							}
+						</div> : null
+					}
 				</Menu>
 				<Tabs
 					fullWidth
@@ -134,7 +154,7 @@ class LibraryList extends React.Component {
 				</Tabs>
 				<IconButton><Refresh /></IconButton>
 				<Button size="small" variant="flat" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
-				<Button size="small" variant="flat" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 15) : 'All Libraries'}<FilterList className={classes.rightIcon} /></Button>
+				<Button size="small" variant="flat" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'All Libraries'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.libraries
 					.sort((lib_a, lib_b) => {
 						if (this.state.sort === 'name') return lib_a.name.localeCompare(lib_b.name);
@@ -145,7 +165,14 @@ class LibraryList extends React.Component {
 					})
 					.filter(library => {
 						let show = true;
-						if (this.state.filter !== '' && library[this.state.filter] === 'No') show = false;
+						if (this.state.filter !== '' && this.state.filter_type === 'facility' && library[this.state.filter] === 'No') show = false;
+						if (this.state.filter !== '' && this.state.filter_type === 'event' && library.events) {
+							let found = false;
+							library.events.forEach(event => {
+								if (event.title === this.state.filter) found = true;
+							});
+							show = found;
+						}
 						if ((this.state.open_tab === 0 && open_libraries.length !== 0) && !libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						if ((this.state.open_tab === 1 && closed_libraries.length !== 0) && libraries.checkLibraryOpen(library, this.props.current_time).open) show = false;
 						return show;

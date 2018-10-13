@@ -40,7 +40,7 @@ class LibraryMap extends Component {
 	componentWillReceiveProps = (nextProps) => {
 		let stateUpdate = {};
 		// If we have a new location
-		if (nextProps.location.length > 0 && nextProps.location !== this.state.center) stateUpdate.center = nextProps.location;
+		if (nextProps.location.length > 0 && nextProps.location !== this.state.center) stateUpdate.location = nextProps.location;
 		this.setState(stateUpdate);
 	}
 	// clusterLibraries
@@ -56,7 +56,7 @@ class LibraryMap extends Component {
 			<div>
 				<Map
 					style='https://s3-eu-west-1.amazonaws.com/tiles.os.uk/styles/open-zoomstack-light/style.json'
-					center={this.state.center}
+					center={this.state.location}
 					zoom={this.state.zoom}
 					pitch={this.state.pitch}
 					bearing={this.state.bearing}

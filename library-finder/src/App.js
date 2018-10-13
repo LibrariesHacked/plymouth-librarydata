@@ -121,7 +121,7 @@ class App extends Component {
 		// Map variables, sent down to the map for updates.
 		map_max_bounds: null,
 		map_fit_bounds: null,
-		map_location: [-4.1432586, 50.3732736], // Plymouth Central Library
+		map_location: [-4.142905038755941, 50.37316282100596], // Plymouth Central Library
 		map_zoom: [12], // Starting Zoom level
 		map_pitch: [0], // Starting pitch
 		map_bearing: [0] // Starting bearing

@@ -10,13 +10,13 @@ router.get('/', (req, res, next) => {
 	let location = [req.query.longitude, req.query.latitude];
 	let postcode = req.query.postcode;
 	let libraries = libHelper.getAllLibraries();
-	geoHelper.getLocationDistances(location, libraries, libs => {
-		if (libs) {
-			feedHelper.getFeed(libs, feeds => {
+	geoHelper.getLocationDistances(location, libraries, new_libs => {
+		if (new_libs) {
+			feedHelper.getFeed(new_libs, feeds => {
 				res.json(feeds);
 			});
 		} else {
-			res.json([]);
+			res.json(libraries);
 		}
 	});
 });

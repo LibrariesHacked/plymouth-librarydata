@@ -9,12 +9,14 @@ module.exports.getFeed = (library_list, callback) => {
 			const results = JSON.parse(body);
 			library.events = [];
 			results.query.results.item.forEach(result => {
-				if (library.name == result.title.split(': ')[1]) {
-					let event = { title: result.title.split(': ')[0], date: result.date };
+				const feedTitle = result.title.split(': ');
+				if (feedTitle.length > 0 && library.name === feedTitle[1]) {
+					let event = { title: feedTitle[0], date: result.date };
 					library.events.push(event);
 				}
 			});
 		});
+		console.log(library_list);
 		callback(library_list);
 	});
 }
