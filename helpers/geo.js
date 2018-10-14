@@ -20,9 +20,10 @@ module.exports.getDistances = (postcode_object, location, destinations) => {
 	oas.forEach(oa => oa_points.push(turf.point([oa.X, oa.Y], { oa_code: oa.oa11cd })));
 	let nearest = turf.nearestPoint(point, turf.featureCollection(oa_points));
 	let oa_code = nearest.properties.oa_code;
-	let path_driving = path.join(__dirname, oa_path + oa_code + '_driving.json');
-	let path_cycling = path.join(__dirname, oa_path + oa_code + '_cycling.json');
-	let path_walking = path.join(__dirname, oa_path + oa_code + '_walking.json');
+	let path_driving = path.join(__dirname, oa_path + oa_code + '_driving-car.json');
+	let path_cycling = path.join(__dirname, oa_path + oa_code + '_cycling-regular.json');
+	let path_walking = path.join(__dirname, oa_path + oa_code + '_foot-walking.json');
+	console.log(path_walking);
 	if (fs.existsSync(path_driving)) {
 		let driving_text = fs.readFileSync(path_driving, { encoding: 'utf8' });
 		let driving_json = JSON.parse(driving_text);

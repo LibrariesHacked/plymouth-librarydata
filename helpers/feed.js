@@ -16,7 +16,6 @@ module.exports.getFeed = (library_list, callback) => {
 				}
 			});
 		});
-		console.log(library_list);
 		callback(library_list);
 	});
 }
