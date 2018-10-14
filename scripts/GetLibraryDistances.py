@@ -10,9 +10,11 @@ OUTPUT_DIR = '../data/oa_distances/'  # Where to save the files
 # Key for open route service
 ORS_KEY = '58d904a497c67e00015b45fc42337203b9d0468561ab2f37e26ecb76'
 
+
 def chunks(l, n):
 	for i in range(0, len(l), n):
 		yield l[i:i + n]
+
 
 def run():
     oas = []  # Array of OAs
@@ -55,6 +57,7 @@ def run():
         transport = ['driving-car', 'cycling-regular', 'foot-walking']
 
         for tran in transport:
+            wait = True
             if not os.path.isfile(OUTPUT_DIR + 'chunk_' + str(oas_idx + 1) + '_' + tran + '.json'):
                 url = (
                     'https://api.openrouteservice.org/matrix?profile=' + tran + '&locations=' +
@@ -70,9 +73,9 @@ def run():
                 with open(OUTPUT_DIR + 'chunk_' + str(oas_idx + 1) + '_' + tran + '.json', 'w') as outfile:
                     json.dump(data, outfile)
             else:
-                # Load in the data from the saved file
-                data = json.loads(OUTPUT_DIR + 'chunk_' +
-                                  str(oas_idx + 1) + '_' + tran + '.json')
+                wait = False
+                with open((OUTPUT_DIR + 'chunk_' + str(oas_idx + 1) + '_' + tran + '.json'), encoding='utf-8') as data_file:
+                    data = json.loads(data_file.read())
 
             if not 'error' in data:
                 # Each item returned is an OA.
@@ -89,7 +92,8 @@ def run():
                         with open(OUTPUT_DIR + oa['oa'] + '_' + tran + '.json', 'w') as outfile:
                             json.dump(oa_data, outfile)
 
-            print('Waiting...')
-            time.sleep(3)
+            if wait:
+                print('Waiting...')
+                time.sleep(3)
 
 run()
