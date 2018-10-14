@@ -72,6 +72,7 @@ def run():
 
                 with open(OUTPUT_DIR + 'chunk_' + str(oas_idx + 1) + '_' + tran + '.json', 'w') as outfile:
                     json.dump(data, outfile)
+
             else:
                 wait = False
                 with open((OUTPUT_DIR + 'chunk_' + str(oas_idx + 1) + '_' + tran + '.json'), encoding='utf-8') as data_file:
