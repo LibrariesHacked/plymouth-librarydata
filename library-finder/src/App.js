@@ -31,7 +31,7 @@ import * as libHelper from './helpers/libraries';
 import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 
-const drawerWidth = 350;
+const drawerWidth = 360;
 
 const theme = createMuiTheme({
 	palette: {

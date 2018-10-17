@@ -1,6 +1,7 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 // Material UI
 import Button from '@material-ui/core/Button';
@@ -24,7 +25,7 @@ import * as libraries from './helpers/libraries';
 
 const styles = theme => ({
 	button: {
-		margin: theme.spacing.unit / 2,
+		margin: 0,
 	},
 	leftIcon: {
 		marginRight: theme.spacing.unit / 2,
@@ -80,7 +81,7 @@ class LibraryCard extends React.Component {
 						(this.props.isochrones[library.name]['foot-walking'].retrieved ?
 							<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 						) : <DirectionsWalk className={classes.leftIcon} />}
-					{library.walking_duration ? Math.round(library.walking_duration / 60) : ''}
+					{library.walking_duration ? moment.duration(library.walking_duration, 'seconds').humanize() : ''}
 				</Button>
 				<Button
 					color={
@@ -97,7 +98,7 @@ class LibraryCard extends React.Component {
 						(this.props.isochrones[library.name]['cycling'].retrieved ?
 							<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 						) : <DirectionsBike className={classes.leftIcon} />}
-					{library.cycling_duration ? Math.round(library.cycling_duration / 60) : ''}
+					{library.cycling_duration ? moment.duration(library.cycling_duration, 'seconds').humanize() : ''}
 				</Button>
 				<Button
 					color={
@@ -114,7 +115,7 @@ class LibraryCard extends React.Component {
 						(this.props.isochrones[library.name]['driving-car'].retrieved ?
 							<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
 						) : <DirectionsCar className={classes.leftIcon} />}
-					{library.driving_duration ? Math.round(library.driving_duration / 60) : ''}
+					{library.driving_duration ? moment.duration(library.driving_duration, 'seconds').humanize() : ''}
 				</Button>
 			</Card>
 		);
