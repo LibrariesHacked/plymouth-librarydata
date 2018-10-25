@@ -1,17 +1,19 @@
 const request = require('request');
 
-const events_yql = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%20IN%20('https%3A%2F%2Fwww.plymouth.gov.uk%2Ftaxonomy%2Fterm%2F88%2Fall%2Ffeed%3Fpage%3D1'%2C%20'https%3A%2F%2Fwww.plymouth.gov.uk%2Ftaxonomy%2Fterm%2F88%2Fall%2Ffeed%3Fpage%3D2'%2C%20'https%3A%2F%2Fwww.plymouth.gov.uk%2Ftaxonomy%2Fterm%2F88%2Fall%2Ffeed%3Fpage%3D3'%2C%20'https%3A%2F%2Fwww.plymouth.gov.uk%2Ftaxonomy%2Fterm%2F88%2Fall%2Ffeed%3Fpage%3D4'%2C%20'https%3A%2F%2Fwww.plymouth.gov.uk%2Ftaxonomy%2Fterm%2F88%2Fall%2Ffeed%3Fpage%3D5')&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys";
+const events_feed = "https://script.google.com/macros/s/AKfycbwYJSz1OgWzXzReiirr8jgwHvQaeyyb0aYOSDFXCFLZrSiZdxbA/exec";
 
 // GetFeed: 
 module.exports.getFeed = (library_list, callback) => {
-	request.get(events_yql, (error, response, body) => {
+	request.get(events_feed, (error, response, body) => {
+		const results = JSON.parse(body);
 		library_list.forEach(library => {
-			const results = JSON.parse(body);
 			library.events = [];
-			results.query.results.item.forEach(result => {
-				const feedTitle = result.title.split(': ');
-				if (feedTitle.length > 0 && library.name === feedTitle[1]) {
-					let event = { title: feedTitle[0], date: result.date };
+			results.forEach(result => {
+				const feedTitle = result.title;
+				const feedLibrary = result.library;
+				const dates = result.events;
+				if (feedTitle.length > 0 && library.name === feedLibrary) {
+					let event = { title: feedTitle, dates: dates };
 					library.events.push(event);
 				}
 			});
