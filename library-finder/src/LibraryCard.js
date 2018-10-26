@@ -16,6 +16,7 @@ import DirectionsBike from '@material-ui/icons/DirectionsBike';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
 import LocationOn from '@material-ui/icons/LocationOn';
+import ZoomIn from '@material-ui/icons/ZoomIn';
 
 // Our custom avatars
 import LibraryAvatar from './LibraryAvatar';
@@ -59,9 +60,14 @@ class LibraryCard extends React.Component {
 							selectLibrary={this.props.more_option ? (() => this.props.viewLibrary(library.name)) : null} />
 					}
 					action={
-						<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
-							<LocationOn />
-						</IconButton>
+						<div>
+							<IconButton onClick={(e) => this.props.goTo([library.longitude, library.latitude])}>
+								<LocationOn />
+							</IconButton>
+							<IconButton onClick={(e) => this.props.zoomTo([library.longitude, library.latitude])}>
+								<ZoomIn />
+							</IconButton>
+						</div>
 					}
 					title={library.name}
 					subheader={library.address_1 + '. ' + libraries.checkLibraryOpen(library, this.props.current_time).message}

@@ -187,6 +187,7 @@ class LibraryList extends React.Component {
 								isochrones={this.props.isochrones}
 								toggleIsochrone={this.props.toggleIsochrone}
 								goTo={this.props.goTo}
+								zoomTo={this.props.zoomTo}
 								viewLibrary={this.props.viewLibrary}
 							/>)
 					})}

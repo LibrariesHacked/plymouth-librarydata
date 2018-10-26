@@ -15,9 +15,27 @@ export function getAllLibraries(location, callback) {
 
 // updateLibraryLocations: 
 export function updateLibraryLocations(location, libraries, callback) {
-	axios.post('/api/libraries/updatelibrarylocations', { location: location, libraries: libraries })
+	// Remove the event data
+	var libraries_trimmed = [];
+	libraries.forEach(library => {
+		libraries_trimmed.push(library);
+	});
+	libraries_trimmed.forEach(library => {
+		delete library.events;
+	});
+
+	axios.post('/api/libraries/updatelibrarylocations', { location: location, libraries: libraries_trimmed })
 		.then(response => {
-			callback(response.data);
+			let libraries_updated = libraries;
+			if (response && response.data && response.data.length > 0) {
+				libraries_updated = response.data;
+				libraries_updated.forEach(library => {
+					libraries.forEach(old_library => {
+						if (old_library.name === library.name) library.events = old_library.events;
+					});
+				});
+			}
+			callback(libraries_updated);
 		})
 		.catch(error => callback([]));
 };

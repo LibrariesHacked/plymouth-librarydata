@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
 // Our components
+import Events from './Events';
 import Facilities from './Facilities';
 import LibraryCard from './LibraryCard';
 import LibraryStats from './LibraryStats';
@@ -44,6 +45,7 @@ class LibraryView extends React.Component {
 					isochrones={this.props.isochrones}
 					toggleIsochrone={this.props.toggleIsochrone}
 					goTo={this.props.goTo}
+					zoomTo={this.props.zoomTo}
 					viewLibrary={this.props.viewLibrary}
 				/>
 				<Tabs
@@ -62,6 +64,9 @@ class LibraryView extends React.Component {
 							library={library}
 						/>
 						<OpeningHours
+							library={library}
+						/>
+						<Events 
 							library={library}
 						/>
 					</div> : null}

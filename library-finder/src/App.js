@@ -31,7 +31,7 @@ import * as libHelper from './helpers/libraries';
 import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 
-const drawerWidth = 360;
+const drawerWidth = 370;
 
 const theme = createMuiTheme({
 	palette: {
@@ -130,8 +130,8 @@ class App extends Component {
 	componentDidMount = () => {
 		this.getLibrariesStart();
 		// Repeat every minute
-		let location_update_interval = setInterval(this.logLocation, 60000);
-		this.setState({ location_update_interval: location_update_interval });
+		// let location_update_interval = setInterval(this.logLocation, 60000);
+		// this.setState({ location_update_interval: location_update_interval });
 		let time_int = setInterval(this.setCurrentTime, 1000);
 		this.setState({ time_int: time_int });
 	};
@@ -259,6 +259,7 @@ class App extends Component {
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
 								goTo={(location) => this.setState({ map_location: location })}
+								zoomTo={(location) => this.setState({ map_location: location, map_zoom: 16, map_bearing: 90 })}
 								viewLibrary={(library_name) => this.setState({ drawer_open: true, library_drawer_open: true, library_name: library_name, list_drawer_open: false })}
 							/> : null}
 						{this.state.library_drawer_open ?
@@ -269,6 +270,7 @@ class App extends Component {
 								current_time={this.state.current_time}
 								getIsochrones={(library) => this.getLibraryIsochrones(library)}
 								goTo={(location) => this.setState({ map_location: location })}
+								zoomTo={(location) => this.setState({ map_location: location, map_zoom: 16, map_bearing: 90 })}
 								close={() => this.setState({ drawer_open: true, library_drawer_open: false, list_drawer_open: true })}
 							/> : null}
 					</Drawer>

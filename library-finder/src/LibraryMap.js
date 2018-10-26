@@ -11,6 +11,7 @@ import { GeoJSONLayer } from 'react-mapbox-gl';
 import { Layer } from 'react-mapbox-gl';
 import { Marker } from 'react-mapbox-gl';
 import { Source } from 'react-mapbox-gl';
+import { ZoomControl } from "react-mapbox-gl";
 
 // Custom components
 import ClusterAvatar from './ClusterAvatar';
@@ -25,7 +26,7 @@ const Map = ReactMapboxGl({
 	scrollZoom: true,
 	interactive: true,
 	dragRotate: true,
-	attributionControl: true
+	attributionControl: true,
 });
 
 class LibraryMap extends Component {
@@ -65,6 +66,7 @@ class LibraryMap extends Component {
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
 					onClick={this.mapClick}
 				>
+					<ZoomControl/>
 					<Source
 						id='buildings_source'
 						tileJsonSource={{
