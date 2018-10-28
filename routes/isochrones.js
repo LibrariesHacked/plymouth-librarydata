@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 
-// Gets an isochrone by library and travel type.
+// Gets an isochrone by location and travel type.
 router.get('/', function (req, res, next) {
-	let library = req.query.library;
+	let location = req.query.location;
 	let travel = req.query.travel;
 	if (travel) travel = travel.split(',');
 	if (!travel) travel = ['cycling-regular', 'driving-car', 'foot-walking'];
@@ -17,11 +17,9 @@ router.get('/', function (req, res, next) {
 		if (index !== -1) travel.splice(index, 1);
 	});
 
-	console.log(travel);
-
 	let isochrones = [];
 	travel.forEach(travel_type => {
-		isochrones.push({ travel: travel_type, iso:  JSON.parse(fs.readFileSync('./data/isochrones/' + library + '_isochrone_' + travel_type + '.json', 'utf8')) })
+		isochrones.push({ travel: travel_type, iso:  JSON.parse(fs.readFileSync('./data/isochrones/' + location + '_isochrone_' + travel_type + '.json', 'utf8')) })
 	});
 	res.json(isochrones);
 });

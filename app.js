@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 // 
-const libraries = require('./routes/libraries');
+const locations = require('./routes/locations');
 const isochrones = require('./routes/isochrones');
 
 const app = express();
@@ -23,15 +23,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '/library-finder/build')));
+app.use(express.static(path.join(__dirname, '/client/build')));
 
-// Web service routes
-app.use('/api/libraries', libraries);
+// API routes
+app.use('/api/locations', locations);
 app.use('/api/isochrones', isochrones);
 
 // React app for all other requests
 app.get('*', function (req, res) {
-	res.sendFile(path.join(__dirname + '/library-finder/build/index.html'));
+	res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 // Listen for requests
