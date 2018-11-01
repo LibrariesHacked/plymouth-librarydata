@@ -16,7 +16,7 @@ const styles = theme => ({
 
 class Stats extends React.Component {
 	componentDidMount = () => {
-		this.props.getIsochrones(this.props.location);
+		this.props.getIsochrones(this.props.location.name);
 	}
 
 	render() {
@@ -25,12 +25,12 @@ class Stats extends React.Component {
 			<div>
 				{isochrones && isochrones[location.name] ?
 					Object.keys(isochrones[location.name])
-						.map(travel => {
+						.map((travel, i) => {
 							let iso_data = isoHelper.getIsochroneData(isochrones[location.name][travel].iso);
 							let data_labels = iso_data.map(f => { return (f.value / 60) + ' mins' });
 							let data_values = iso_data.map(f => { return f.total_pop });
 							return (
-								<div>
+								<div key={'travel_stats_' + i}>
 									<ListSubheader>{(isoHelper.getIsochroneConfig())[travel].display + ' distance population'}</ListSubheader>
 									<br />
 									<Bar

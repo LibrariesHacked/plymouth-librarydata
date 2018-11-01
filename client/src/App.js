@@ -13,9 +13,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import LocationSearching from '@material-ui/icons/LocationSearching';
-import MenuIcon from '@material-ui/icons/Menu';
+import Menu from '@material-ui/icons/Menu';
 import MyLocation from '@material-ui/icons/MyLocation';
 
 // Use moment for opening hours
@@ -25,6 +25,7 @@ import moment from 'moment';
 import List from './List';
 import Location from './Location';
 import LocationMap from './LocationMap';
+import Search from './Search';
 
 // Helpers
 import * as locationsHelper from './helpers/locations';
@@ -34,6 +35,9 @@ import * as isoHelper from './helpers/isochrones';
 const drawerWidth = 380;
 
 const theme = createMuiTheme({
+	typography: {
+		useNextVariants: true,
+	},
 	palette: {
 		primary: { main: 'rgb(143,212,0)', contrastText: '#fff' },
 		secondary: { main: 'rgb(0,120,201)', contrastText: '#fff' }
@@ -69,7 +73,7 @@ const styles = {
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
-		backgroundColor: 'rgba(255, 255, 255, 0.8)'
+		backgroundColor: 'rgba(255, 255, 255, 0.9)'
 	},
 	flex: {
 		flex: 1,
@@ -77,7 +81,7 @@ const styles = {
 	header: {
 		textAlign: 'right',
 		padding: 16,
-		color: 'rgba(143, 212, 0, 0.6)',
+		color: 'rgba(143, 212, 0, 1)',
 		fontWeight: 700
 	},
 	map: {
@@ -98,7 +102,7 @@ const styles = {
 		display: 'flex',
 		width: '100%',
 	},
-	toolBar: {
+	toolbar: {
 		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
 	toolbarPadding: theme.mixins.toolbar
@@ -106,25 +110,29 @@ const styles = {
 
 class App extends Component {
 	state = {
-		loading: false,
+		// We either maintain data by GPS or by postcode search
+		search_type: 'gps',
+		// Tracking of position and time
 		current_time: moment(),
+		time_update_interval: '',
 		current_position: [],
-		drawer_open: true,
-		isochrones: {},
-		location_drawer_open: false,
+		position_update_interval: '',
+		// The locations displayed in the system.
 		locations: [],
 		location_name: '',
-		list_drawer_open: true,
-		position_update_interval: '',
-		search_type: 'gps', // gps or postcode.
-		time_int: '',
+		location_isochrones: {},
 		// Map variables, sent down to the map for updates.
 		map_max_bounds: null,
 		map_fit_bounds: null,
-		map_position: [-4.1429, 50.3732], // Have central as centre
-		map_zoom: [12], // Starting zoom level
-		map_pitch: [0], // Starting pitch
-		map_bearing: [0] // Starting bearing
+		map_position: [-4.1429, 50.3732],
+		map_zoom: [12],
+		map_pitch: [0],
+		map_bearing: [0],
+		// UI variables
+		loading: false,
+		main_drawer_open: true,
+		list_drawer_open: true,
+		location_drawer_open: false
 	}
 
 	// componentDidMount: sets up data and any logging
@@ -135,21 +143,22 @@ class App extends Component {
 		let position_update_interval = setInterval(this.logPosition, 60000);
 		this.setState({ position_update_interval: position_update_interval });
 
-		// Update the current time every second. This is used in some views.
-		let time_int = setInterval(this.setCurrentTime, 1000);
-		this.setState({ time_int: time_int });
-	};
-
-	// setCurrentTime: 
-	setCurrentTime = () => this.setState({ current_time: moment() });
+		// Update the current time every 5 seconds. This is used in some views.
+		let time_update_interval = setInterval(this.setCurrentTime, 5000);
+		this.setState({ time_update_interval: time_update_interval });
+	}
 
 	// logPosition: Retrieve position from gps
 	logPosition = () => {
 		this.setState({ loading: true }); // Show the loading indicator
 		geoHelper.getCurrentPosition(position => {
 			// Update 
+			this.setState({ loading: false });
 		});
 	}
+
+	// setCurrentTime: 
+	setCurrentTime = () => this.setState({ current_time: moment() });
 
 	// getLocations:
 	getLocations = () => {
@@ -165,7 +174,7 @@ class App extends Component {
 
 	// 
 	fitLocationBounds = () => {
-
+		// 
 	}
 
 	// handleGPS:
@@ -176,7 +185,7 @@ class App extends Component {
 	// getLocationIsochrones: fetches the underlying data for an isochrone
 	getLocationIsochrones = (location_name) => {
 		this.setState({ loading: true });
-		let isochrones = this.state.isochrones;
+		let isochrones = this.state.location_isochrones;
 		let received = [];
 		if (isochrones[location_name]) received = Object.keys(isochrones[location_name]);
 		if (!isochrones[location_name]) isochrones[location_name] = {};
@@ -184,25 +193,25 @@ class App extends Component {
 			isos.forEach(iso => {
 				isochrones[location_name][iso.travel] = { retrieved: true, selected: false, iso: iso.iso };
 			});
-			this.setState({ isochrones: isochrones, loading: false });
+			this.setState({ location_isochrones: isochrones, loading: false });
 		});
 	}
 
 	// toggleIsochrone: turns a particular location travel type on or off
 	toggleIsochrone = (location_name, travel) => {
 		this.setState({ loading: true });
-		let isochrones = this.state.isochrones;
+		let isochrones = this.state.location_isochrones;
 		if (!isochrones[location_name]) isochrones[location_name] = {};
 		if (!isochrones[location_name][travel]) {
 			isochrones[location_name][travel] = { retrieved: false, selected: true, iso: null };
 			this.setState({ isochrones: isochrones });
 			isoHelper.getLocationIsochronesByType(location_name, [travel], iso => {
 				isochrones[location_name][travel] = { retrieved: true, selected: true, iso: iso[0].iso };
-				this.setState({ isochrones: isochrones, loading: false });
+				this.setState({ location_isochrones: isochrones, loading: false });
 			});
 		} else {
 			isochrones[location_name][travel].selected = !isochrones[location_name][travel].selected;
-			this.setState({ isochrones: isochrones, loading: false });
+			this.setState({ location_isochrones: isochrones, loading: false });
 		}
 	}
 
@@ -218,7 +227,7 @@ class App extends Component {
 						color="default"
 						elevation={0}
 						className={classes.appBar}>
-						<Toolbar className={classes.toolBar}>
+						<Toolbar className={classes.toolbar}>
 							{this.state.list_drawer_open ?
 								<Button
 									variant="fab"
@@ -227,21 +236,22 @@ class App extends Component {
 									color="secondary"
 									className={classes.menuButton}
 									aria-label="Menu"
-									onClick={(e) => this.setState({ drawer_open: !this.state.drawer_open, list_drawer_open: true, location_drawer_open: false })}
+									onClick={(e) => this.setState({ main_drawer_open: !this.state.main_drawer_open, list_drawer_open: true, location_drawer_open: false })}
 								>
 									{this.state.loading ?
 										<CircularProgress
 											size={20}
 											className={classes.buttonProgress}
-										/> : <MenuIcon />}
+										/> : <Menu />}
 								</Button> : null
 							}
 							{this.state.location_drawer_open ?
-								<Button variant="fab" mini color="secondary" className={classes.menuButton} aria-label="Menu" onClick={() => this.setState({ drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
-									<ArrowBackIcon />
+								<Button variant="fab" mini color="secondary" className={classes.menuButton} aria-label="Menu" onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
+									<ArrowBack />
 								</Button> : null
 							}
-							<Typography variant="title" color="inherit" className={classes.flex}></Typography>
+							<span className={classes.flex}></span>
+							<Search />
 							<Button
 								variant="fab"
 								mini
@@ -255,44 +265,44 @@ class App extends Component {
 					</AppBar>
 					<Drawer
 						variant="persistent"
-						open={this.state.drawer_open}
+						open={this.state.main_drawer_open}
 						classes={{
 							paper: classes.drawerPaper
 						}}
 					>
 						<div className={classes.toolbarPadding}>
-							<Typography variant="headline" className={classes.header}>Plymouth Libraries</Typography>
+							<Typography variant="h6" className={classes.header}>Plymouth</Typography>
 						</div>
 						{this.state.list_drawer_open ?
 							<List
 								locations={this.state.locations}
-								isochrones={this.state.isochrones}
+								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
-								viewLocation={(location_name) => this.setState({ drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
+								viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
 							/> : null}
 						{this.state.location_drawer_open ?
 							<Location
 								location={this.state.locations.find(location => { return location.name === this.state.location_name })}
-								isochrones={this.state.isochrones}
+								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
 								getIsochrones={(location_name) => this.getLocationIsochrones(location_name)}
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
-								close={() => this.setState({ drawer_open: true, location_drawer_open: false, list_drawer_open: true })}
+								close={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })}
 							/> : null}
 					</Drawer>
 					<LocationMap
 						position={this.state.map_position}
-						isochrones={this.state.isochrones}
+						isochrones={this.state.location_isochrones}
 						locations={this.state.locations}
 						max_bounds={this.state.map_max_bounds}
 						fit_bounds={this.state.map_fit_bounds}
 						bearing={this.state.map_bearing}
 						pitch={this.state.map_pitch}
 						zoom={this.state.map_zoom}
-						viewLocation={(location_name) => this.setState({ drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
+						viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
 					/>
 				</div>
 			</MuiThemeProvider >

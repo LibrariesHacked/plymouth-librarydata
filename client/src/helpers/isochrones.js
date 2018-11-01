@@ -18,7 +18,7 @@ export function getIsochroneConfig() {
 
 // getLocationIsochronesByType:Gets isochrones for a particular location and travel type.
 export function getLocationIsochronesByType(location_name, travel, callback) {
-	axios.get('/api/isochrones?location=' + location_name + '&travel=' + travel.join(','))
+	axios.get('/api/isochrones?location=' + location_name + '&include=' + travel.join(','))
 		.then(response => {
 			callback(response.data);
 		})
@@ -27,7 +27,7 @@ export function getLocationIsochronesByType(location_name, travel, callback) {
 
 // getAllLocationIsochrones: Gets all isochrones for a location except those already received
 export function getAllLocationIsochrones(location_name, received, callback) {
-	axios.get('/api/isochrones?location=' + location_name + '&received=' + received.join(','))
+	axios.get('/api/isochrones?location=' + location_name + '&exclude=' + received.join(','))
 		.then(response => {
 			callback(response.data);
 		})

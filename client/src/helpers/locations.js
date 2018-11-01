@@ -4,14 +4,78 @@ import axios from 'axios';
 // Moment for using dates and times
 import moment from 'moment';
 
+// Facility config for libraries
+const facilityConfig = {
+	computers: {
+		display: 'Computers',
+		icon: ''
+	},
+	wifi: {
+		display: 'WiFi',
+		icon: ''
+	}, 
+	printers: {
+		display: 'Printers',
+		icon: ''
+	}, 
+	photocopiers: {
+		display: 'Photocopying',
+		icon: ''
+	}, 
+	scanners: {
+		display: 'Scanners',
+		icon: ''
+	}, 
+	meetingrooms: {
+		display: 'Meeting rooms',
+		icon: ''
+	}, 
+	localandfamilyhistory: {
+		display: 'Computers',
+		icon: ''
+	}, 
+	navalhistory: {
+		display: 'Naval History',
+		icon: ''
+	}, 
+	microfilmscanners: {
+		display: 'Microfilm scanners',
+		icon: ''
+	}, 
+	roofterrace: {
+		display: 'Roof terrace',
+		icon: ''
+	}, 
+	books: {
+		display: 'Boos',
+		icon: ''
+	}, 
+	dvds: {
+		display: 'DVDs',
+		icon: ''
+	}, 
+	audiobooks: {
+		display: 'Audiobooks',
+		icon: ''
+	}, 
+	requestservice: {
+		display: 'Request service',
+		icon: ''
+	}, 
+	cafe: {
+		display: 'Cafe',
+		icon: ''
+	}
+};
+
 // getAllLocations: 
 export function getAllLocations(position_coords, callback) {
-	axios.get('/api/locations?latitude=' + position_coords[1] + '&longitude=' + position_coords[0])
+	axios.get('/api/locations?events=true&latitude=' + position_coords[1] + '&longitude=' + position_coords[0])
 		.then(response => {
 			callback(response.data);
 		})
-		.catch(error => callback([]));
-};
+		.catch(err => callback([]));
+}
 
 // checkLocationOpen: 
 export function checkLocationOpen(location, current) {
@@ -48,13 +112,15 @@ export function checkLocationOpen(location, current) {
 		}
 	}
 	return { open: open, message: message };
-};
+}
 
 // getLocationOpeningHours:
 export function getLocationOpeningHours(location) {
 	let opening_hours = [];
 	let date = moment();
 	for (let x = 0; x < 7; x++) {
+		const start = location[date.format('dddd').toLowerCase()].split('-')[0];
+		const end = location[date.format('dddd').toLowerCase()].split('-')[1];
 		opening_hours.push(
 			{
 				full: date.format('DD/MM/YYYY'),
@@ -62,7 +128,9 @@ export function getLocationOpeningHours(location) {
 				day_code: date.format('ddd'),
 				date: date.format('DD'),
 				date_ordinal: date.format('Do'),
-				hours: location[date.format('dddd').toLowerCase()]
+				hours: location[date.format('dddd').toLowerCase()],
+				start: moment(start, 'HH:mm').format('ha'),
+				end: moment(end, 'HH:mm').format('ha')
 			}
 		)
 		date.add('day', 1);
@@ -95,5 +163,6 @@ export function getLocationTotalOpeningHoursDay(location, day) {
 // getFacilities:
 export function getFacilities(location) {
 	let facilities = [];
+
 	return [];
 }

@@ -10,6 +10,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 // Material Icons
 import Business from '@material-ui/icons/Business';
@@ -17,6 +18,7 @@ import DirectionsBike from '@material-ui/icons/DirectionsBike';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
 import LocationOn from '@material-ui/icons/LocationOn';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 // Our custom avatars
 import LocationAvatar from './LocationAvatar';
@@ -26,18 +28,21 @@ import * as locationsHelper from './helpers/locations';
 
 const styles = theme => ({
 	button: {
-		margin: 0,
-	},
-	leftIcon: {
-		marginRight: theme.spacing.unit / 2,
-	},
-	progress: {
-		marginRight: theme.spacing.unit / 2
+		margin: theme.spacing.unit / 2,
 	},
 	card: {
 		border: '1px solid #e5e5e5',
 		margin: '5px',
 		borderRadius: '3px'
+	},
+	leftIcon: {
+	},
+	progress: {
+		marginRight: theme.spacing.unit / 2
+	},
+	textMargin: {
+		marginLeft: 10,
+		marginRight: 10
 	}
 });
 
@@ -97,10 +102,17 @@ class LocationCard extends React.Component {
 					subheader={
 						location.address_1 + '. ' +
 						locationsHelper.checkLocationOpen(location, this.props.current_time).message + '. ' +
-						(Object.keys(current_event).length > 0 ? 'Currently hosting ' + current_event.name + '. ' : '') +
-						(Object.keys(next_event).length > 0 ? 'Next up, ' + next_event.title + '. ' : '')
+						(Object.keys(current_event).length > 0 ? 'Currently hosting ' + current_event.name + '. ' : '')
 					}
 				/>
+				{Object.keys(current_event).length > 0 ?
+					<Typography className={classes.textMargin} variant="body2">{'Now ' + current_event.title}</Typography> :
+					<Typography className={classes.textMargin} variant="body2">{(Object.keys(next_event).length > 0 ? 'Next up ' + next_event.title + ' (' + moment(next_event.date.start_date).format('ddd Do h:mma') + ')' : '')}</Typography>
+				}
+				<br/>
+				<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
+					<MoreHoriz className={classes.leftIcon} />
+				</IconButton>
 				<Button
 					color={
 						this.props.isochrones &&
@@ -109,7 +121,7 @@ class LocationCard extends React.Component {
 							this.props.isochrones[location.name]['foot-walking'].selected ? 'primary' : 'secondary'}
 					className={classes.button}
 					aria-label="Directions Isochrone"
-					onClick={(e) => this.props.toggleIsochrone(location.name, 'foot-walking')}>
+					onClick={() => this.props.toggleIsochrone(location.name, 'foot-walking')}>
 					{this.props.isochrones &&
 						this.props.isochrones[location.name] &&
 						this.props.isochrones[location.name]['foot-walking'] ?
@@ -126,7 +138,7 @@ class LocationCard extends React.Component {
 							this.props.isochrones[location.name]['cycling-regular'].selected ? 'primary' : 'secondary'}
 					className={classes.button}
 					aria-label="Directions Isochrone"
-					onClick={(e) => this.props.toggleIsochrone(location.name, 'cycling-regular')}>
+					onClick={() => this.props.toggleIsochrone(location.name, 'cycling-regular')}>
 					{this.props.isochrones &&
 						this.props.isochrones[location.name] &&
 						this.props.isochrones[location.name]['cycling'] ?
@@ -143,7 +155,7 @@ class LocationCard extends React.Component {
 							this.props.isochrones[location.name]['driving-car'].selected ? 'primary' : 'secondary'}
 					className={classes.button}
 					aria-label="Directions Isochrone"
-					onClick={(e) => this.props.toggleIsochrone(location.name, 'driving-car')}>
+					onClick={() => this.props.toggleIsochrone(location.name, 'driving-car')}>
 					{this.props.isochrones &&
 						this.props.isochrones[location.name] &&
 						this.props.isochrones[location.name]['driving-car'] ?

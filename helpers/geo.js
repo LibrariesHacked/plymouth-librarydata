@@ -46,7 +46,7 @@ module.exports.getDistances = (postcode_object, location, destinations) => {
 
 // GetLocationDistances: Takes in a Lat/Lng and retrieves the distance to each location.
 module.exports.getLocationDistances = (location, destinations, callback) => {
-	request('https://api.postcodes.io/postcodes?lon=' + location[0] + '&lat=' + location[1], (err, res, body) => {
+	request(postcodes_url + '?lon=' + location[0] + '&lat=' + location[1], (err, res, body) => {
 		let json_result;
 		try {
 			json_result = JSON.parse(body);
@@ -62,7 +62,7 @@ module.exports.getLocationDistances = (location, destinations, callback) => {
 
 // GetPostcodeDistances: Takes in a postcode and retrieves the distance to each library.
 module.exports.getPostcodeDistances = (postcode, destinations, callback) => {
-	request('https://api.postcodes.io/postcodes/' + postcode, (err, res, body) => {
+	request(postcodes_url + postcode, (err, res, body) => {
 		let json_result = JSON.parse(body);
 		if (json_result && json_result.result) {
 			let destinations_processed = _this.getDistances(json_result.result, [json_result.result.longitude, json_result.result.latitude], destinations);

@@ -25,8 +25,8 @@
     "type": "git",
     "url": "git+https://github.com/librarieshacked/plymouth-librarydata.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Libraries Hacked",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/librarieshacked/plymouth-librarydata/issues"
   },

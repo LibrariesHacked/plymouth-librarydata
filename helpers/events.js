@@ -1,26 +1,39 @@
 const request = require('request');
 
-const event_url = "https://script.google.com/macros/s/AKfycbwYJSz1OgWzXzReiirr8jgwHvQaeyyb0aYOSDFXCFLZrSiZdxbA/exec";
+const event_url = 'https://script.google.com/macros/s/AKfycbwYJSz1OgWzXzReiirr8jgwHvQaeyyb0aYOSDFXCFLZrSiZdxbA/exec';
 
-// GetFeed: Takes in an array of locations and adds events for them.
-module.exports.getEvents = (locations, callback) => {
-	request.get(event_url, (err, res, body) => {
-		let results = [];
+// Get Events: Retrieves events from the URL
+module.exports.getEvents = (callback) => {
+	request.get(event_url, (err, results, body) => {
+		let events = [];
+		let event_data = [];
 		try {
-			results = JSON.parse(body);
+			event_data = JSON.parse(body);
 		} catch (err) { }
-		locations.forEach(location => {
-			location.events = [];
-			results.forEach(result => {
-				const event_title = result.name;
-				const event_location = result.location;
-				const dates = result.dates;
-				if (event_title.length > 0 && location.name === event_location) {
-					let event = { title: event_title, dates: dates, url: result.url };
-					location.events.push(event);
-				}
-			});
+		event_data.forEach(item => {
+			const event_title = item.title;
+			const event_location = item.location;
+			const dates = item.dates;
+			const categories = item.categories;
+			const event_url = item.url;
+			if (event_title && event_title.length > 0) {
+				let event = { title: event_title, location: event_location, categories: categories, url: event_url, dates: dates };
+				events.push(event);
+			}
 		});
-		callback(locations);
+		callback(events);
 	});
+}
+
+// Add Events To Locations: Add events to the locations based upon name
+module.exports.addEventsToLocations = (events, locations) => {
+	locations.forEach(location => {
+		location.events = [];
+		events.forEach(event => {
+			if (location.name === event.location) {
+				location.events.push(event);
+			}
+		});
+	});
+	return locations;
 }

@@ -83,7 +83,7 @@ class List extends React.Component {
 		this.props.locations.forEach(location => {
 			if (location.events) {
 				location.events.forEach(event => {
-					if (events.indexOf(event.title) === -1) events.push(event.title);
+					if (events.map(ev => ev.toLowerCase()).indexOf(event.title.toLowerCase()) === -1) events.push(event.title);
 				});
 			}
 		});
@@ -122,8 +122,8 @@ class List extends React.Component {
 							<ListSubheader disableSticky={true}>Filter by Events</ListSubheader>
 							<Divider/>
 							{
-								events.sort().map(event => {
-									return <MenuItem onClick={() => this.setState({ filter_menu: false, filter: event, filter_type: 'event' })}>{event}</MenuItem>
+								events.sort().map((event, i) => {
+									return <MenuItem key={'mnu_item_' + i} onClick={() => this.setState({ filter_menu: false, filter: event, filter_type: 'event' })}>{event}</MenuItem>
 								})
 							}
 						</div> : null
@@ -154,8 +154,8 @@ class List extends React.Component {
 					/>
 				</Tabs>
 				<IconButton><Refresh /></IconButton>
-				<Button size="small" variant="flat" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
-				<Button size="small" variant="flat" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'All'}<FilterList className={classes.rightIcon} /></Button>
+				<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
+				<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'All'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.locations
 					.sort((loc_a, loc_b) => {
 						if (this.state.sort === 'name') return loc_a.name.localeCompare(loc_b.name);

@@ -1,25 +1,33 @@
+// Third party includes
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
+
+// Our isochrone helper
+const isoHelper = require('../helpers/isochrones');
 
 // Gets an isochrone by location and travel type.
 router.get('/', function (req, res, next) {
-	let location = req.query.location;
-	let travel = req.query.travel;
-	if (travel) travel = travel.split(',');
-	if (!travel) travel = ['cycling-regular', 'driving-car', 'foot-walking'];
-	let received = req.query.received;
-	if (received) received = received.split(',');
-	if (!received) received = [];
+	const location = req.query.location;
 
-	received.forEach(travel_received => {
-		let index = travel.indexOf(travel_received);
-		if (index !== -1) travel.splice(index, 1);
+	// Which travel types to include
+	let include = req.query.include;
+	if (include) include = include.split(',');
+	if (!include) include = ['cycling-regular', 'driving-car', 'foot-walking'];
+
+	// Which travel types to exclude
+	let exclude = req.query.exclude;
+	if (exclude) exclude = exclude.split(',');
+	if (!exclude) exclude = [];
+
+	// Process Excludes
+	exclude.forEach(travel => {
+		let index = include.indexOf(travel);
+		if (index !== -1) include.splice(index, 1);
 	});
 
 	let isochrones = [];
-	travel.forEach(travel_type => {
-		isochrones.push({ travel: travel_type, iso:  JSON.parse(fs.readFileSync('./data/isochrones/' + location + '_isochrone_' + travel_type + '.json', 'utf8')) })
+	include.forEach(travel => {
+		isochrones.push({ travel: travel, iso: isoHelper.getIsochrone(location, travel) })
 	});
 	res.json(isochrones);
 });

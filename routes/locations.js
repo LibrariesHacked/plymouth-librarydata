@@ -1,32 +1,42 @@
+// Third party includes
 const express = require('express');
 const router = express.Router();
 
+// Our helpers
 const eventsHelper = require('../helpers/events');
 const geoHelper = require('../helpers/geo');
 const locationHelper = require('../helpers/locations');
 
-// Gets a list of locations
+// Get. Gets a list of locations
 router.get('/', (req, res, next) => {
-	const client_location = [req.query.longitude, req.query.latitude];
-	const postcode = req.query.postcode;
+
+	// Request parameters
+	const client_position = [req.query.longitude, req.query.latitude];
 	const events = req.query.events || false;
+	const postcode = req.query.postcode;
+
+	// 
 	let locations = locationHelper.getAllLocations();
-	
+
 	if (postcode && postcode !== '') {
 		geoHelper.getPostcodeDistances(postcode, locations, geo_locations => {
-			if (geo_locations && events) { 
-				eventsHelper.getEvents(locations, locations_events => {
-					res.json(locations_events);
+			if (geo_locations) locations = geo_locations;
+			if (events) {
+				eventsHelper.getEvents(event_list => {
+					if (event_list && event_list.length > 0) locations = eventsHelper.addEventsToLocations(event_list, locations);
+					res.json(locations);
 				});
 			} else {
 				res.json(locations);
 			}
 		});
 	} else {
-		geoHelper.getLocationDistances(client_location, locations, geo_locations => {
-			if (geo_locations && events) { 
-				eventsHelper.getEvents(locations, locations_events => {
-					res.json(locations_events);
+		geoHelper.getLocationDistances(client_position, locations, geo_locations => {
+			if (geo_locations) locations = geo_locations;
+			if (events) {
+				eventsHelper.getEvents(event_list => {
+					if (event_list && event_list.length > 0) locations = eventsHelper.addEventsToLocations(event_list, locations);
+					res.json(locations);
 				});
 			} else {
 				res.json(locations);

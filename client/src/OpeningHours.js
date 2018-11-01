@@ -35,8 +35,8 @@ class OpeningHours extends React.Component {
 					return (
 						<Chip
 							className={classes.chip}
-							label={day.day_code + ' ' + day.hours}
-							color={x === 0 ? 'primary' : 'secondary'}
+							label={day.day_code + ' ' + (day.hours === 'closed' ? ' is closed' : (day.start + ' to ' + day.end))}
+							color={day.hours === 'closed' ? 'default' : (x === 0 ? 'primary' : 'secondary')}
 							avatar={<Avatar>{day.date}</Avatar>}
 						/>
 					)

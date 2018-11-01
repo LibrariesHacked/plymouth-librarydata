@@ -1,6 +1,5 @@
-# Plymouth 3D
+# Plymouth Library Finder
 
-3D map of Plymouth using Mapbox GL and Open Street Map data.
-
+Plymouth
 
 
