@@ -8,6 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 // Helpers
 import * as locationsHelper from './helpers/locations';
@@ -29,18 +30,21 @@ class OpeningHours extends React.Component {
 		const hours_total = locationsHelper.getLocationTotalOpeningHours(location);
 		return (
 			<div>
-				<ListSubheader>{'Opening hours (' + hours_total + ' per week)'}</ListSubheader>
-				<Divider />
+				<ListSubheader>{'Opening hours'}</ListSubheader>
 				{opening_hours.map((day, x) => {
 					return (
 						<Chip
+							key={'chp_openinghour_' + x}
 							className={classes.chip}
-							label={day.day_code + ' ' + (day.hours === 'closed' ? ' is closed' : (day.start + ' to ' + day.end))}
+							label={day.day_code + ' ' + (day.hours === 'closed' ? ' closed' : (day.start + ' - ' + day.end))}
 							color={day.hours === 'closed' ? 'default' : (x === 0 ? 'primary' : 'secondary')}
 							avatar={<Avatar>{day.date}</Avatar>}
 						/>
 					)
 				})}
+				<br/>
+				<Typography variant="caption">{hours_total + ' per week'}</Typography>
+				<Divider />
 			</div>
 		);
 	}

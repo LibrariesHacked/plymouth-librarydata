@@ -22,7 +22,7 @@ export function getLocationIsochronesByType(location_name, travel, callback) {
 		.then(response => {
 			callback(response.data);
 		})
-		.catch(error => callback([]));
+		.catch(() => callback([]));
 };
 
 // getAllLocationIsochrones: Gets all isochrones for a location except those already received
@@ -31,7 +31,7 @@ export function getAllLocationIsochrones(location_name, received, callback) {
 		.then(response => {
 			callback(response.data);
 		})
-		.catch(error => callback([]));
+		.catch(() => callback([]));
 };
 
 // getIsochroneData: 

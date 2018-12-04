@@ -112,9 +112,9 @@ class LocationMap extends Component {
 							.filter(travel => {
 								return this.props.isochrones[location][travel].selected
 							})
-							.map(travel => { // Each travel method
+							.map((travel, x) => { // Each travel method
 								return (
-									<span>
+									<span key={'sp_isotravel_' + x}>
 										<GeoJSONLayer // Shows the shaded polygons
 											data={this.props.isochrones[location][travel].iso}
 											fillPaint={{
@@ -160,7 +160,7 @@ class LocationMap extends Component {
 						{
 							this.props.locations.map((location, key) =>
 								<Marker
-									key={'lib_' + key}
+									key={'mk_lib_' + key}
 									style={styles.marker}
 									coordinates={[location.longitude, location.latitude]}>
 									<LocationAvatar

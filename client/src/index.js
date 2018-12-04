@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 
 // Typeface and style to use throughout app
 import './App.css';
-import 'typeface-roboto'
+import 'typeface-roboto';
 
 // Our main app dashboard
 import App from './App';

@@ -73,7 +73,7 @@ const styles = {
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
-		backgroundColor: 'rgba(255, 255, 255, 0.9)'
+		backgroundColor: 'rgba(255, 255, 255, 0.6)'
 	},
 	flex: {
 		flex: 1,
@@ -230,13 +230,13 @@ class App extends Component {
 						<Toolbar className={classes.toolbar}>
 							{this.state.list_drawer_open ?
 								<Button
+									mini
 									variant="fab"
 									disabled={this.state.loading}
-									mini
 									color="secondary"
 									className={classes.menuButton}
 									aria-label="Menu"
-									onClick={(e) => this.setState({ main_drawer_open: !this.state.main_drawer_open, list_drawer_open: true, location_drawer_open: false })}
+									onClick={() => this.setState({ main_drawer_open: !this.state.main_drawer_open, list_drawer_open: true, location_drawer_open: false })}
 								>
 									{this.state.loading ?
 										<CircularProgress
@@ -246,18 +246,24 @@ class App extends Component {
 								</Button> : null
 							}
 							{this.state.location_drawer_open ?
-								<Button variant="fab" mini color="secondary" className={classes.menuButton} aria-label="Menu" onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
+								<Button
+									mini
+									variant="fab" 
+									color="secondary"
+									className={classes.menuButton}
+									aria-label="Menu"
+									onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
 									<ArrowBack />
 								</Button> : null
 							}
 							<span className={classes.flex}></span>
 							<Search />
 							<Button
-								variant="fab"
 								mini
+								variant="fab"
+								color="primary"
 								disabled={this.state.current_position.length === 0}
 								onClick={this.handleGPS}
-								color="primary"
 							>
 								{this.state.current_position.length > 0 ? <MyLocation /> : <LocationSearching />}
 							</Button>
@@ -312,6 +318,6 @@ class App extends Component {
 
 App.propTypes = {
 	classes: PropTypes.object.isRequired,
-};
+}
 
 export default withStyles(styles)(App);

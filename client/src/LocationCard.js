@@ -4,10 +4,15 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 // Material UI
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +22,7 @@ import Business from '@material-ui/icons/Business';
 import DirectionsBike from '@material-ui/icons/DirectionsBike';
 import DirectionsCar from '@material-ui/icons/DirectionsCar';
 import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
+import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
@@ -37,6 +43,10 @@ const styles = theme => ({
 	},
 	leftIcon: {
 	},
+	locationAvatar: {
+		float: 'right',
+		display: 'inline'
+	},
 	progress: {
 		marginRight: theme.spacing.unit / 2
 	},
@@ -48,6 +58,7 @@ const styles = theme => ({
 
 class LocationCard extends React.Component {
 	state = {
+		expanded: false
 	}
 
 	render() {
@@ -81,89 +92,98 @@ class LocationCard extends React.Component {
 		}
 		return (
 			<Card className={classes.card} elevation={0}>
-				<CardHeader
-					avatar={
-						<LocationAvatar
-							location={location}
-							viewLocation={this.props.more_option ? (() => this.props.viewLocation(location.name)) : null} />
-					}
-					action={
-						<div>
-							<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
-								<LocationOn />
-							</IconButton>
-							<br />
-							<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [18], [90], [120])}>
-								<Business />
-							</IconButton>
-						</div>
-					}
-					title={location.name}
-					subheader={
-						location.address_1 + '. ' +
-						locationsHelper.checkLocationOpen(location, this.props.current_time).message + '. ' +
-						(Object.keys(current_event).length > 0 ? 'Currently hosting ' + current_event.name + '. ' : '')
-					}
+				<CardMedia
+					component="img"
+					alt="Library"
+					className={classes.media}
+					height="120"
+					image="https://www.theplymouthdaily.co.uk/sites/default/files/field/image/central%20library%20plymouth.png"
+					title="Library"
 				/>
-				{Object.keys(current_event).length > 0 ?
-					<Typography className={classes.textMargin} variant="body2">{'Now ' + current_event.title}</Typography> :
-					<Typography className={classes.textMargin} variant="body2">{(Object.keys(next_event).length > 0 ? 'Next up ' + next_event.title + ' (' + moment(next_event.date.start_date).format('ddd Do h:mma') + ')' : '')}</Typography>
-				}
-				<br/>
-				<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
-					<MoreHoriz className={classes.leftIcon} />
-				</IconButton>
-				<Button
-					color={
-						this.props.isochrones &&
-							this.props.isochrones[location.name] &&
-							this.props.isochrones[location.name]['foot-walking'] &&
-							this.props.isochrones[location.name]['foot-walking'].selected ? 'primary' : 'secondary'}
-					className={classes.button}
-					aria-label="Directions Isochrone"
-					onClick={() => this.props.toggleIsochrone(location.name, 'foot-walking')}>
-					{this.props.isochrones &&
-						this.props.isochrones[location.name] &&
-						this.props.isochrones[location.name]['foot-walking'] ?
-						(this.props.isochrones[location.name]['foot-walking'].retrieved ?
-							<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-						) : <DirectionsWalk className={classes.leftIcon} />}
-					{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
-				</Button>
-				<Button
-					color={
-						this.props.isochrones &&
-							this.props.isochrones[location.name] &&
-							this.props.isochrones[location.name]['cycling-regular'] &&
-							this.props.isochrones[location.name]['cycling-regular'].selected ? 'primary' : 'secondary'}
-					className={classes.button}
-					aria-label="Directions Isochrone"
-					onClick={() => this.props.toggleIsochrone(location.name, 'cycling-regular')}>
-					{this.props.isochrones &&
-						this.props.isochrones[location.name] &&
-						this.props.isochrones[location.name]['cycling'] ?
-						(this.props.isochrones[location.name]['cycling'].retrieved ?
-							<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-						) : <DirectionsBike className={classes.leftIcon} />}
-					{location.cycling_duration ? moment.duration(location.cycling_duration, 'seconds').humanize() : ''}
-				</Button>
-				<Button
-					color={
-						this.props.isochrones &&
-							this.props.isochrones[location.name] &&
-							this.props.isochrones[location.name]['driving-car'] &&
-							this.props.isochrones[location.name]['driving-car'].selected ? 'primary' : 'secondary'}
-					className={classes.button}
-					aria-label="Directions Isochrone"
-					onClick={() => this.props.toggleIsochrone(location.name, 'driving-car')}>
-					{this.props.isochrones &&
-						this.props.isochrones[location.name] &&
-						this.props.isochrones[location.name]['driving-car'] ?
-						(this.props.isochrones[location.name]['driving-car'].retrieved ?
-							<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-						) : <DirectionsCar className={classes.leftIcon} />}
-					{location.driving_duration ? moment.duration(location.driving_duration, 'seconds').humanize() : ''}
-				</Button>
+				<CardContent>
+					<LocationAvatar className={classes.locationAvatar} location={location}/>
+					<Typography variant="h5" component="h2">{location.name}</Typography>
+					<Typography variant="caption" gutterBottom>
+						{
+							locationsHelper.checkLocationOpen(location, this.props.current_time).message
+						}
+					</Typography>
+					{Object.keys(current_event).length > 0 ?
+						<Chip
+							avatar={<Avatar><Event /></Avatar>}
+							color="primary"
+							label={'Now: ' + current_event.title} /> :
+						<Chip
+							avatar={<Avatar><Event /></Avatar>}
+							label={(Object.keys(next_event).length > 0 ? moment(next_event.date.start_date).format('dddd h:mma') + ': ' + next_event.title : '')} />
+					}
+				</CardContent>
+				<CardActions>
+					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
+						<MoreHoriz className={classes.leftIcon} />
+					</IconButton>
+					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
+						<LocationOn />
+					</IconButton>
+					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [18], [90], [120])}>
+						<Business />
+					</IconButton>
+				</CardActions>
+				<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+					<CardActions>
+						<Button
+							color={
+								this.props.isochrones &&
+									this.props.isochrones[location.name] &&
+									this.props.isochrones[location.name]['foot-walking'] &&
+									this.props.isochrones[location.name]['foot-walking'].selected ? 'primary' : 'secondary'}
+							className={classes.button}
+							aria-label="Directions Isochrone"
+							onClick={() => this.props.toggleIsochrone(location.name, 'foot-walking')}>
+							{this.props.isochrones &&
+								this.props.isochrones[location.name] &&
+								this.props.isochrones[location.name]['foot-walking'] ?
+								(this.props.isochrones[location.name]['foot-walking'].retrieved ?
+									<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
+								) : <DirectionsWalk className={classes.leftIcon} />}
+							{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
+						</Button>
+						<Button
+							color={
+								this.props.isochrones &&
+									this.props.isochrones[location.name] &&
+									this.props.isochrones[location.name]['cycling-regular'] &&
+									this.props.isochrones[location.name]['cycling-regular'].selected ? 'primary' : 'secondary'}
+							className={classes.button}
+							aria-label="Directions Isochrone"
+							onClick={() => this.props.toggleIsochrone(location.name, 'cycling-regular')}>
+							{this.props.isochrones &&
+								this.props.isochrones[location.name] &&
+								this.props.isochrones[location.name]['cycling'] ?
+								(this.props.isochrones[location.name]['cycling'].retrieved ?
+									<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
+								) : <DirectionsBike className={classes.leftIcon} />}
+							{location.cycling_duration ? moment.duration(location.cycling_duration, 'seconds').humanize() : ''}
+						</Button>
+						<Button
+							color={
+								this.props.isochrones &&
+									this.props.isochrones[location.name] &&
+									this.props.isochrones[location.name]['driving-car'] &&
+									this.props.isochrones[location.name]['driving-car'].selected ? 'primary' : 'secondary'}
+							className={classes.button}
+							aria-label="Directions Isochrone"
+							onClick={() => this.props.toggleIsochrone(location.name, 'driving-car')}>
+							{this.props.isochrones &&
+								this.props.isochrones[location.name] &&
+								this.props.isochrones[location.name]['driving-car'] ?
+								(this.props.isochrones[location.name]['driving-car'].retrieved ?
+									<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
+								) : <DirectionsCar className={classes.leftIcon} />}
+							{location.driving_duration ? moment.duration(location.driving_duration, 'seconds').humanize() : ''}
+						</Button>
+					</CardActions>
+				</Collapse>
 			</Card>
 		);
 	}

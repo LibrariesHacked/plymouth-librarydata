@@ -61,7 +61,7 @@ class Location extends React.Component {
 					<div>
 						<Facilities location={location} />
 						<OpeningHours location={location} />
-						<Events  location={location} />
+						<Events location={location} />
 					</div> : null}
 				{this.state.open_tab === 1 ? 
 					<Stats

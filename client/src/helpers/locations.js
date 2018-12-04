@@ -8,63 +8,79 @@ import moment from 'moment';
 const facilityConfig = {
 	computers: {
 		display: 'Computers',
-		icon: ''
+		icon: 'DesktopWindows',
+		description: 'Computers for public use'
 	},
 	wifi: {
 		display: 'WiFi',
-		icon: ''
-	}, 
+		icon: 'Wifi',
+		description: 'Free Wifi'
+	},
 	printers: {
 		display: 'Printers',
-		icon: ''
-	}, 
+		icon: 'Print',
+		description: 'Printers (colour and black/white)'
+	},
 	photocopiers: {
 		display: 'Photocopying',
-		icon: ''
-	}, 
+		icon: 'FileCopy',
+		description: 'Photocopiers (colour and black/white)'
+
+	},
 	scanners: {
 		display: 'Scanners',
-		icon: ''
-	}, 
+		icon: 'Scanner',
+		description: 'Scanners'
+	},
 	meetingrooms: {
 		display: 'Meeting rooms',
-		icon: ''
-	}, 
+		icon: 'MeetingRoom',
+		description: 'Meeting rooms for hire'
+	},
 	localandfamilyhistory: {
-		display: 'Computers',
-		icon: ''
-	}, 
+		display: 'Local and family history',
+		icon: 'LocalActivity',
+		description: 'Local and family history collection'
+	},
 	navalhistory: {
 		display: 'Naval History',
-		icon: ''
-	}, 
+		icon: 'DirectionsBoat',
+		description: 'Local and family history collection'
+	},
 	microfilmscanners: {
 		display: 'Microfilm scanners',
-		icon: ''
-	}, 
+		icon: 'CameraRoll',
+		description: 'Microfilm scanners'
+	},
 	roofterrace: {
 		display: 'Roof terrace',
-		icon: ''
-	}, 
+		icon: 'WbSunny',
+		description: 'Roof terrace'
+	},
 	books: {
-		display: 'Boos',
-		icon: ''
-	}, 
+		display: 'Books',
+		icon: 'LibraryBooks',
+		description: 'Books for loan'
+	},
 	dvds: {
 		display: 'DVDs',
-		icon: ''
-	}, 
+		icon: 'LocalMovies',
+		description: 'DVDs for hire'
+	},
 	audiobooks: {
 		display: 'Audiobooks',
-		icon: ''
-	}, 
+		icon: 'Headset',
+		description: 'Audiobooks'
+	},
 	requestservice: {
 		display: 'Request service',
-		icon: ''
-	}, 
+		icon: 'RoomService',
+		description: 'Request service'
+	},
 	cafe: {
 		display: 'Cafe',
-		icon: ''
+		icon: 'LocalCafe',
+		description: 'Cafe'
 	}
 };
 
@@ -163,6 +179,12 @@ export function getLocationTotalOpeningHoursDay(location, day) {
 // getFacilities:
 export function getFacilities(location) {
 	let facilities = [];
-
-	return [];
+	Object.keys(facilityConfig).forEach(facility => {
+		if (location[facility] === 'Yes') facilities.push({ 
+			label: facilityConfig[facility].display, 
+			icon: facilityConfig[facility].icon,
+			description: facilityConfig[facility].description
+		});
+	});
+	return facilities;
 }

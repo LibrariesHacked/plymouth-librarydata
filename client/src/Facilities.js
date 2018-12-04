@@ -3,20 +3,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
-import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
+
+import * as icons from '@material-ui/icons';
 
 // Helpers
 import * as locationsHelper from './helpers/locations';
+import { IconButton } from '@material-ui/core';
 
 // Style: 
 const styles = theme => ({
 	chip: {
-		margin: theme.spacing.unit / 2,
+		margin: theme.spacing.unit / 2
 	}
-});
+})
 
 class Facilities extends React.Component {
 	state = {
@@ -28,16 +31,17 @@ class Facilities extends React.Component {
 		return (
 			<div>
 				<ListSubheader>{'Facilities'}</ListSubheader>
-				<Divider />
-				{facilities.map((day, x) => {
+				{facilities.map((facility, x) => {
+					const Icon = icons[facility.icon];
 					return (
-						<Chip
-							className={classes.chip}
-							label={day.day_code + ' ' + day.hours}
-							color={x === 0 ? 'primary' : 'secondary'}
-						/>
+						<Tooltip key={'tt_facility_' + x} title={facility.description}>
+							<IconButton>
+								{Icon ? <Icon /> : null}
+							</IconButton>
+						</Tooltip>
 					)
 				})}
+				<Divider />
 			</div>
 		);
 	}
@@ -46,6 +50,6 @@ class Facilities extends React.Component {
 Facilities.propTypes = {
 	classes: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired
-};
+}
 
 export default withStyles(styles, { withTheme: true })(Facilities);
