@@ -61,7 +61,7 @@ class LocationMap extends Component {
 		return (
 			<div>
 				<Map
-					style='https://s3-eu-west-1.amazonaws.com/tiles.os.uk/styles/open-zoomstack-light/style.json'
+					style='https://s3-eu-west-1.amazonaws.com/tiles.os.uk/styles/open-zoomstack-light/style.json'  // eslint-disable-line react/style-prop-object
 					center={this.state.position}
 					zoom={this.state.zoom}
 					pitch={this.state.pitch}
