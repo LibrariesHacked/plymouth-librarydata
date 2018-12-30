@@ -1,5 +1,9 @@
 create table oas (
-    id serial not null,
-    oa_code not null,
-    constraint pk_oas_id primary key
+    objectid integer not null,
+    oa11cd character(9) not null,
+    lad11cd character(9) not null,
+    st_areasha numeric,
+    st_lengths numeric,
+    geom geometry,
+    constraint pk_oas_id primary key (objectid)
 );

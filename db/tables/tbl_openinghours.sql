@@ -4,6 +4,6 @@ create table openinghours (
     opening_time time,
     closing_time time,
     start_date timestamp,
-    end_date timestamp
-    constraint pk_openinghours_id primary key
+    end_date timestamp,
+    constraint pk_openinghours_id primary key (id)
 );

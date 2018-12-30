@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
+import Fab from '@material-ui/core/Fab';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -28,6 +28,7 @@ import LocationMap from './LocationMap';
 import Search from './Search';
 
 // Helpers
+import * as appdataHelper from './helpers/appdata';
 import * as locationsHelper from './helpers/locations';
 import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
@@ -121,6 +122,11 @@ class App extends Component {
 		locations: [],
 		location_name: '',
 		location_isochrones: {},
+		// App Data
+		facilities: [],
+		travel_types: [],
+		// Event data
+		events: [],
 		// Map variables, sent down to the map for updates.
 		map_max_bounds: null,
 		map_fit_bounds: null,
@@ -132,12 +138,14 @@ class App extends Component {
 		loading: false,
 		main_drawer_open: true,
 		list_drawer_open: true,
-		location_drawer_open: false
+		location_drawer_open: false,
 	}
 
 	// componentDidMount: sets up data and any logging
 	componentDidMount = () => {
 		this.getLocations();
+		this.getFacilities();
+		this.getTravel();
 
 		// Get a new position every minute
 		let position_update_interval = setInterval(this.logPosition, 60000);
@@ -169,6 +177,20 @@ class App extends Component {
 			});
 			// And fit map to bounds.
 			this.fitLocationBounds();
+		});
+	};
+
+	// getLocations:
+	getFacilities = () => {
+		appdataHelper.getFacilities(facilities => {
+			this.setState({ facilities: facilities });
+		});
+	};
+
+	// getTravel:
+	getTravel = () => {
+		appdataHelper.getTravel(travel => {
+			this.setState({ travel_types: travel });
 		});
 	};
 
@@ -229,9 +251,8 @@ class App extends Component {
 						className={classes.appBar}>
 						<Toolbar className={classes.toolbar}>
 							{this.state.list_drawer_open ?
-								<Button
-									mini
-									variant="fab"
+								<Fab
+									size="small"
 									disabled={this.state.loading}
 									color="secondary"
 									className={classes.menuButton}
@@ -243,30 +264,28 @@ class App extends Component {
 											size={20}
 											className={classes.buttonProgress}
 										/> : <Menu />}
-								</Button> : null
+								</Fab> : null
 							}
 							{this.state.location_drawer_open ?
-								<Button
-									mini
-									variant="fab" 
+								<Fab
+									size="small"
 									color="secondary"
 									className={classes.menuButton}
 									aria-label="Menu"
 									onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
 									<ArrowBack />
-								</Button> : null
+								</Fab> : null
 							}
 							<span className={classes.flex}></span>
 							<Search />
-							<Button
-								mini
-								variant="fab"
+							<Fab
+								size="small"
 								color="primary"
 								disabled={this.state.current_position.length === 0}
 								onClick={this.handleGPS}
 							>
 								{this.state.current_position.length > 0 ? <MyLocation /> : <LocationSearching />}
-							</Button>
+							</Fab>
 						</Toolbar>
 					</AppBar>
 					<Drawer
@@ -282,6 +301,8 @@ class App extends Component {
 						{this.state.list_drawer_open ?
 							<List
 								locations={this.state.locations}
+								facilities={this.state.facilities}
+								travel_types={this.state.travel_types}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
@@ -290,7 +311,9 @@ class App extends Component {
 							/> : null}
 						{this.state.location_drawer_open ?
 							<Location
-								location={this.state.locations.find(location => { return location.name === this.state.location_name })}
+								facilities={this.state.facilities}
+								location={this.state.locations.find(location => { return location.location_name === this.state.location_name })}
+								travel_types={this.state.travel_types}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}

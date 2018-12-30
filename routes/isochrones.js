@@ -1,8 +1,6 @@
-// Third party includes
 const express = require('express');
 const router = express.Router();
 
-// Our isochrone helper
 const isoHelper = require('../helpers/isochrones');
 
 // Gets an isochrone by location and travel type.

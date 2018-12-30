@@ -18,7 +18,11 @@ class LocationAvatar extends React.Component {
 	}
 
 	getInitials = (name) => {
-		return name.replace(' Library', '').split(' ').map(word => { return word.substring(0, 1) }).join('');
+		let initials = 'LI';
+		if (name && name.length > 2) {
+			initials = name.replace(' Library', '').split(' ').map(word => { return word.substring(0, 1) }).join('');
+		}
+		return initials
 	}
 
 	componentDidMount = () => {
@@ -26,15 +30,17 @@ class LocationAvatar extends React.Component {
 
 	render() {
 		const { classes, location, theme } = this.props;
+		let location_name = '';
+		if (location.location_name && location.location_name.length > 0) location_name = location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()
 		return (
 			<Avatar
-				aria-label={location.name}
+				aria-label={location.location_name}
 				className={classes.avatar}
 				style={{
-					backgroundColor: theme.locations[location.name.replace(' Library', '').replace(/ /g, '').toLowerCase()]
+					backgroundColor: (theme.locations[location_name] ? theme.locations[location_name] : '#ccc')
 				}}
 				onClick={this.props.viewLocation}>
-				{this.getInitials(location.name)}
+				{this.getInitials(location.location_name)}
 			</Avatar>
 		);
 	}

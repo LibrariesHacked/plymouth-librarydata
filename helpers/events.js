@@ -24,16 +24,3 @@ module.exports.getEvents = (callback) => {
 		callback(events);
 	});
 }
-
-// Add Events To Locations: Add events to the locations based upon name
-module.exports.addEventsToLocations = (events, locations) => {
-	locations.forEach(location => {
-		location.events = [];
-		events.forEach(event => {
-			if (location.name === event.location) {
-				location.events.push(event);
-			}
-		});
-	});
-	return locations;
-}

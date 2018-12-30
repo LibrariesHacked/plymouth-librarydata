@@ -61,7 +61,7 @@ class LocationMap extends Component {
 		return (
 			<div>
 				<Map
-					style='https://s3-eu-west-1.amazonaws.com/tiles.os.uk/styles/open-zoomstack-light/style.json'  // eslint-disable-line react/style-prop-object
+					style='style.json'  // eslint-disable-line react/style-prop-object
 					center={this.state.position}
 					zoom={this.state.zoom}
 					pitch={this.state.pitch}
@@ -165,7 +165,7 @@ class LocationMap extends Component {
 									coordinates={[location.longitude, location.latitude]}>
 									<LocationAvatar
 										location={location}
-										viewLocation={() => this.props.viewLocation(location.name)} />
+										viewLocation={() => this.props.viewLocation(location.location_name)} />
 								</Marker>
 							)
 						}

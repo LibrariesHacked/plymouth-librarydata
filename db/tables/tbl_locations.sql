@@ -12,4 +12,5 @@ create table locations (
     constraint pk_locations_id primary key (id)
 );
 
+-- 
 select AddGeometryColumn ('public', 'locations', 'geom', 4326, 'POINT', 2);

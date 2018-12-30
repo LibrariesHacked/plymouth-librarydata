@@ -16,17 +16,17 @@ const styles = theme => ({
 
 class Stats extends React.Component {
 	componentDidMount = () => {
-		this.props.getIsochrones(this.props.location.name);
+		this.props.getIsochrones(this.props.location.location_name);
 	}
 
 	render() {
 		const { location, isochrones, theme } = this.props;
 		return (
 			<div>
-				{isochrones && isochrones[location.name] ?
-					Object.keys(isochrones[location.name])
+				{isochrones && isochrones[location.location_name] ?
+					Object.keys(isochrones[location.location_name])
 						.map((travel, i) => {
-							let iso_data = isoHelper.getIsochroneData(isochrones[location.name][travel].iso);
+							let iso_data = isoHelper.getIsochroneData(isochrones[location.location_name][travel].iso);
 							let data_labels = iso_data.map(f => { return (f.value / 60) + ' mins' });
 							let data_values = iso_data.map(f => { return f.total_pop });
 							return (
@@ -40,7 +40,7 @@ class Stats extends React.Component {
 												datasets: [{
 													label: 'Population',
 													data: data_values,
-													backgroundColor: theme.locations[location.name.replace(' Library', '').replace(/ /g, '').toLowerCase()],
+													backgroundColor: theme.locations[location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()],
 													borderColor: 'rgba(255, 255, 255, 1)',
 													borderWidth: 1
 												}]

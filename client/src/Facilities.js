@@ -8,6 +8,7 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 
+// Icons
 import * as icons from '@material-ui/icons';
 
 // Helpers
@@ -26,7 +27,7 @@ class Facilities extends React.Component {
 	}
 
 	render() {
-		const { classes, location } = this.props;
+		const { location } = this.props;
 		const facilities = locationsHelper.getFacilities(location);
 		return (
 			<div>
@@ -48,7 +49,6 @@ class Facilities extends React.Component {
 }
 
 Facilities.propTypes = {
-	classes: PropTypes.object.isRequired,
 	location: PropTypes.object.isRequired
 }
 

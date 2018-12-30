@@ -5,26 +5,24 @@ import moment from 'moment';
 
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
 import Business from '@material-ui/icons/Business';
-import DirectionsBike from '@material-ui/icons/DirectionsBike';
-import DirectionsCar from '@material-ui/icons/DirectionsCar';
-import DirectionsWalk from '@material-ui/icons/DirectionsWalk';
 import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
+
+// Icons
+import * as icons from '@material-ui/icons';
 
 // Our custom avatars
 import LocationAvatar from './LocationAvatar';
@@ -41,11 +39,13 @@ const styles = theme => ({
 		margin: '5px',
 		borderRadius: '3px'
 	},
-	leftIcon: {
+	cardHeader: {
+		display: 'flex',
+		paddingBottom: 10
 	},
-	locationAvatar: {
-		float: 'right',
-		display: 'inline'
+	libraryHeader: {
+		marginTop: '4px',
+		marginLeft: '10px'
 	},
 	progress: {
 		marginRight: theme.spacing.unit / 2
@@ -53,6 +53,9 @@ const styles = theme => ({
 	textMargin: {
 		marginLeft: 10,
 		marginRight: 10
+	},
+	media: {
+		objectFit: 'cover'
 	}
 });
 
@@ -92,20 +95,15 @@ class LocationCard extends React.Component {
 		}
 		return (
 			<Card className={classes.card} elevation={0}>
-				<CardMedia
-					component="img"
-					alt="Library"
-					className={classes.media}
-					height="120"
-					image="https://www.theplymouthdaily.co.uk/sites/default/files/field/image/central%20library%20plymouth.png"
-					title="Library"
-				/>
 				<CardContent>
-					<LocationAvatar className={classes.locationAvatar} location={location}/>
-					<Typography variant="h5" component="h2">{location.name}</Typography>
-					<Typography variant="caption" gutterBottom>
+					<div className={classes.cardHeader}>
+						<LocationAvatar location={location} />
+						<Typography className={classes.libraryHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
+					</div>
+					<Divider />
+					<Typography variant="subtitle1" gutterBottom>
 						{
-							locationsHelper.checkLocationOpen(location, this.props.current_time).message
+							locationsHelper.checkLocationOpen(location).message + '.'
 						}
 					</Typography>
 					{Object.keys(current_event).length > 0 ?
@@ -120,70 +118,33 @@ class LocationCard extends React.Component {
 				</CardContent>
 				<CardActions>
 					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
-						<MoreHoriz className={classes.leftIcon} />
-					</IconButton>
-					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
 						<LocationOn />
 					</IconButton>
 					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [18], [90], [120])}>
 						<Business />
 					</IconButton>
+					{
+						this.props.travel_types.map(travel => {
+							const Icon = icons[travel.icon];
+							return <IconButton
+								color={
+									this.props.isochrones &&
+										this.props.isochrones[location.location_name] &&
+										this.props.isochrones[location.location_name][travel.travel_type] &&
+										this.props.isochrones[location.location_name][travel.travel_type].selected ? 'primary' : 'default'}
+								className={classes.button}
+								onClick={() => this.props.toggleIsochrone(location.location_name, travel.travel_type)}>
+								{this.props.isochrones &&
+									this.props.isochrones[location.location_name] &&
+									this.props.isochrones[location.location_name][travel.travel_type] ?
+									(this.props.isochrones[location.location_name][travel.travel_type].retrieved ?
+										<Icon /> : <CircularProgress className={classes.progress} size={30} />
+									) : <Icon />}
+								{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
+							</IconButton>
+						})
+					}
 				</CardActions>
-				<Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-					<CardActions>
-						<Button
-							color={
-								this.props.isochrones &&
-									this.props.isochrones[location.name] &&
-									this.props.isochrones[location.name]['foot-walking'] &&
-									this.props.isochrones[location.name]['foot-walking'].selected ? 'primary' : 'secondary'}
-							className={classes.button}
-							aria-label="Directions Isochrone"
-							onClick={() => this.props.toggleIsochrone(location.name, 'foot-walking')}>
-							{this.props.isochrones &&
-								this.props.isochrones[location.name] &&
-								this.props.isochrones[location.name]['foot-walking'] ?
-								(this.props.isochrones[location.name]['foot-walking'].retrieved ?
-									<DirectionsWalk className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-								) : <DirectionsWalk className={classes.leftIcon} />}
-							{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
-						</Button>
-						<Button
-							color={
-								this.props.isochrones &&
-									this.props.isochrones[location.name] &&
-									this.props.isochrones[location.name]['cycling-regular'] &&
-									this.props.isochrones[location.name]['cycling-regular'].selected ? 'primary' : 'secondary'}
-							className={classes.button}
-							aria-label="Directions Isochrone"
-							onClick={() => this.props.toggleIsochrone(location.name, 'cycling-regular')}>
-							{this.props.isochrones &&
-								this.props.isochrones[location.name] &&
-								this.props.isochrones[location.name]['cycling'] ?
-								(this.props.isochrones[location.name]['cycling'].retrieved ?
-									<DirectionsBike className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-								) : <DirectionsBike className={classes.leftIcon} />}
-							{location.cycling_duration ? moment.duration(location.cycling_duration, 'seconds').humanize() : ''}
-						</Button>
-						<Button
-							color={
-								this.props.isochrones &&
-									this.props.isochrones[location.name] &&
-									this.props.isochrones[location.name]['driving-car'] &&
-									this.props.isochrones[location.name]['driving-car'].selected ? 'primary' : 'secondary'}
-							className={classes.button}
-							aria-label="Directions Isochrone"
-							onClick={() => this.props.toggleIsochrone(location.name, 'driving-car')}>
-							{this.props.isochrones &&
-								this.props.isochrones[location.name] &&
-								this.props.isochrones[location.name]['driving-car'] ?
-								(this.props.isochrones[location.name]['driving-car'].retrieved ?
-									<DirectionsCar className={classes.leftIcon} /> : <CircularProgress className={classes.progress} size={30} />
-								) : <DirectionsCar className={classes.leftIcon} />}
-							{location.driving_duration ? moment.duration(location.driving_duration, 'seconds').humanize() : ''}
-						</Button>
-					</CardActions>
-				</Collapse>
 			</Card>
 		);
 	}

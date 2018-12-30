@@ -35,11 +35,12 @@ class Location extends React.Component {
 		open_tab: 0
 	}
 	render() {
-		const { location } = this.props;
+		const { location, facilities } = this.props;
 		return (
 			<div>
 				<LocationCard
 					location={location}
+					travel_types={this.props.travel_types}
 					current_time={this.props.current_time}
 					more_option={false}
 					isochrones={this.props.isochrones}
@@ -59,7 +60,7 @@ class Location extends React.Component {
 				</Tabs>
 				{this.state.open_tab === 0 ?
 					<div>
-						<Facilities location={location} />
+						<Facilities location={location} facilities={facilities} />
 						<OpeningHours location={location} />
 						<Events location={location} />
 					</div> : null}

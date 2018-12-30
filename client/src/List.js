@@ -7,6 +7,8 @@ import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -14,6 +16,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { Typography } from '@material-ui/core';
+
+// Icons
+import * as icons from '@material-ui/icons';
 
 // Material Icons
 import FilterList from '@material-ui/icons/FilterList';
@@ -39,6 +44,14 @@ const styles = theme => ({
 	},
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
+	},
+	menuItem: {
+		'&:focus': {
+			backgroundColor: theme.palette.primary.main,
+			'& $primary, & $icon': {
+				color: theme.palette.common.white,
+			},
+		},
 	},
 	padding: {
 		padding: `0 ${theme.spacing.unit * 2}px`,
@@ -69,14 +82,14 @@ class List extends React.Component {
 			.filter(location => {
 				let show = true;
 				if (this.state.filter !== '' && location[this.state.filter] === 'No') show = false;
-				if (!locationsHelper.checkLocationOpen(location, this.props.current_time).open) show = false;
+				if (!locationsHelper.checkLocationOpen(location).open) show = false;
 				return show;
 			});
 		let closed_locations = this.props.locations
 			.filter(location => {
 				let show = true;
 				if (this.state.filter !== '' && location[this.state.filter] === 'No') show = false;
-				if (locationsHelper.checkLocationOpen(location, this.props.current_time).open) show = false;
+				if (locationsHelper.checkLocationOpen(location).open) show = false;
 				return show;
 			});
 		let events = [];
@@ -109,18 +122,26 @@ class List extends React.Component {
 					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>Show All</MenuItem>
 					<Divider />
 					<ListSubheader disableSticky={true}>Filter by Facilities</ListSubheader>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'meetingrooms', filter_type: 'facility' })}>Meeting Rooms</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'localandfamilyhistory', filter_type: 'facility' })}>Local and Family History</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'navalhistory', filter_type: 'facility' })}>Naval History</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'microfilmscanners', filter_type: 'facility' })}>Microfilm Scanners</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'dvds', filter_type: 'facility' })}>DVDs</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'wifi', filter_type: 'facility' })}>WiFi</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'roofterrace', filter_type: 'facility' })}>Roof Terrace</MenuItem>
-					<MenuItem onClick={() => this.setState({ filter_menu: false, filter: 'cafe', filter_type: 'facility' })}>Cafe</MenuItem>
-					{events.length > 0 ? 
+					{this.props.facilities
+						.sort((a, b) => { return a.description.localeCompare(b.description) })
+						.map(facility => {
+							const Icon = icons[facility.icon];
+							return Icon ? (
+								<MenuItem
+									className={classes.menuItem}
+									onClick={() => this.setState({ filter_menu: false, filter: facility.facility_name, filter_type: 'facility' })}>
+									<ListItemIcon>
+										<Icon />
+									</ListItemIcon>
+									<ListItemText inset primary={facility.description} />
+								</MenuItem>
+							) : null;
+						})
+					}
+					{events.length > 0 ?
 						<div>
 							<ListSubheader disableSticky={true}>Filter by Events</ListSubheader>
-							<Divider/>
+							<Divider />
 							{
 								events.sort().map((event, i) => {
 									return <MenuItem key={'mnu_item_' + i} onClick={() => this.setState({ filter_menu: false, filter: event, filter_type: 'event' })}>{event}</MenuItem>
@@ -153,12 +174,14 @@ class List extends React.Component {
 						}
 					/>
 				</Tabs>
-				<IconButton><Refresh /></IconButton>
+				<IconButton>
+					<Refresh />
+				</IconButton>
 				<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
 				<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'All'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.locations
 					.sort((loc_a, loc_b) => {
-						if (this.state.sort === 'name') return loc_a.name.localeCompare(loc_b.name);
+						if (this.state.sort === 'name') return loc_a.location_name.localeCompare(loc_b.location_name);
 						if (this.state.sort === 'walking') return loc_a.walking_duration - loc_b.walking_duration;
 						if (this.state.sort === 'cycling') return loc_a.cycling_duration - loc_b.cycling_duration;
 						if (this.state.sort === 'driving') return loc_a.driving_duration - loc_b.driving_duration;
@@ -174,15 +197,16 @@ class List extends React.Component {
 							});
 							show = found;
 						}
-						if ((this.state.open_tab === 0 && open_locations.length !== 0) && !locationsHelper.checkLocationOpen(location, this.props.current_time).open) show = false;
-						if ((this.state.open_tab === 1 && closed_locations.length !== 0) && locationsHelper.checkLocationOpen(location, this.props.current_time).open) show = false;
+						if ((this.state.open_tab === 0 && open_locations.length !== 0) && !locationsHelper.checkLocationOpen(location).open) show = false;
+						if ((this.state.open_tab === 1 && closed_locations.length !== 0) && locationsHelper.checkLocationOpen(location).open) show = false;
 						return show;
 					})
 					.map(location => {
 						return (
 							<LocationCard
-								key={'crd-location' + location.name}
+								key={'crd-location' + location.location_name}
 								location={location}
+								travel_types={this.props.travel_types}
 								current_time={this.props.current_time}
 								more_option={true}
 								isochrones={this.props.isochrones}

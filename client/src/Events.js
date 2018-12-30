@@ -64,20 +64,20 @@ class Events extends React.Component {
 			<div>
 				<ListSubheader component="div">{'Events'}</ListSubheader>
 				{categories
-				.filter(cat => cat !== 'Libraries')
-				.map((cat, z) => {
-					const active = (this.state.categories_inactive.indexOf(cat) === -1);
-					return (
-						<Tooltip title={cat} key={'tt_cat_' + z}>
-							<Chip
-								avatar={<Avatar>{active ? <Check /> : <Close />}</Avatar>}
-								label={cat}
-								color={active ? 'primary' : 'default'}
-								onClick={() => this.toggleCategory(cat)}
-								className={classes.chip}
-							/>
-						</Tooltip>);
-				})}
+					.filter(cat => cat !== 'Libraries')
+					.map((cat, z) => {
+						const active = (this.state.categories_inactive.indexOf(cat) === -1);
+						return (
+							<Tooltip title={cat} key={'tt_cat_' + z}>
+								<Chip
+									avatar={<Avatar>{active ? <Check /> : <Close />}</Avatar>}
+									label={cat}
+									color={active ? 'primary' : 'default'}
+									onClick={() => this.toggleCategory(cat)}
+									className={classes.chip}
+								/>
+							</Tooltip>);
+					})}
 				<List
 					component="nav">
 					{events
@@ -100,9 +100,9 @@ class Events extends React.Component {
 										<List component="div" disablePadding>
 											{event.dates.map((date, x) => {
 												return (
-													<ListItem 
+													<ListItem
 														dense
-														key={'li_date_' + x} 
+														key={'li_date_' + x}
 														className={classes.nested}>
 														<ListItemIcon>
 															<Event />
