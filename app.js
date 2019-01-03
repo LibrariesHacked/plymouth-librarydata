@@ -3,10 +3,10 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 
+const appdata = require('./routes/appdata');
 const events = require('./routes/events');
 const isochrones = require('./routes/isochrones');
 const locations = require('./routes/locations');
-const appdata = require('./routes/appdata');
 
 // Set port to be 8080 for development, or the process environment for production/dev.
 const port = process.env.PORT || 8080;
@@ -23,10 +23,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // API routes
+app.use('/api/appdata', appdata);
 app.use('/api/events', events);
 app.use('/api/isochrones', isochrones);
 app.use('/api/locations', locations);
-app.use('/api/appdata', appdata);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));

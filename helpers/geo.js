@@ -18,12 +18,12 @@ module.exports.getLocationsDistances = (location_type, location, destinations, c
 
 	if (location_type === 'postcode') {
 		query = 'select travel_type, location_name, duration, distance from vw_oadistances od join postcode p on p.oa_code = od.oa_code where p.postcode_trim = $1';
-		vars = [location];
+		query_vars = [location];
 	}
 
 	if (location_type === 'coordinates') {
 		query = 'select travel_type, location_name, duration, distance from vw_oadistances od join oas o on od.oa_code = o.oa11cd where ST_Within(ST_Transform(ST_SetSRID(ST_MakePoint($1, $2), 4326), 27700), o.geom)';
-		vars = [location[0], location[1]];
+		query_vars = [location[0], location[1]];
 	}
 
 	client.connect();
@@ -33,8 +33,10 @@ module.exports.getLocationsDistances = (location_type, location, destinations, c
 			res.rows.forEach(trip => {
 				destinations.forEach(destination => {
 					if (destination.location_name === trip.location_name) {
-						destination[trip.travel_type + '_duration'] = trip.duration;
-						destination[trip.travel_type + '_distance'] = trip.distance;
+						if (!destination.travel) destination.travel = {};
+						destination.travel[trip.travel_type] = {};
+						destination.travel[trip.travel_type].duration = trip.duration;
+						destination.travel[trip.travel_type].distance = trip.distance;
 					}
 				});
 			});

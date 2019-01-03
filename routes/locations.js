@@ -15,10 +15,15 @@ router.get('/', (req, res, next) => {
 	let location = (client_position ? client_position : postcode);
 
 	locationHelper.getAllLocations(locations => {
-		geoHelper.getLocationsDistances(location_type, location, locations, geo_locations => {
-			if (geo_locations) locations = geo_locations;
+		if (location) {
+			geoHelper.getLocationsDistances(location_type, location, locations, geo_locations => {
+				if (geo_locations) locations = geo_locations;
+				res.json(locations);
+			});
+		} else {
 			res.json(locations);
-		});
+		}
+
 	});
 });
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -11,24 +12,23 @@ import Tooltip from '@material-ui/core/Tooltip';
 // Icons
 import * as icons from '@material-ui/icons';
 
-// Helpers
-import * as locationsHelper from './helpers/locations';
-import { IconButton } from '@material-ui/core';
-
 // Style: 
 const styles = theme => ({
-	chip: {
-		margin: theme.spacing.unit / 2
-	}
 })
 
 class Facilities extends React.Component {
-	state = {
-	}
-
 	render() {
 		const { location } = this.props;
-		const facilities = locationsHelper.getFacilities(location);
+		let facilities = [];
+		if (location.facilities) {
+			location.facilities.forEach(facility => {
+				this.props.facilities.forEach(def => {
+					if (def.facility_name === facility) {
+						facilities.push({ name: facility, icon: def.icon, description: def.description });
+					}
+				});
+			});
+		}
 		return (
 			<div>
 				<ListSubheader>{'Facilities'}</ListSubheader>

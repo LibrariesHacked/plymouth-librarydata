@@ -41,6 +41,7 @@ class Location extends React.Component {
 				<LocationCard
 					location={location}
 					travel_types={this.props.travel_types}
+					events={this.props.events}
 					current_time={this.props.current_time}
 					more_option={false}
 					isochrones={this.props.isochrones}
@@ -62,7 +63,7 @@ class Location extends React.Component {
 					<div>
 						<Facilities location={location} facilities={facilities} />
 						<OpeningHours location={location} />
-						<Events location={location} />
+						<Events location={location} events={this.props.events} />
 					</div> : null}
 				{this.state.open_tab === 1 ? 
 					<Stats

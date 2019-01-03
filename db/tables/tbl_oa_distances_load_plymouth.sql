@@ -2,8 +2,8 @@ create table oa_distances_temp (
     oa_code character (9) not null,
     travel_type character varying (20),
     location_name text,
-    duration numeric,
-    distance numeric
+    distance numeric,
+    duration numeric
 );
 
 -- Run \copy in psql to do remote upload.
@@ -17,6 +17,11 @@ select distinct travel_type from oa_distances_temp order by travel_type;
 update travel set icon = 'DirectionsWalk' where travel_type = 'foot-walking';
 update travel set icon = 'DirectionsBike' where travel_type = 'cycling-regular';
 update travel set icon = 'DirectionsCar' where travel_type = 'driving-car';
+
+-- and descriptions
+update travel set description = 'Walking' where travel_type = 'foot-walking';
+update travel set description = 'Cycling' where travel_type = 'cycling-regular';
+update travel set description = 'Driving' where travel_type = 'driving-car';
 
 -- now load in the distances
 insert into oa_distances(oa_code, travel_id, location_id, duration, distance)

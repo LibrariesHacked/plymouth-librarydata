@@ -5,8 +5,28 @@ import axios from 'axios';
 import moment from 'moment';
 
 // getAllLocations: 
-export function getAllLocations(position_coords, callback) {
+export function getAllLocations(callback) {
+	axios.get('/api/locations')
+		.then(response => {
+			callback(response.data);
+		})
+		.catch(err => callback([]));
+}
+
+// getAllLocationsByCoords: 
+export function getAllLocationsByCoords(position_coords, callback) {
 	axios.get('/api/locations?latitude=' + position_coords[1] + '&longitude=' + position_coords[0])
+		.then(response => {
+			callback(response.data);
+		})
+		.catch(err => callback([]));
+}
+
+// getAllLocationsByPostcode: 
+export function getAllLocationsByPostcode(postcode, callback) {
+	// always trim and remove spaces from the postcode
+	const postcode_trimmed = postcode.replace(/\s/g, '');
+	axios.get('/api/locations?postcode=' + postcode_trimmed)
 		.then(response => {
 			callback(response.data);
 		})
@@ -21,9 +41,9 @@ export function getLocationOpeningHours(location) {
 	// create a lookup for the location days
 	let location_lookup = {};
 	for (let y = 0; y < location_opening_days.length; y++) {
-		const day_code = location_opening_days[y].substring(0, 2);
-		const start = location_opening_days[y].substring(5, 10);
-		const end = location_opening_days[y].substring(11, 16);
+		const day_code = location_opening_days[y].substring(0, 3);
+		const start = location_opening_days[y].substring(4, 9);
+		const end = location_opening_days[y].substring(10, 15);
 		location_lookup[day_code] = { start: start, end: end };
 	}
 
@@ -36,9 +56,10 @@ export function getLocationOpeningHours(location) {
 				day_code: date.format('ddd'),
 				date: date.format('DD'),
 				date_ordinal: date.format('Do'),
-				hours: location[date.format('dddd').toLowerCase()],
+				hours: (location_lookup[date.format('ddd')] ? location_lookup[date.format('ddd')].start + '-' + location_lookup[date.format('ddd')].end : null),
 				start: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].start, 'HH:mm').format('ha') : 'Closed'),
-				end: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].end, 'HH:mm').format('ha') : '')
+				end: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].end, 'HH:mm').format('ha') : ''),
+				hours_open: (location_lookup[date.format('ddd')] ? moment.duration(moment(location_lookup[date.format('ddd')].end, 'HH:mm').diff(moment(location_lookup[date.format('ddd')].start, 'HH:mm'))).hours() : 0),
 			}
 		)
 		date.add('day', 1);
@@ -78,10 +99,10 @@ export function checkLocationOpen(location) {
 
 // getLocationTotalOpeningHours:
 export function getLocationTotalOpeningHours(location) {
-	const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 	let total = 0;
-	days.forEach(day => {
-		total += getLocationTotalOpeningHoursDay(location, day);
+	const opening_hours = getLocationOpeningHours(location);
+	opening_hours.forEach(day => {
+		total = total + parseFloat(day.hours_open);
 	});
 	return total;
 }
@@ -89,19 +110,9 @@ export function getLocationTotalOpeningHours(location) {
 // getLocationTotalOpeningHoursDay:
 export function getLocationTotalOpeningHoursDay(location, day) {
 	let total = 0;
+	const opening_hours = getLocationOpeningHours(location);
+	opening_hours.forEach(day => {
+		if (day === day.day) total = total + parseFloat(day.hours_open);
+	});
 	return total;
-	let hours = location[day];
-	if (hours && hours !== 'closed') {
-		let start = hours.split('-')[0];
-		let end = hours.split('-')[1];
-		total = moment.duration(moment(end, 'hh:mm').diff(moment(start, 'hh:mm'))).asHours();
-	}
-	return total;
-}
-
-// getFacilities:
-export function getFacilities(location) {
-	let facilities = [];
-
-	return facilities;
 }

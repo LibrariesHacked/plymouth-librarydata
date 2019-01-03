@@ -29,6 +29,7 @@ import Search from './Search';
 
 // Helpers
 import * as appdataHelper from './helpers/appdata';
+import * as eventsHelper from './helpers/events';
 import * as locationsHelper from './helpers/locations';
 import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
@@ -62,7 +63,7 @@ const theme = createMuiTheme({
 const styles = {
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
-		backgroundColor: 'rgba(255, 255, 255, 0)'
+		backgroundColor: 'rgba(255, 255, 255, 0.5)'
 	},
 	buttonProgress: {
 		position: 'absolute',
@@ -117,6 +118,7 @@ class App extends Component {
 		current_time: moment(),
 		time_update_interval: '',
 		current_position: [],
+		postcode: '',
 		position_update_interval: '',
 		// The locations displayed in the system.
 		locations: [],
@@ -146,6 +148,7 @@ class App extends Component {
 		this.getLocations();
 		this.getFacilities();
 		this.getTravel();
+		this.getEvents();
 
 		// Get a new position every minute
 		let position_update_interval = setInterval(this.logPosition, 60000);
@@ -158,11 +161,12 @@ class App extends Component {
 
 	// logPosition: Retrieve position from gps
 	logPosition = () => {
-		this.setState({ loading: true }); // Show the loading indicator
-		geoHelper.getCurrentPosition(position => {
-			// Update 
-			this.setState({ loading: false });
-		});
+		if (this.state.search_type === 'gps') {
+			this.setState({ loading: true }); // Show the loading indicator
+			geoHelper.getCurrentPosition(position => {
+				this.setState({ loading: false });
+			});
+		}
 	}
 
 	// setCurrentTime: 
@@ -172,7 +176,7 @@ class App extends Component {
 	getLocations = () => {
 		this.setState({ loading: true });
 		geoHelper.getCurrentPosition(position => {
-			locationsHelper.getAllLocations(position, locations => {
+			locationsHelper.getAllLocationsByCoords(position, locations => {
 				this.setState({ loading: false, locations: locations });
 			});
 			// And fit map to bounds.
@@ -180,18 +184,19 @@ class App extends Component {
 		});
 	};
 
-	// getLocations:
+	// getFacilities:
 	getFacilities = () => {
-		appdataHelper.getFacilities(facilities => {
-			this.setState({ facilities: facilities });
-		});
+		appdataHelper.getFacilities(facilities => this.setState({ facilities: facilities }));
 	};
 
 	// getTravel:
 	getTravel = () => {
-		appdataHelper.getTravel(travel => {
-			this.setState({ travel_types: travel });
-		});
+		appdataHelper.getTravel(travel => this.setState({ travel_types: travel }));
+	};
+
+	// getEvents:
+	getEvents = () => {
+		eventsHelper.getEvents(events => this.setState({ events: events }));
 	};
 
 	// 
@@ -201,7 +206,10 @@ class App extends Component {
 
 	// handleGPS:
 	handleGPS = (e) => {
-
+		this.setState({
+			search_type: 'gps',
+			postcode: ''
+		});
 	}
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
@@ -295,14 +303,13 @@ class App extends Component {
 							paper: classes.drawerPaper
 						}}
 					>
-						<div className={classes.toolbarPadding}>
-							<Typography variant="h6" className={classes.header}>Plymouth</Typography>
-						</div>
+						<div className={classes.toolbarPadding}></div>
 						{this.state.list_drawer_open ?
 							<List
 								locations={this.state.locations}
 								facilities={this.state.facilities}
 								travel_types={this.state.travel_types}
+								events={this.state.events}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}
@@ -314,6 +321,7 @@ class App extends Component {
 								facilities={this.state.facilities}
 								location={this.state.locations.find(location => { return location.location_name === this.state.location_name })}
 								travel_types={this.state.travel_types}
+								events={this.state.events.filter(event => event.location === this.state.location_name)}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								current_time={this.state.current_time}

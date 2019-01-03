@@ -17,13 +17,11 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { Typography } from '@material-ui/core';
 
-// Icons
-import * as icons from '@material-ui/icons';
-
 // Material Icons
 import FilterList from '@material-ui/icons/FilterList';
 import Refresh from '@material-ui/icons/Refresh';
 import Sort from '@material-ui/icons/Sort';
+import * as icons from '@material-ui/icons';
 
 // Our custom components
 import LocationCard from './LocationCard';
@@ -206,6 +204,7 @@ class List extends React.Component {
 							<LocationCard
 								key={'crd-location' + location.location_name}
 								location={location}
+								events={this.props.events.filter(event => event.location === location.location_name)}
 								travel_types={this.props.travel_types}
 								current_time={this.props.current_time}
 								more_option={true}
@@ -216,7 +215,7 @@ class List extends React.Component {
 							/>)
 					})}
 				<Divider />
-				<Typography variant="caption" className={classes.footer}>A #LibraryData project</Typography>
+				<Typography variant="subtitle2" className={classes.footer}>A #LibraryData project</Typography>
 			</div>
 		);
 	}

@@ -71,7 +71,7 @@ class LocationMap extends Component {
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
 					onClick={this.mapClick}
 				>
-					<ZoomControl/>
+					<ZoomControl position="bottom-right" />
 					<Source
 						id='buildings_source'
 						tileJsonSource={{

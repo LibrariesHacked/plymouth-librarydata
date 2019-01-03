@@ -9,7 +9,6 @@ import Divider from '@material-ui/core/Divider';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
@@ -43,6 +42,9 @@ const styles = theme => ({
 		display: 'flex',
 		paddingBottom: 10
 	},
+	chip: {
+		marginRight: theme.spacing.unit
+	},
 	libraryHeader: {
 		marginTop: '4px',
 		marginLeft: '10px'
@@ -68,8 +70,8 @@ class LocationCard extends React.Component {
 		const { classes, location } = this.props;
 		let current_event = {};
 		let next_event = {};
-		if (location.events) {
-			location.events
+		if (this.props.events) {
+			this.props.events
 				.forEach(event => {
 					// Loop through times.
 					event.dates.forEach(date => {
@@ -101,6 +103,24 @@ class LocationCard extends React.Component {
 						<Typography className={classes.libraryHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
 					</div>
 					<Divider />
+					<Typography variant="caption" gutterBottom>
+					{
+						this.props.travel_types.map(travel => {
+							if (location.travel && location.travel[travel.travel_type]) {
+								const Icon = icons[travel.icon];
+								return (
+									<span>
+										<Icon />
+										{' ' + location.travel[travel.travel_type].duration  + '. '}
+									</span>
+								)
+							} else {
+								return null;
+							}
+						})
+					}
+					</Typography>
+					<br />
 					<Typography variant="subtitle1" gutterBottom>
 						{
 							locationsHelper.checkLocationOpen(location).message + '.'
@@ -117,6 +137,7 @@ class LocationCard extends React.Component {
 					}
 				</CardContent>
 				<CardActions>
+					<Divider />
 					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
 						<LocationOn />
 					</IconButton>

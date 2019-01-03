@@ -51,7 +51,7 @@ class Events extends React.Component {
 	// 
 	render() {
 		const { classes, location } = this.props;
-		const events = location.events || [];
+		const events = this.props.events || [];
 		const categories = [];
 		events.forEach(event => {
 			if (event.categories) {

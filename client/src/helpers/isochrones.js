@@ -1,21 +1,6 @@
 // Axios for making requests
 import axios from 'axios';
 
-// getIsochroneConfig
-export function getIsochroneConfig() {
-	return {
-		'foot-walking': {
-			display: 'Walking'
-		},
-		'cycling-regular': {
-			display: 'Cycling'
-		},
-		'driving-car': {
-			display: 'Driving'
-		}
-	};
-};
-
 // getLocationIsochronesByType:Gets isochrones for a particular location and travel type.
 export function getLocationIsochronesByType(location_name, travel, callback) {
 	axios.get('/api/isochrones?location=' + location_name + '&include=' + travel.join(','))
