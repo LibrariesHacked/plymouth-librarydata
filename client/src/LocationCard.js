@@ -45,6 +45,9 @@ const styles = theme => ({
 	chip: {
 		marginRight: theme.spacing.unit
 	},
+	flex: {
+		flex: 1,
+	},
 	libraryHeader: {
 		marginTop: '4px',
 		marginLeft: '10px'
@@ -99,8 +102,9 @@ class LocationCard extends React.Component {
 			<Card className={classes.card} elevation={0}>
 				<CardContent>
 					<div className={classes.cardHeader}>
-						<LocationAvatar location={location} />
 						<Typography className={classes.libraryHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
+						<span className={classes.flex}></span>
+						<LocationAvatar location={location} />
 					</div>
 					<Divider />
 					<Typography variant="caption" gutterBottom>

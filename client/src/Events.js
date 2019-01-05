@@ -50,7 +50,7 @@ class Events extends React.Component {
 
 	// 
 	render() {
-		const { classes, location } = this.props;
+		const { classes } = this.props;
 		const events = this.props.events || [];
 		const categories = [];
 		events.forEach(event => {
@@ -125,8 +125,7 @@ class Events extends React.Component {
 }
 
 Events.propTypes = {
-	classes: PropTypes.object.isRequired,
-	location: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles, { withTheme: true })(Events);

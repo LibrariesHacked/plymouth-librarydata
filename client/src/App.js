@@ -10,7 +10,6 @@ import Drawer from '@material-ui/core/Drawer';
 import Fab from '@material-ui/core/Fab';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 
 // Material Icons
 import ArrowBack from '@material-ui/icons/ArrowBack';
@@ -80,18 +79,6 @@ const styles = {
 	flex: {
 		flex: 1,
 	},
-	header: {
-		textAlign: 'right',
-		padding: 16,
-		color: 'rgba(143, 212, 0, 1)',
-		fontWeight: 700
-	},
-	map: {
-		position: 'absolute',
-		top: 0,
-		width: '100%',
-		height: 'calc(100%)'
-	},
 	menuButton: {
 		marginLeft: -12,
 		marginRight: 20,
@@ -103,9 +90,6 @@ const styles = {
 		position: 'relative',
 		display: 'flex',
 		width: '100%',
-	},
-	toolbar: {
-		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
 	toolbarPadding: theme.mixins.toolbar
 };
@@ -136,7 +120,7 @@ class App extends Component {
 		map_zoom: [12],
 		map_pitch: [0],
 		map_bearing: [0],
-		// UI variables
+		// UI display variables
 		loading: false,
 		main_drawer_open: true,
 		list_drawer_open: true,
@@ -150,23 +134,16 @@ class App extends Component {
 		this.getTravel();
 		this.getEvents();
 
-		// Get a new position every minute
+		// Set up updates for location and time
 		let position_update_interval = setInterval(this.logPosition, 60000);
 		this.setState({ position_update_interval: position_update_interval });
-
-		// Update the current time every 5 seconds. This is used in some views.
 		let time_update_interval = setInterval(this.setCurrentTime, 5000);
 		this.setState({ time_update_interval: time_update_interval });
 	}
 
 	// logPosition: Retrieve position from gps
 	logPosition = () => {
-		if (this.state.search_type === 'gps') {
-			this.setState({ loading: true }); // Show the loading indicator
-			geoHelper.getCurrentPosition(position => {
-				this.setState({ loading: false });
-			});
-		}
+		if (this.state.search_type === 'gps') this.getLocations();
 	}
 
 	// setCurrentTime: 
@@ -177,10 +154,8 @@ class App extends Component {
 		this.setState({ loading: true });
 		geoHelper.getCurrentPosition(position => {
 			locationsHelper.getAllLocationsByCoords(position, locations => {
-				this.setState({ loading: false, locations: locations });
+				this.setState({ loading: false, locations: locations, current_position: position });
 			});
-			// And fit map to bounds.
-			this.fitLocationBounds();
 		});
 	};
 
@@ -201,16 +176,11 @@ class App extends Component {
 
 	// 
 	fitLocationBounds = () => {
-		// 
+		// To do: 
 	}
 
 	// handleGPS:
-	handleGPS = (e) => {
-		this.setState({
-			search_type: 'gps',
-			postcode: ''
-		});
-	}
+	handleGPS = (e) => this.setState({ search_type: 'gps', postcode: '' });
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
 	getLocationIsochrones = (location_name) => {
@@ -257,7 +227,7 @@ class App extends Component {
 						color="default"
 						elevation={0}
 						className={classes.appBar}>
-						<Toolbar className={classes.toolbar}>
+						<Toolbar>
 							{this.state.list_drawer_open ?
 								<Fab
 									size="small"
@@ -306,25 +276,25 @@ class App extends Component {
 						<div className={classes.toolbarPadding}></div>
 						{this.state.list_drawer_open ?
 							<List
+								current_time={this.state.current_time}
 								locations={this.state.locations}
 								facilities={this.state.facilities}
 								travel_types={this.state.travel_types}
 								events={this.state.events}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
-								current_time={this.state.current_time}
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
 								viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
 							/> : null}
 						{this.state.location_drawer_open ?
 							<Location
+								current_time={this.state.current_time}
 								facilities={this.state.facilities}
 								location={this.state.locations.find(location => { return location.location_name === this.state.location_name })}
 								travel_types={this.state.travel_types}
 								events={this.state.events.filter(event => event.location === this.state.location_name)}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
-								current_time={this.state.current_time}
 								getIsochrones={(location_name) => this.getLocationIsochrones(location_name)}
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
 								close={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })}

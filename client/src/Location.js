@@ -69,6 +69,7 @@ class Location extends React.Component {
 					<Stats
 						getIsochrones={this.props.getIsochrones}
 						location={this.props.location}
+						travel_types={this.props.travel_types}
 						isochrones={this.props.isochrones}
 					/>: null}
 			</div>

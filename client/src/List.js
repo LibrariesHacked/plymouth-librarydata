@@ -18,10 +18,10 @@ import Tabs from '@material-ui/core/Tabs';
 import { Typography } from '@material-ui/core';
 
 // Material Icons
+import * as icons from '@material-ui/icons';
 import FilterList from '@material-ui/icons/FilterList';
 import Refresh from '@material-ui/icons/Refresh';
 import Sort from '@material-ui/icons/Sort';
-import * as icons from '@material-ui/icons';
 
 // Our custom components
 import LocationCard from './LocationCard';
@@ -37,9 +37,6 @@ const styles = theme => ({
 	footer: {
 		padding: 10
 	},
-	leftIcon: {
-		marginRight: theme.spacing.unit,
-	},
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
 	},
@@ -53,21 +50,15 @@ const styles = theme => ({
 	},
 	padding: {
 		padding: `0 ${theme.spacing.unit * 2}px`,
-	},
-	progress: {
-		marginRight: theme.spacing.unit
 	}
 });
 
 class List extends React.Component {
 	state = {
-		actions_menu: false,
-		actions_menu_anchor: null,
 		filter: '',
 		filter_type: '',
 		filter_menu: false,
 		filter_menu_anchor: null,
-		location_name: '',
 		open_tab: 0,
 		sort: 'name',
 		sort_menu: false,
