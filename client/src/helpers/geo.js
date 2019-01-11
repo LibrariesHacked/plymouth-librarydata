@@ -2,7 +2,7 @@
 export function getCurrentPosition(callback) {
 	var options = {
 		enableHighAccuracy: true,
-		timeout: 6000,
+		timeout: 10000,
 		maximumAge: 0
 	};
 	navigator.geolocation.getCurrentPosition((pos) => {

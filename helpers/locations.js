@@ -12,13 +12,19 @@ module.exports.getAllLocations = (callback) => {
 		ssl: true
 	})
 
-	client.connect();
-	client.query('select * from vw_locations', (err, res) => {
-		client.end();
-		if (res && res.rows && res.rows.length > 0) {
-			callback(res.rows);
-		} else {
+	client.connect((err, res) => {
+		if (err) {
 			callback([]);
+			return;
 		}
-	})
+		client.query('select * from vw_locations', (err, res) => {
+			client.end();
+			if (res && res.rows && res.rows.length > 0) {
+				callback(res.rows);
+			} else {
+				callback([]);
+			}
+		})
+	});
+
 }

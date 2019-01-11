@@ -1,11 +1,13 @@
 // React
-import { Bar } from 'react-chartjs-2';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
+
+// Chart JS
+import { Bar } from 'react-chartjs-2';
 
 import * as isoHelper from './helpers/isochrones';
 

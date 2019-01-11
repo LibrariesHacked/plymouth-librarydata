@@ -1,17 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// Material UI
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
+import { withStyles } from '@material-ui/core/styles';
+
+// Material icons
+import LocationSearching from '@material-ui/icons/LocationSearching';
+import MyLocation from '@material-ui/icons/MyLocation';
 
 const styles = theme => ({
-	grow: {
-		flexGrow: 1,
+	divider: {
+		width: 1,
+		height: 28,
+		margin: 8,
 	},
 	search: {
 		position: 'relative',
+		border: '1px solid #e5e5e5',
 		borderRadius: theme.shape.borderRadius,
 		backgroundColor: fade(theme.palette.common.white, 0.75),
 		'&:hover': {
@@ -19,50 +29,33 @@ const styles = theme => ({
 		},
 		marginLeft: 0,
 		marginRight: theme.spacing.unit,
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			marginLeft: theme.spacing.unit,
-			width: 'auto',
-		},
+		display: 'flex'
 	},
-	searchIcon: {
-		width: theme.spacing.unit * 9,
-		height: '100%',
-		position: 'absolute',
-		pointerEvents: 'none',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
+	iconButton: {
+		padding: 10,
 	},
 	inputRoot: {
-		color: 'inherit',
-		width: '100%',
+		color: 'inherit'
 	},
 	inputInput: {
 		paddingTop: theme.spacing.unit,
 		paddingRight: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit,
-		paddingLeft: theme.spacing.unit * 10,
-		transition: theme.transitions.create('width'),
-		width: '100%',
+		paddingLeft: theme.spacing.unit * 2,
 		[theme.breakpoints.up('sm')]: {
-			width: 120,
-			'&:focus': {
-				width: 200,
-			},
-		},
-	},
+			width: 100
+		}
+	}
 });
 
-function Search(props) {
-	const { classes } = props;
-	return (
-		<div>
-			<div className={classes.grow} />
+class Search extends React.Component {
+	state = {
+	}
+
+	render() {
+		const { classes } = this.props;
+		return (
 			<div className={classes.search}>
-				<div className={classes.searchIcon}>
-					<SearchIcon />
-				</div>
 				<InputBase
 					placeholder="Postcode"
 					classes={{
@@ -70,9 +63,23 @@ function Search(props) {
 						input: classes.inputInput,
 					}}
 				/>
+				<IconButton
+					className={classes.iconButton}
+					onClick={this.props.handlePostcodeSearch}>
+					<SearchIcon />
+				</IconButton>
+				<Divider className={classes.divider} />
+				{this.props.current_position.length > 0 ?
+					<IconButton
+						className={classes.iconButton}
+						color="primary"
+						onClick={this.props.handleGPS}
+					>
+						{this.props.current_position.length > 0 && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
+					</IconButton> : null}
 			</div>
-		</div>
-	);
+		);
+	}
 }
 
 Search.propTypes = {

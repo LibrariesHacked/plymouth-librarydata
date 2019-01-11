@@ -35,8 +35,8 @@ const styles = theme => ({
 	},
 	card: {
 		border: '1px solid #e5e5e5',
-		margin: '5px',
-		borderRadius: '3px'
+		margin: 5,
+		borderRadius: theme.shape.borderRadius,
 	},
 	cardHeader: {
 		display: 'flex',
@@ -98,6 +98,18 @@ class LocationCard extends React.Component {
 					});
 				});
 		}
+		// travel time string
+		const travel = this.props.travel_types.map(travel => {
+			if (location.travel && location.travel[travel.travel_type]) {
+				return (
+					+ moment.duration(parseInt(location.travel[travel.travel_type].duration), 'minutes').humanize()
+					+ ' '
+					+ travel.description.toLowerCase()
+				)
+			} else {
+				return '';
+			}
+		}).join(', ');
 		return (
 			<Card className={classes.card} elevation={0}>
 				<CardContent>
@@ -107,27 +119,11 @@ class LocationCard extends React.Component {
 						<LocationAvatar location={location} />
 					</div>
 					<Divider />
-					<Typography variant="caption" gutterBottom>
-					{
-						this.props.travel_types.map(travel => {
-							if (location.travel && location.travel[travel.travel_type]) {
-								const Icon = icons[travel.icon];
-								return (
-									<span>
-										<Icon />
-										{' ' + location.travel[travel.travel_type].duration  + '. '}
-									</span>
-								)
-							} else {
-								return null;
-							}
-						})
-					}
-					</Typography>
-					<br />
-					<Typography variant="subtitle1" gutterBottom>
+					<Typography variant="caption">
 						{
-							locationsHelper.checkLocationOpen(location).message + '.'
+							locationsHelper.checkLocationOpen(location).message + '. ' +
+							travel
+
 						}
 					</Typography>
 					{Object.keys(current_event).length > 0 ?
@@ -141,7 +137,6 @@ class LocationCard extends React.Component {
 					}
 				</CardContent>
 				<CardActions>
-					<Divider />
 					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
 						<LocationOn />
 					</IconButton>

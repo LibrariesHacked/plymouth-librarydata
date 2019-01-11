@@ -26,21 +26,27 @@ module.exports.getLocationsDistances = (location_type, location, destinations, c
 		query_vars = [location[0], location[1]];
 	}
 
-	client.connect();
-	client.query(query, query_vars, (err, res) => {
-		client.end();
-		if (res && res.rows && res.rows.length > 0) {
-			res.rows.forEach(trip => {
-				destinations.forEach(destination => {
-					if (destination.location_name === trip.location_name) {
-						if (!destination.travel) destination.travel = {};
-						destination.travel[trip.travel_type] = {};
-						destination.travel[trip.travel_type].duration = trip.duration;
-						destination.travel[trip.travel_type].distance = trip.distance;
-					}
-				});
-			});
+	client.connect((err, res) => {
+		if (err) {
+			callback([]);
+			return;
 		}
-		callback(destinations);
+		client.query(query, query_vars, (err, res) => {
+			client.end();
+			if (res && res.rows && res.rows.length > 0) {
+				res.rows.forEach(trip => {
+					destinations.forEach(destination => {
+						if (destination.location_name === trip.location_name) {
+							if (!destination.travel) destination.travel = {};
+							destination.travel[trip.travel_type] = {};
+							destination.travel[trip.travel_type].duration = trip.duration;
+							destination.travel[trip.travel_type].distance = trip.distance;
+						}
+					});
+				});
+			}
+			callback(destinations);
+		});
 	});
+
 }

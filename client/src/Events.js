@@ -28,6 +28,12 @@ const styles = theme => ({
 	chip: {
 		margin: theme.spacing.unit / 2
 	},
+	eventList: {
+		backgroundColor: 'white',
+		border: '1px solid #e5e5e5',
+		margin: 5,
+		borderRadius: theme.shape.borderRadius,
+	},
 	nested: {
 		paddingLeft: theme.spacing.unit * 4
 	}
@@ -50,8 +56,7 @@ class Events extends React.Component {
 
 	// 
 	render() {
-		const { classes } = this.props;
-		const events = this.props.events || [];
+		const { classes, events } = this.props;
 		const categories = [];
 		events.forEach(event => {
 			if (event.categories) {
@@ -78,7 +83,8 @@ class Events extends React.Component {
 								/>
 							</Tooltip>);
 					})}
-				<List
+				<List 
+					className={classes.eventList}
 					component="nav">
 					{events
 						.filter(event => {

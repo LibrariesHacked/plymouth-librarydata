@@ -1,7 +1,7 @@
 insert into facilities(facility_name, description, icon)
 values 
 ('Computers', 'Computers for public use', 'DesktopWindows'),
-('WiFi', 'Wifi', 'Free Wifi'),
+('WiFi', 'Free Wifi', 'Wifi'),
 ('Printers', 'Printers', 'Print'),
 ('Photocopying', 'Photocopiers', 'FileCopy'),
 ('Scanners', 'Scanners', 'Scanner'),

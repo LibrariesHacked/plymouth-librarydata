@@ -8,14 +8,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Fab from '@material-ui/core/Fab';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 
 // Material Icons
 import ArrowBack from '@material-ui/icons/ArrowBack';
-import LocationSearching from '@material-ui/icons/LocationSearching';
 import Menu from '@material-ui/icons/Menu';
-import MyLocation from '@material-ui/icons/MyLocation';
 
 // Use moment for opening hours
 import moment from 'moment';
@@ -62,7 +61,7 @@ const theme = createMuiTheme({
 const styles = {
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
-		backgroundColor: 'rgba(255, 255, 255, 0.5)'
+		backgroundColor: 'rgba(255, 255, 255, 0)'
 	},
 	buttonProgress: {
 		position: 'absolute',
@@ -74,7 +73,7 @@ const styles = {
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
-		backgroundColor: 'rgba(255, 255, 255, 0.6)'
+		backgroundColor: 'rgba(255, 255, 255, 0.8)'
 	},
 	flex: {
 		flex: 1,
@@ -97,7 +96,7 @@ const styles = {
 class App extends Component {
 	state = {
 		// We either maintain data by GPS or by postcode search
-		search_type: 'gps',
+		search_type: '',
 		// Tracking of position and time
 		current_time: moment(),
 		time_update_interval: '',
@@ -134,16 +133,20 @@ class App extends Component {
 		this.getTravel();
 		this.getEvents();
 
-		// Set up updates for location and time
-		let position_update_interval = setInterval(this.logPosition, 60000);
-		this.setState({ position_update_interval: position_update_interval });
+		// Initially we try to trigger a position to request GPS
+		// This will also retrieve the locations whether position works or not.
+		this.logPosition();
+
 		let time_update_interval = setInterval(this.setCurrentTime, 5000);
 		this.setState({ time_update_interval: time_update_interval });
 	}
 
 	// logPosition: Retrieve position from gps
 	logPosition = () => {
-		if (this.state.search_type === 'gps') this.getLocations();
+		geoHelper.getCurrentPosition(position => {
+			this.setState({ current_position: position });
+			this.getLocations();
+		});
 	}
 
 	// setCurrentTime: 
@@ -152,11 +155,20 @@ class App extends Component {
 	// getLocations:
 	getLocations = () => {
 		this.setState({ loading: true });
-		geoHelper.getCurrentPosition(position => {
-			locationsHelper.getAllLocationsByCoords(position, locations => {
-				this.setState({ loading: false, locations: locations, current_position: position });
+
+		if (this.state.current_position && this.state.search_type !== 'postcode') {
+			locationsHelper.getAllLocationsByCoords(this.state.current_position, locations => {
+				this.setState({ loading: false, locations: locations });
 			});
-		});
+		} else if (this.state.search_type === 'postcode') {
+			locationsHelper.getAllLocationsByPostcode(this.state.postcode, locations => {
+				this.setState({ loading: false, locations: locations });
+			});
+		} else { // Just get all the locations
+			locationsHelper.getAllLocations(locations => {
+				this.setState({ loading: false, locations: locations });
+			});
+		}
 	};
 
 	// getFacilities:
@@ -174,13 +186,17 @@ class App extends Component {
 		eventsHelper.getEvents(events => this.setState({ events: events }));
 	};
 
-	// 
-	fitLocationBounds = () => {
-		// To do: 
-	}
-
 	// handleGPS:
-	handleGPS = (e) => this.setState({ search_type: 'gps', postcode: '' });
+	handleGPS = (e) => {
+		// If we're already tracking GPS then turn this off
+		if (this.state.search_type === 'gps') {
+			clearInterval(this.state.position_update_interval);
+			this.setState({ search_type: '', postcode: '', position_update_interval: null });
+		} else {
+			let position_update_interval = setInterval(this.logPosition, 60000);
+			this.setState({ position_update_interval: position_update_interval, search_type: 'gps', postcode: '' });
+		}
+	}
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
 	getLocationIsochrones = (location_name) => {
@@ -255,15 +271,12 @@ class App extends Component {
 								</Fab> : null
 							}
 							<span className={classes.flex}></span>
-							<Search />
-							<Fab
-								size="small"
-								color="primary"
-								disabled={this.state.current_position.length === 0}
-								onClick={this.handleGPS}
-							>
-								{this.state.current_position.length > 0 ? <MyLocation /> : <LocationSearching />}
-							</Fab>
+							<Search 
+								search_type={this.state.search_type}
+								current_position={this.state.current_position}
+								handleGPS={this.handleGPS}
+								handlePostcodeSearch={this.handlePostcodeSearch}
+							/>
 						</Toolbar>
 					</AppBar>
 					<Drawer

@@ -12,15 +12,22 @@ module.exports.getFacilities = (callback) => {
 		ssl: true
 	})
 
-	client.connect();
-	client.query('select * from vw_facilities', (err, res) => {
-		client.end();
-		if (res && res.rows && res.rows.length > 0) {
-			callback(res.rows);
-		} else {
+	client.connect((err, res) => {
+		if (err) {
 			callback([]);
+			return;
 		}
-	})
+		client.query('select * from vw_facilities', (err, res) => {
+			client.end();
+			if (res && res.rows && res.rows.length > 0) {
+				callback(res.rows);
+			} else {
+				callback([]);
+			}
+		})
+	});
+
+
 }
 
 // Get Travel: 
@@ -34,13 +41,19 @@ module.exports.getTravel = (callback) => {
 		ssl: true
 	})
 
-	client.connect();
-	client.query('select * from vw_travel', (err, res) => {
-		client.end();
-		if (res && res.rows && res.rows.length > 0) {
-			callback(res.rows);
-		} else {
+	client.connect((err, res) => {
+		if (err) {
 			callback([]);
+			return;
 		}
-	})
+		client.query('select * from vw_travel', (err, res) => {
+			client.end();
+			if (res && res.rows && res.rows.length > 0) {
+				callback(res.rows);
+			} else {
+				callback([]);
+			}
+		})
+	});
+
 }

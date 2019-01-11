@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
@@ -15,12 +14,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { Typography } from '@material-ui/core';
 
 // Material Icons
 import * as icons from '@material-ui/icons';
 import FilterList from '@material-ui/icons/FilterList';
-import Refresh from '@material-ui/icons/Refresh';
 import Sort from '@material-ui/icons/Sort';
 
 // Our custom components
@@ -82,12 +79,8 @@ class List extends React.Component {
 				return show;
 			});
 		let events = [];
-		this.props.locations.forEach(location => {
-			if (location.events) {
-				location.events.forEach(event => {
-					if (events.map(ev => ev.toLowerCase()).indexOf(event.title.toLowerCase()) === -1) events.push(event.title);
-				});
-			}
+		this.props.events.forEach(event => {
+			if (events.map(ev => ev.toLowerCase()).indexOf(event.title.toLowerCase()) === -1) events.push(event.title);
 		});
 		return (
 			<div>
@@ -163,11 +156,8 @@ class List extends React.Component {
 						}
 					/>
 				</Tabs>
-				<IconButton>
-					<Refresh />
-				</IconButton>
 				<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
-				<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'All'}<FilterList className={classes.rightIcon} /></Button>
+				<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
 				{this.props.locations
 					.sort((loc_a, loc_b) => {
 						if (this.state.sort === 'name') return loc_a.location_name.localeCompare(loc_b.location_name);
@@ -205,8 +195,6 @@ class List extends React.Component {
 								viewLocation={this.props.viewLocation}
 							/>)
 					})}
-				<Divider />
-				<Typography variant="subtitle2" className={classes.footer}>A #LibraryData project</Typography>
 			</div>
 		);
 	}

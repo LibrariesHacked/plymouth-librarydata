@@ -76,17 +76,16 @@ export function checkLocationOpen(location) {
 	if (opening_hours[0].full === now.format('DD/MM/YYYY')) { // Open today
 		let start = moment(opening_hours[0].full + ' ' + opening_hours[0].start, 'DD/MM/YYYY ha');
 		let end = moment(opening_hours[0].full + ' ' + opening_hours[0].end, 'DD/MM/YYYY ha');
-
 		if (now.isAfter(start) && now.isBefore(end)) { // Currently Open
 			open = true;
-			message = 'Closing in ' + moment.duration(end.diff(start)).humanize();
+			message = 'Closing in ' + moment.duration(now.diff(end)).humanize();
 		} else {
 			if (now.isBefore(start)) { // Opening today
 				message = 'Opening in ' + moment.duration(now.diff(start)).humanize()
 			}
 		}
 	}
-	if (open === false && message === '') { // 
+	if (!open && message === '') { // 
 		let x = 1;
 		while (x < opening_hours.length && message === '') {
 			let start = moment(opening_hours[x].full + ' ' + opening_hours[x].start, 'DD/MM/YYYY ha');
