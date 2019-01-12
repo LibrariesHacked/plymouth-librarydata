@@ -99,7 +99,7 @@ class LocationCard extends React.Component {
 				});
 		}
 		// travel time string
-		const travel = this.props.travel_types.map(travel => {
+		const travel_message = this.props.travel_types.map(travel => {
 			if (location.travel && location.travel[travel.travel_type]) {
 				return (
 					+ moment.duration(parseInt(location.travel[travel.travel_type].duration), 'minutes').humanize()
@@ -119,10 +119,10 @@ class LocationCard extends React.Component {
 						<LocationAvatar location={location} />
 					</div>
 					<Divider />
-					<Typography variant="caption">
+					<Typography variant="caption" gutterBottom>
 						{
 							locationsHelper.checkLocationOpen(location).message + '. ' +
-							travel
+							(travel_message.length > 4 ? travel_message : '')
 
 						}
 					</Typography>
@@ -133,7 +133,7 @@ class LocationCard extends React.Component {
 							label={'Now: ' + current_event.title} /> :
 						<Chip
 							avatar={<Avatar><Event /></Avatar>}
-							label={(Object.keys(next_event).length > 0 ? moment(next_event.date.start_date).format('dddd h:mma') + ': ' + next_event.title : '')} />
+							label={(Object.keys(next_event).length > 0 ? moment(next_event.date.start_date).format('ddd h:mma') + ' ' + next_event.title : '')} />
 					}
 				</CardContent>
 				<CardActions>

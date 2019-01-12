@@ -56,9 +56,9 @@ export function getLocationOpeningHours(location) {
 				day_code: date.format('ddd'),
 				date: date.format('DD'),
 				date_ordinal: date.format('Do'),
-				hours: (location_lookup[date.format('ddd')] ? location_lookup[date.format('ddd')].start + '-' + location_lookup[date.format('ddd')].end : null),
-				start: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].start, 'HH:mm').format('ha') : 'Closed'),
-				end: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].end, 'HH:mm').format('ha') : ''),
+				hours: (location_lookup[date.format('ddd')] ? location_lookup[date.format('ddd')].start + '-' + location_lookup[date.format('ddd')].end : 'Closed'),
+				start: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].start, 'HH:mm').format('ha') : null),
+				end: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].end, 'HH:mm').format('ha') : null),
 				hours_open: (location_lookup[date.format('ddd')] ? moment.duration(moment(location_lookup[date.format('ddd')].end, 'HH:mm').diff(moment(location_lookup[date.format('ddd')].start, 'HH:mm'))).hours() : 0),
 			}
 		)

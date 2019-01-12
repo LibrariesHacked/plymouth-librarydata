@@ -8,7 +8,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Fab from '@material-ui/core/Fab';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -101,6 +100,7 @@ class App extends Component {
 		current_time: moment(),
 		time_update_interval: '',
 		current_position: [],
+		gps_available: false,
 		postcode: '',
 		position_update_interval: '',
 		// The locations displayed in the system.
@@ -142,10 +142,10 @@ class App extends Component {
 	}
 
 	// logPosition: Retrieve position from gps
-	logPosition = () => {
+	logPosition = (fitBounds = false) => {
 		geoHelper.getCurrentPosition(position => {
-			this.setState({ current_position: position });
-			this.getLocations();
+			this.setState({ current_position: position, gps_available: (position.length > 0) });
+			this.getLocations(fitBounds);
 		});
 	}
 
@@ -153,16 +153,18 @@ class App extends Component {
 	setCurrentTime = () => this.setState({ current_time: moment() });
 
 	// getLocations:
-	getLocations = () => {
+	getLocations = (fitBounds = false) => {
 		this.setState({ loading: true });
 
 		if (this.state.current_position && this.state.search_type !== 'postcode') {
 			locationsHelper.getAllLocationsByCoords(this.state.current_position, locations => {
 				this.setState({ loading: false, locations: locations });
+				if (fitBounds) this.fitBounds();
 			});
 		} else if (this.state.search_type === 'postcode') {
 			locationsHelper.getAllLocationsByPostcode(this.state.postcode, locations => {
 				this.setState({ loading: false, locations: locations });
+				if (fitBounds) this.fitBounds();
 			});
 		} else { // Just get all the locations
 			locationsHelper.getAllLocations(locations => {
@@ -186,8 +188,8 @@ class App extends Component {
 		eventsHelper.getEvents(events => this.setState({ events: events }));
 	};
 
-	// handleGPS:
-	handleGPS = (e) => {
+	// :
+	toggleGPS = () => {
 		// If we're already tracking GPS then turn this off
 		if (this.state.search_type === 'gps') {
 			clearInterval(this.state.position_update_interval);
@@ -195,7 +197,24 @@ class App extends Component {
 		} else {
 			let position_update_interval = setInterval(this.logPosition, 60000);
 			this.setState({ position_update_interval: position_update_interval, search_type: 'gps', postcode: '' });
+			this.logPosition(true);
 		}
+	}
+
+	// :
+	postcodeSearch = () => {
+		// If we're already tracking GPS then turn this off
+		if (this.state.search_type === 'gps') {
+			clearInterval(this.state.position_update_interval);
+			this.setState({ search_type: '', postcode: '', position_update_interval: null });
+		}
+		this.setState({ search_type: 'postcode' });
+		this.getLocations();
+	}
+
+	// fitBounds
+	fitBounds = () => {
+
 	}
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
@@ -271,11 +290,13 @@ class App extends Component {
 								</Fab> : null
 							}
 							<span className={classes.flex}></span>
-							<Search 
+							<Search
 								search_type={this.state.search_type}
-								current_position={this.state.current_position}
-								handleGPS={this.handleGPS}
-								handlePostcodeSearch={this.handlePostcodeSearch}
+								postcode={this.state.postcode}
+								gps_available={this.state.gps_available}
+								toggleGPS={this.toggleGPS}
+								postcodeSearch={this.postcodeSearch}
+								updatePostcode={(postcode) => this.setState({ postcode: postcode })}
 							/>
 						</Toolbar>
 					</AppBar>
@@ -314,6 +335,8 @@ class App extends Component {
 							/> : null}
 					</Drawer>
 					<LocationMap
+						current_position={this.state.current_position}
+						search_type={this.state.search_type}
 						position={this.state.map_position}
 						isochrones={this.state.location_isochrones}
 						locations={this.state.locations}

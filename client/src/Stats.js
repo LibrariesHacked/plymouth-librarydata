@@ -30,8 +30,8 @@ class Stats extends React.Component {
 					Object.keys(isochrones[location.location_name])
 						.map((travel, i) => {
 							let travel_name = '';
-							this.props.travel_types.forEach(travel => {
-								if (travel.travel_name === travel) travel_name = travel.description;
+							this.props.travel_types.forEach(travel_def => {
+								if (travel_def.travel_type === travel) travel_name = travel_def.description;
 							});
 							let iso_data = isoHelper.getIsochroneData(isochrones[location.location_name][travel].iso);
 							let data_labels = iso_data.map(f => { return (f.value / 60) + ' mins' });

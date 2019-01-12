@@ -62,20 +62,22 @@ class Search extends React.Component {
 						root: classes.inputRoot,
 						input: classes.inputInput,
 					}}
+					value={this.props.postcode}
+					onChange={(e) => this.props.updatePostcode(e.target.value)}
 				/>
 				<IconButton
 					className={classes.iconButton}
-					onClick={this.props.handlePostcodeSearch}>
+					onClick={() => this.props.postcodeSearch()}>
 					<SearchIcon />
 				</IconButton>
 				<Divider className={classes.divider} />
-				{this.props.current_position.length > 0 ?
+				{this.props.gps_available ?
 					<IconButton
 						className={classes.iconButton}
 						color="primary"
-						onClick={this.props.handleGPS}
+						onClick={() => this.props.toggleGPS()}
 					>
-						{this.props.current_position.length > 0 && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
+						{this.props.gps_available && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
 					</IconButton> : null}
 			</div>
 		);

@@ -114,7 +114,7 @@ class Events extends React.Component {
 															<Event />
 														</ListItemIcon>
 														<ListItemText
-															primary={moment(date.start_date).format('ddd do MMM h:mma')}
+															primary={moment(date.start_date, 'YYYY-MM-DDTHH:mm:ss+00:00').format('ddd Do MMM h:mma')}
 														/>
 													</ListItem>)
 											})}

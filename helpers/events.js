@@ -13,7 +13,14 @@ module.exports.getEvents = (callback) => {
 		event_data.forEach(item => {
 			const event_title = item.title;
 			const event_location = item.location;
-			const dates = item.dates.filter((v, i) => item.dates.indexOf(v) == i);
+			let date_instances = [];
+			let dates = [];
+			item.dates.forEach(date => {
+				if (date_instances.indexOf(date.start_date) === -1) {
+					date_instances.push(date.start_date);
+					dates.push(date);
+				}
+			});
 			const categories = item.categories;
 			const event_url = item.url;
 			// see if we already have it

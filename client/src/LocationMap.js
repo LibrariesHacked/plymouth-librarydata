@@ -16,6 +16,7 @@ import { ZoomControl } from "react-mapbox-gl";
 // Custom components
 import LocationAvatar from './LocationAvatar';
 import LocationAvatarCluster from './LocationAvatarCluster';
+import MeAvatar from './MeAvatar';
 
 const styles = {};
 
@@ -170,6 +171,14 @@ class LocationMap extends Component {
 							)
 						}
 					</Cluster>
+					{this.props.current_position && this.props.current_position.length > 0 ? 
+						<Marker
+							key={'mk_me'}
+							style={styles.marker}
+							coordinates={[this.props.current_position[0], this.props.current_position[1]]}>
+							<MeAvatar search_type={this.props.search_type} />
+						</Marker>
+					: null}
 				</Map>
 			</div>
 		);
