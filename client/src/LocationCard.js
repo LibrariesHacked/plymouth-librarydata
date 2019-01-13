@@ -13,12 +13,14 @@ import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
 import Business from '@material-ui/icons/Business';
 import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
+import MoreVert from '@material-ui/icons/MoreVert';
 
 // Icons
 import * as icons from '@material-ui/icons';
@@ -42,9 +44,6 @@ const styles = theme => ({
 		display: 'flex',
 		paddingBottom: 10
 	},
-	chip: {
-		marginRight: theme.spacing.unit
-	},
 	flex: {
 		flex: 1,
 	},
@@ -54,13 +53,6 @@ const styles = theme => ({
 	},
 	progress: {
 		marginRight: theme.spacing.unit / 2
-	},
-	textMargin: {
-		marginLeft: 10,
-		marginRight: 10
-	},
-	media: {
-		objectFit: 'cover'
 	}
 });
 
@@ -70,11 +62,11 @@ class LocationCard extends React.Component {
 	}
 
 	render() {
-		const { classes, location } = this.props;
+		const { classes, location, events } = this.props;
 		let current_event = {};
 		let next_event = {};
-		if (this.props.events) {
-			this.props.events
+		if (events) {
+			events
 				.forEach(event => {
 					// Loop through times.
 					event.dates.forEach(date => {
@@ -99,31 +91,36 @@ class LocationCard extends React.Component {
 				});
 		}
 		// travel time string
-		const travel_message = this.props.travel_types.map(travel => {
-			if (location.travel && location.travel[travel.travel_type]) {
-				return (
-					+ moment.duration(parseInt(location.travel[travel.travel_type].duration), 'minutes').humanize()
-					+ ' '
-					+ travel.description.toLowerCase()
-				)
-			} else {
-				return '';
-			}
-		}).join(', ');
+		let travel_message = '';
+		if (this.props.travel_types && location.travel && location.travel.length > 0) {
+			travel_message = this.props.travel_types.map(travel => {
+				if (location.travel[travel.travel_type]) {
+					const duration = parseInt(location.travel[travel.travel_type].duration);
+					const duration_human = moment.duration(duration, 'minutes').humanize();
+					return duration_human + ' ' + travel.description.toLowerCase();
+				} else {
+					return '';
+				}
+			}).join(', ') + '.';
+		}
 		return (
 			<Card className={classes.card} elevation={0}>
 				<CardContent>
 					<div className={classes.cardHeader}>
+						<Tooltip title={'See more about ' + location.location_name}>
+							<IconButton onClick={() => this.props.viewLocation(location.location_name)}>
+								<MoreVert />
+							</IconButton>
+						</Tooltip>
 						<Typography className={classes.libraryHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
 						<span className={classes.flex}></span>
-						<LocationAvatar location={location} />
+						<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
 					</div>
 					<Divider />
 					<Typography variant="caption" gutterBottom>
 						{
 							locationsHelper.checkLocationOpen(location).message + '. ' +
 							(travel_message.length > 4 ? travel_message : '')
-
 						}
 					</Typography>
 					{Object.keys(current_event).length > 0 ?
@@ -137,31 +134,37 @@ class LocationCard extends React.Component {
 					}
 				</CardContent>
 				<CardActions>
-					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [14], [0], [0])}>
-						<LocationOn />
-					</IconButton>
-					<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [18], [90], [120])}>
-						<Business />
-					</IconButton>
+					<Tooltip title="Move to location position">
+						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [12], [0], [0])}>
+							<LocationOn />
+						</IconButton>
+					</Tooltip>
+					<Tooltip title="Show location building">
+						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [18], [90], [120])}>
+							<Business />
+						</IconButton>
+					</Tooltip>
 					{
 						this.props.travel_types.map(travel => {
 							const Icon = icons[travel.icon];
-							return <IconButton
-								color={
-									this.props.isochrones &&
+							return <Tooltip title={'Display ' + travel.description + ' distances'}>
+								<IconButton
+									color={
+										this.props.isochrones &&
+											this.props.isochrones[location.location_name] &&
+											this.props.isochrones[location.location_name][travel.travel_type] &&
+											this.props.isochrones[location.location_name][travel.travel_type].selected ? 'primary' : 'default'}
+									className={classes.button}
+									onClick={() => this.props.toggleIsochrone(location.location_name, travel.travel_type)}>
+									{this.props.isochrones &&
 										this.props.isochrones[location.location_name] &&
-										this.props.isochrones[location.location_name][travel.travel_type] &&
-										this.props.isochrones[location.location_name][travel.travel_type].selected ? 'primary' : 'default'}
-								className={classes.button}
-								onClick={() => this.props.toggleIsochrone(location.location_name, travel.travel_type)}>
-								{this.props.isochrones &&
-									this.props.isochrones[location.location_name] &&
-									this.props.isochrones[location.location_name][travel.travel_type] ?
-									(this.props.isochrones[location.location_name][travel.travel_type].retrieved ?
-										<Icon /> : <CircularProgress className={classes.progress} size={30} />
-									) : <Icon />}
-								{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
-							</IconButton>
+										this.props.isochrones[location.location_name][travel.travel_type] ?
+										(this.props.isochrones[location.location_name][travel.travel_type].retrieved ?
+											<Icon /> : <CircularProgress className={classes.progress} size={30} />
+										) : <Icon />}
+									{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
+								</IconButton>
+							</Tooltip>
 						})
 					}
 				</CardActions>

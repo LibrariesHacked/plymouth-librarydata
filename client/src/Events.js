@@ -8,9 +8,11 @@ import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
@@ -22,6 +24,7 @@ import Close from '@material-ui/icons/Close';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Event from '@material-ui/icons/Event';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 
 // Style: 
 const styles = theme => ({
@@ -83,7 +86,7 @@ class Events extends React.Component {
 								/>
 							</Tooltip>);
 					})}
-				<List 
+				<List
 					className={classes.eventList}
 					component="nav">
 					{events
@@ -98,26 +101,35 @@ class Events extends React.Component {
 							return (
 								<div key={'div_event_' + y}>
 									<ListItem button onClick={() => this.setState({ event_open: (this.state.event_open === event.title ? '' : event.title) })}>
+										{this.state.event_open === event.title ? <ExpandLess /> : <ExpandMore />}
 										<ListItemText
 											primary={event.title} />
-										{this.state.event_open === event.title ? <ExpandLess /> : <ExpandMore />}
+										<ListItemSecondaryAction>
+										<Tooltip title="Go to website">
+											<IconButton color="secondary" onClick={() => window.open(event.url)}>
+												<OpenInNew />
+											</IconButton>
+										</Tooltip>
+										</ListItemSecondaryAction>
 									</ListItem>
 									<Collapse in={this.state.event_open === event.title} timeout="auto" unmountOnExit>
 										<List component="div" disablePadding>
-											{event.dates.map((date, x) => {
-												return (
-													<ListItem
-														dense
-														key={'li_date_' + x}
-														className={classes.nested}>
-														<ListItemIcon>
-															<Event />
-														</ListItemIcon>
-														<ListItemText
-															primary={moment(date.start_date, 'YYYY-MM-DDTHH:mm:ss+00:00').format('ddd Do MMM h:mma')}
-														/>
-													</ListItem>)
-											})}
+											{event.dates // Only show the next two months
+												.filter(date => moment(date.start_date, 'YYYY-MM-DDTHH:mm:ss+00:00').isBefore(moment().add(2, 'months')))
+												.map((date, x) => {
+													return (
+														<ListItem
+															dense
+															key={'li_date_' + x}
+															className={classes.nested}>
+															<ListItemIcon>
+																<Event />
+															</ListItemIcon>
+															<ListItemText
+																primary={moment(date.start_date, 'YYYY-MM-DDTHH:mm:ss+00:00').format('ddd Do MMM h:mma')}
+															/>
+														</ListItem>)
+												})}
 										</List>
 									</Collapse>
 								</div>

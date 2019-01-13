@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // Material Icons
 import * as icons from '@material-ui/icons';
@@ -30,9 +31,6 @@ import * as locationsHelper from './helpers/locations';
 const styles = theme => ({
 	button: {
 		margin: theme.spacing.unit,
-	},
-	footer: {
-		padding: 10
 	},
 	rightIcon: {
 		marginLeft: theme.spacing.unit,
@@ -63,15 +61,15 @@ class List extends React.Component {
 	}
 
 	render() {
-		const { classes } = this.props;
-		let open_locations = this.props.locations
+		const { classes, locations } = this.props;
+		let open_locations = locations
 			.filter(location => {
 				let show = true;
 				if (this.state.filter !== '' && location[this.state.filter] === 'No') show = false;
 				if (!locationsHelper.checkLocationOpen(location).open) show = false;
 				return show;
 			});
-		let closed_locations = this.props.locations
+		let closed_locations = locations
 			.filter(location => {
 				let show = true;
 				if (this.state.filter !== '' && location[this.state.filter] === 'No') show = false;
@@ -91,9 +89,6 @@ class List extends React.Component {
 					onClose={() => this.setState({ sort_menu: false, sort_menu_anchor: null })}
 				>
 					<MenuItem onClick={() => this.setState({ sort_menu: false, sort: 'name' })}>Name</MenuItem>
-					<MenuItem onClick={() => this.setState({ sort_menu: false, sort: 'walking' })}>Walking time</MenuItem>
-					<MenuItem onClick={() => this.setState({ sort_menu: false, sort: 'cycling' })}>Cycling time</MenuItem>
-					<MenuItem onClick={() => this.setState({ sort_menu: false, sort: 'driving' })}>Driving time</MenuItem>
 				</Menu>
 				<Menu // Menu used for filtering the list
 					id="menu-locationfilter"
@@ -142,7 +137,10 @@ class List extends React.Component {
 					<Tab
 						disabled={open_locations.length === 0}
 						label={
-							<Badge className={classes.padding} color="primary" badgeContent={open_locations.length}>
+							<Badge
+								className={classes.padding}
+								color={open_locations.length > 0 ? 'primary' : 'default'}
+								badgeContent={open_locations.length}>
 								Open
 							</Badge>
 						}
@@ -150,29 +148,33 @@ class List extends React.Component {
 					<Tab
 						disabled={closed_locations.length === 0}
 						label={
-							<Badge className={classes.padding} color="secondary" badgeContent={closed_locations.length}>
+							<Badge
+								className={classes.padding}
+								color={open_locations.length > 0 ? 'secondary' : 'default'}
+								badgeContent={closed_locations.length}>
 								Closed
 							</Badge>
 						}
 					/>
 				</Tabs>
-				<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
-				<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
+				<Tooltip title={'Sort locations'}>
+					<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
+				</Tooltip>
+				<Tooltip title={'Filter locations'}>
+					<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
+				</Tooltip>
 				{this.props.locations
 					.sort((loc_a, loc_b) => {
 						if (this.state.sort === 'name') return loc_a.location_name.localeCompare(loc_b.location_name);
-						if (this.state.sort === 'walking') return loc_a.walking_duration - loc_b.walking_duration;
-						if (this.state.sort === 'cycling') return loc_a.cycling_duration - loc_b.cycling_duration;
-						if (this.state.sort === 'driving') return loc_a.driving_duration - loc_b.driving_duration;
 						return -1;
 					})
 					.filter(location => {
 						let show = true;
-						if (this.state.filter !== '' && this.state.filter_type === 'facility' && location[this.state.filter] === 'No') show = false;
-						if (this.state.filter !== '' && this.state.filter_type === 'event' && location.events) {
+						if (this.state.filter !== '' && this.state.filter_type === 'facility' && location.facilities.indexOf(this.state.filter) === -1) show = false;
+						if (this.state.filter !== '' && this.state.filter_type === 'event' && this.props.events) {
 							let found = false;
-							location.events.forEach(event => {
-								if (event.title === this.state.filter) found = true;
+							this.props.events.forEach(event => {
+								if (event.title === this.state.filter && event.location === location.location_name) found = true;
 							});
 							show = found;
 						}

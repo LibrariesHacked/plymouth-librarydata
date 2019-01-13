@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
 	avatar: {
@@ -33,15 +34,17 @@ class LocationAvatar extends React.Component {
 		let location_name = '';
 		if (location.location_name && location.location_name.length > 0) location_name = location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()
 		return (
-			<Avatar
-				aria-label={location.location_name}
-				className={classes.avatar}
-				style={{
-					backgroundColor: (theme.locations[location_name] ? theme.locations[location_name] : '#ccc')
-				}}
-				onClick={this.props.viewLocation}>
-				{this.getInitials(location.location_name)}
-			</Avatar>
+			<Tooltip title={location.location_name}>
+				<Avatar
+					aria-label={location.location_name}
+					className={classes.avatar}
+					style={{
+						backgroundColor: (theme.locations[location_name] ? theme.locations[location_name] : '#ccc')
+					}}
+					onClick={this.props.viewLocation}>
+					{this.getInitials(location.location_name)}
+				</Avatar>
+			</Tooltip>
 		);
 	}
 }

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
-
+import Tooltip from '@material-ui/core/Tooltip';
 
 // Icons
 import Face from '@material-ui/icons/Face';
@@ -29,10 +29,12 @@ class MeAvatar extends React.Component {
 		const { classes } = this.props;
 
 		return (
-			<Avatar
-				className={this.props.search_type === 'gps' ? classes.avatarOn : classes.avatar}>
-				<Face />
-			</Avatar>
+			<Tooltip title={'Me'}>
+				<Avatar
+					className={this.props.search_type === 'gps' ? classes.avatarOn : classes.avatar}>
+					<Face />
+				</Avatar>
+			</Tooltip>
 		);
 	}
 }

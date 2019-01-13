@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
 	avatar: {
@@ -23,14 +24,16 @@ class LocationAvatarCluster extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (
-			<Avatar
-				className={classes.avatar}>
-				{this.props.points}
-			</Avatar>
+			<Tooltip title={this.props.points + ' locations'}>
+				<Avatar
+					className={classes.avatar}>
+					{this.props.points}
+				</Avatar>
+			</Tooltip>
 		);
 	}
 }
-
+ 
 LocationAvatarCluster.propTypes = {
 	classes: PropTypes.object.isRequired
 };

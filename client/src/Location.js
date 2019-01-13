@@ -16,18 +16,6 @@ import OpeningHours from './OpeningHours';
 
 // Style: 
 const styles = theme => ({
-	button: {
-		margin: theme.spacing.unit,
-	},
-	leftIcon: {
-		marginRight: theme.spacing.unit,
-	},
-	progress: {
-		marginRight: theme.spacing.unit
-	},
-	rightIcon: {
-		marginLeft: theme.spacing.unit,
-	}
 });
 
 class Location extends React.Component {
@@ -35,16 +23,16 @@ class Location extends React.Component {
 		open_tab: 0
 	}
 	render() {
-		const { location, facilities } = this.props;
+		const { location, facilities, travel_types, isochrones, events } = this.props;
 		return (
 			<div>
 				<LocationCard
 					location={location}
-					travel_types={this.props.travel_types}
-					events={this.props.events}
+					travel_types={travel_types}
+					events={events}
 					current_time={this.props.current_time}
 					more_option={false}
-					isochrones={this.props.isochrones}
+					isochrones={isochrones}
 					toggleIsochrone={this.props.toggleIsochrone}
 					goTo={this.props.goTo}
 					viewLocation={this.props.viewLocation}
@@ -63,15 +51,15 @@ class Location extends React.Component {
 					<div>
 						<Facilities location={location} facilities={facilities} />
 						<OpeningHours location={location} />
-						<Events location={location} events={this.props.events} />
+						<Events location={location} events={events} />
 					</div> : null}
-				{this.state.open_tab === 1 ? 
+				{this.state.open_tab === 1 ?
 					<Stats
 						getIsochrones={this.props.getIsochrones}
-						location={this.props.location}
-						travel_types={this.props.travel_types}
-						isochrones={this.props.isochrones}
-					/>: null}
+						location={location}
+						travel_types={travel_types}
+						isochrones={isochrones}
+					/> : null}
 			</div>
 		);
 	}

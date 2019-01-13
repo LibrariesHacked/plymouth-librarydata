@@ -8,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // Material icons
 import LocationSearching from '@material-ui/icons/LocationSearching';
@@ -65,20 +66,24 @@ class Search extends React.Component {
 					value={this.props.postcode}
 					onChange={(e) => this.props.updatePostcode(e.target.value)}
 				/>
-				<IconButton
-					className={classes.iconButton}
-					onClick={() => this.props.postcodeSearch()}>
-					<SearchIcon />
-				</IconButton>
-				<Divider className={classes.divider} />
-				{this.props.gps_available ?
+				<Tooltip title={'Search by postcode'}>
 					<IconButton
 						className={classes.iconButton}
-						color="primary"
-						onClick={() => this.props.toggleGPS()}
-					>
-						{this.props.gps_available && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
-					</IconButton> : null}
+						onClick={() => this.props.postcodeSearch()}>
+						<SearchIcon />
+					</IconButton>
+				</Tooltip>
+				<Divider className={classes.divider} />
+				{this.props.gps_available ?
+					<Tooltip title={'Track my location'}>
+						<IconButton
+							className={classes.iconButton}
+							color="primary"
+							onClick={() => this.props.toggleGPS()}
+						>
+							{this.props.gps_available && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
+						</IconButton>
+					</Tooltip> : null}
 			</div>
 		);
 	}

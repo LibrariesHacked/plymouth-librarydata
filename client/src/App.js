@@ -10,6 +10,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Fab from '@material-ui/core/Fab';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // Material Icons
 import ArrowBack from '@material-ui/icons/ArrowBack';
@@ -27,9 +28,9 @@ import Search from './Search';
 // Helpers
 import * as appdataHelper from './helpers/appdata';
 import * as eventsHelper from './helpers/events';
-import * as locationsHelper from './helpers/locations';
 import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
+import * as locationsHelper from './helpers/locations';
 
 const drawerWidth = 380;
 
@@ -264,30 +265,34 @@ class App extends Component {
 						className={classes.appBar}>
 						<Toolbar>
 							{this.state.list_drawer_open ?
-								<Fab
-									size="small"
-									disabled={this.state.loading}
-									color="secondary"
-									className={classes.menuButton}
-									aria-label="Menu"
-									onClick={() => this.setState({ main_drawer_open: !this.state.main_drawer_open, list_drawer_open: true, location_drawer_open: false })}
-								>
-									{this.state.loading ?
-										<CircularProgress
-											size={20}
-											className={classes.buttonProgress}
-										/> : <Menu />}
-								</Fab> : null
+								<Tooltip title={this.state.list_drawer_open ? 'Close list' : 'Open list'} aria-label="Menu">
+									<Fab
+										size="small"
+										disabled={this.state.loading}
+										color="secondary"
+										className={classes.menuButton}
+										aria-label="Menu"
+										onClick={() => this.setState({ main_drawer_open: !this.state.main_drawer_open, list_drawer_open: true, location_drawer_open: false })}
+									>
+										{this.state.loading ?
+											<CircularProgress
+												size={20}
+												className={classes.buttonProgress}
+											/> : <Menu />}
+									</Fab>
+								</Tooltip> : null
 							}
 							{this.state.location_drawer_open ?
-								<Fab
-									size="small"
-									color="secondary"
-									className={classes.menuButton}
-									aria-label="Menu"
-									onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
-									<ArrowBack />
-								</Fab> : null
+								<Tooltip title="Go back" aria-label="Back">
+									<Fab
+										size="small"
+										color="secondary"
+										className={classes.menuButton}
+										aria-label="Back"
+										onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
+										<ArrowBack />
+									</Fab>
+								</Tooltip> : null
 							}
 							<span className={classes.flex}></span>
 							<Search
