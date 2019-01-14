@@ -92,7 +92,7 @@ class LocationCard extends React.Component {
 		}
 		// travel time string
 		let travel_message = '';
-		if (this.props.travel_types && location.travel && location.travel.length > 0) {
+		if (this.props.travel_types && location.travel && Object.keys(location.travel).length > 0) {
 			travel_message = this.props.travel_types.map(travel => {
 				if (location.travel[travel.travel_type]) {
 					const duration = parseInt(location.travel[travel.travel_type].duration);
@@ -116,8 +116,7 @@ class LocationCard extends React.Component {
 						<span className={classes.flex}></span>
 						<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
 					</div>
-					<Divider />
-					<Typography variant="caption" gutterBottom>
+					<Typography variant="body2" gutterBottom>
 						{
 							locationsHelper.checkLocationOpen(location).message + '. ' +
 							(travel_message.length > 4 ? travel_message : '')

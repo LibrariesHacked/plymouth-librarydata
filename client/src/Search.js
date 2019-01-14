@@ -18,7 +18,7 @@ const styles = theme => ({
 	divider: {
 		width: 1,
 		height: 28,
-		margin: 8,
+		margin: 8
 	},
 	search: {
 		position: 'relative',
@@ -33,7 +33,7 @@ const styles = theme => ({
 		display: 'flex'
 	},
 	iconButton: {
-		padding: 10,
+		padding: 10
 	},
 	inputRoot: {
 		color: 'inherit'

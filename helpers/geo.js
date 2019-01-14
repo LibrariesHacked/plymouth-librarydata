@@ -2,7 +2,7 @@ const { Client } = require('pg');
 require('dotenv').load();
 
 // getDistances: 
-module.exports.getLocationsDistances = (location_type, location, destinations, callback) => {
+module.exports.getLocationDistances = (location_type, location, destinations, callback) => {
 
 	const client = new Client({
 		user: process.env.PGUSER,
@@ -13,28 +13,35 @@ module.exports.getLocationsDistances = (location_type, location, destinations, c
 		ssl: true
 	});
 
+	let coordinates = [];
+
 	let query = '';
 	let query_vars = [location];
 
 	if (location_type === 'postcode') {
-		query = 'select travel_type, location_name, duration, distance from vw_oadistances od join postcode p on p.oa_code = od.oa_code where p.postcode_trim = $1';
-		query_vars = [location];
+		query = 'select travel_type, location_name, duration, distance, ST_X(ST_Transform(ST_SetSRID(ST_MakePoint(eastings, northings), 27700), 4326)) as longitude, ST_Y(ST_Transform(ST_SetSRID(ST_MakePoint(eastings, northings), 27700), 4326)) as latitude from vw_oadistances od join postcodes p on p.oa_code = od.oa_code where p.postcode_trim = $1';
+		query_vars = [location.replace(/\s/g, '')];
 	}
 
 	if (location_type === 'coordinates') {
+		coordinates = location;
 		query = 'select travel_type, location_name, duration, distance from vw_oadistances od join oas o on od.oa_code = o.oa11cd where ST_Within(ST_Transform(ST_SetSRID(ST_MakePoint($1, $2), 4326), 27700), o.geom)';
-		query_vars = [location[0], location[1]];
+		query_vars = location;
 	}
 
 	client.connect((err, res) => {
 		if (err) {
-			callback([]);
+			callback({
+				coordinates: coordinates,
+				destinations: destinations
+			});
 			return;
 		}
 		client.query(query, query_vars, (err, res) => {
 			client.end();
 			if (res && res.rows && res.rows.length > 0) {
 				res.rows.forEach(trip => {
+					if (trip.longitude && trip.latitude) coordinates = [trip.longitude, trip.latitude];
 					destinations.forEach(destination => {
 						if (destination.location_name === trip.location_name) {
 							if (!destination.travel) destination.travel = {};
@@ -45,8 +52,10 @@ module.exports.getLocationsDistances = (location_type, location, destinations, c
 					});
 				});
 			}
-			callback(destinations);
+			callback({
+				coordinates: coordinates,
+				destinations: destinations
+			});
 		});
 	});
-
 }

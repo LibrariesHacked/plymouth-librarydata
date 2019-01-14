@@ -158,18 +158,18 @@ class App extends Component {
 		this.setState({ loading: true });
 
 		if (this.state.current_position && this.state.search_type !== 'postcode') {
-			locationsHelper.getAllLocationsByCoords(this.state.current_position, locations => {
-				this.setState({ loading: false, locations: locations });
+			locationsHelper.getAllLocationsByCoords(this.state.current_position, results => {
+				this.setState({ loading: false, locations: (results.locations || []) });
 				if (fitBounds) this.fitBounds();
 			});
 		} else if (this.state.search_type === 'postcode') {
-			locationsHelper.getAllLocationsByPostcode(this.state.postcode, locations => {
-				this.setState({ loading: false, locations: locations });
+			locationsHelper.getAllLocationsByPostcode(this.state.postcode, results => {
+				this.setState({ loading: false, locations: (results.locations || []), current_position: results.coordinates });
 				if (fitBounds) this.fitBounds();
 			});
 		} else { // Just get all the locations
-			locationsHelper.getAllLocations(locations => {
-				this.setState({ loading: false, locations: locations });
+			locationsHelper.getAllLocations(results => {
+				this.setState({ loading: false, locations: (results.locations || []) });
 			});
 		}
 	};

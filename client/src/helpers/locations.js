@@ -8,18 +8,26 @@ import moment from 'moment';
 export function getAllLocations(callback) {
 	axios.get('/api/locations')
 		.then(response => {
-			callback(response.data);
+			if (response && response.data) {
+				callback(response.data);
+			} else {
+				callback({});
+			}
 		})
-		.catch(err => callback([]));
+		.catch(err => callback({}));
 }
 
 // getAllLocationsByCoords: 
 export function getAllLocationsByCoords(position_coords, callback) {
 	axios.get('/api/locations?latitude=' + position_coords[1] + '&longitude=' + position_coords[0])
 		.then(response => {
-			callback(response.data);
+			if (response && response.data) {
+				callback(response.data);
+			} else {
+				callback({});
+			}
 		})
-		.catch(err => callback([]));
+		.catch(err => callback({}));
 }
 
 // getAllLocationsByPostcode: 
@@ -28,9 +36,13 @@ export function getAllLocationsByPostcode(postcode, callback) {
 	const postcode_trimmed = postcode.replace(/\s/g, '');
 	axios.get('/api/locations?postcode=' + postcode_trimmed)
 		.then(response => {
-			callback(response.data);
+			if (response && response.data) {
+				callback(response.data);
+			} else {
+				callback({});
+			}
 		})
-		.catch(err => callback([]));
+		.catch(err => callback({}));
 }
 
 // getLocationOpeningHours:

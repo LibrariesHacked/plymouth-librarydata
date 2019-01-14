@@ -11,19 +11,29 @@ router.get('/', (req, res, next) => {
 	const client_position = [req.query.longitude, req.query.latitude];
 	const postcode = req.query.postcode;
 
-	let location_type = (client_position ? 'coordinates' : 'postcode');
-	let location = (client_position ? client_position : postcode);
+	// Response
+	let response = {
+		success: false,
+		coordinates: (client_position || []),
+		locations: []
+	}
+
+	let location_type = (req.query.longitude ? 'coordinates' : 'postcode');
+	let location = (req.query.longitude ? client_position : postcode);
 
 	locationHelper.getAllLocations(locations => {
-		if (location) {
-			geoHelper.getLocationsDistances(location_type, location, locations, geo_locations => {
-				if (geo_locations) locations = geo_locations;
-				res.json(locations);
+		if (locations) {
+			geoHelper.getLocationDistances(location_type, location, locations, result => {
+				response.success = true;
+				response.locations = (result.destinations || locations);
+				response.coordinates = result.coordinates;
+				console.log(response.locations[0].travel);
+				res.json(response);
 			});
 		} else {
-			res.json(locations);
+			response.success = false;
+			res.json(response);
 		}
-
 	});
 });
 
