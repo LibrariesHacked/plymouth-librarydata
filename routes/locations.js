@@ -27,7 +27,6 @@ router.get('/', (req, res, next) => {
 				response.success = true;
 				response.locations = (result.destinations || locations);
 				response.coordinates = result.coordinates;
-				console.log(response.locations[0].travel);
 				res.json(response);
 			});
 		} else {

@@ -38,7 +38,7 @@ class Location extends React.Component {
 					viewLocation={this.props.viewLocation}
 				/>
 				<Tabs
-					fullWidth
+					variant="fullWidth"
 					value={this.state.open_tab}
 					indicatorColor="primary"
 					textColor="primary"

@@ -130,7 +130,6 @@ class App extends Component {
 
 	// componentDidMount: sets up data and any logging
 	componentDidMount = () => {
-		this.getLocations();
 		this.getFacilities();
 		this.getTravel();
 		this.getEvents();
@@ -147,7 +146,7 @@ class App extends Component {
 	logPosition = (fitBounds = false) => {
 		geoHelper.getCurrentPosition(position => {
 			this.setState({ current_position: position, gps_available: (position.length > 0) });
-			this.getLocations(fitBounds);
+			this.getLocations('gps', fitBounds);
 		});
 	}
 
@@ -155,15 +154,17 @@ class App extends Component {
 	setCurrentTime = () => this.setState({ current_time: moment() });
 
 	// getLocations:
-	getLocations = (fitBounds = false) => {
+	getLocations = (search_type, fitBounds = false) => {
 		this.setState({ loading: true });
 
-		if (this.state.current_position && this.state.search_type !== 'postcode') {
+		if (this.state.current_position && search_type !== 'postcode') {
+			console.log('GPS');
 			locationsHelper.getAllLocationsByCoords(this.state.current_position, results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
 				if (fitBounds) this.fitBounds();
 			});
-		} else if (this.state.search_type === 'postcode') {
+		} else if (search_type === 'postcode') {
+			console.log('Postcode');
 			locationsHelper.getAllLocationsByPostcode(this.state.postcode, results => {
 				this.setState({ loading: false, locations: (results.locations || []), current_position: results.coordinates });
 				if (fitBounds) this.fitBounds();
@@ -206,12 +207,13 @@ class App extends Component {
 	// :
 	postcodeSearch = (postcode) => {
 		// If we're already tracking GPS then turn this off
+		let new_state = { search_type: 'postcode', postcode: postcode };
 		if (this.state.search_type === 'gps') {
 			clearInterval(this.state.position_update_interval);
-			this.setState({ search_type: '', position_update_interval: null });
+			new_state.position_update_interval = null;
 		}
-		this.setState({ search_type: 'postcode', postcode: postcode });
-		this.getLocations();
+		this.setState(new_state);
+		this.getLocations('postcode');
 	}
 
 	// fitBounds

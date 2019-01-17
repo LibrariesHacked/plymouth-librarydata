@@ -128,7 +128,7 @@ class List extends React.Component {
 					}
 				</Menu>
 				<Tabs
-					fullWidth
+					variant="fullWidth"
 					value={open_locations.length > 0 ? this.state.open_tab : 1}
 					indicatorColor="primary"
 					textColor="primary"
