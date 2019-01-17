@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -11,6 +12,15 @@ const styles = theme => ({
 	avatar: {
 		margin: 0,
 		cursor: 'pointer'
+	},
+	outline: {
+		border: '1px solid #e5e5e5',
+		backgroundColor: fade(theme.palette.common.white, 0.8),
+		'&:hover': {
+			backgroundColor: fade(theme.palette.common.white, 0.9),
+		},
+		borderRadius: theme.shape.borderRadius,
+		padding: 2
 	}
 });
 
@@ -34,6 +44,7 @@ class LocationAvatar extends React.Component {
 		let location_name = '';
 		if (location.location_name && location.location_name.length > 0) location_name = location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()
 		return (
+			<div className={this.props.outline ? classes.outline : ''}>
 			<Tooltip title={location.location_name}>
 				<Avatar
 					aria-label={location.location_name}
@@ -45,6 +56,7 @@ class LocationAvatar extends React.Component {
 					{this.getInitials(location.location_name)}
 				</Avatar>
 			</Tooltip>
+			</div>
 		);
 	}
 }

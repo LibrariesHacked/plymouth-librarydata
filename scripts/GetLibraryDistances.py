@@ -10,11 +10,9 @@ OUTPUT_DIR = '../data/oa_distances/'  # Where to save the files
 # Key for open route service
 ORS_KEY = '58d904a497c67e00015b45fc42337203b9d0468561ab2f37e26ecb76'
 
-
 def chunks(l, n):
 	for i in range(0, len(l), n):
 		yield l[i:i + n]
-
 
 def run():
     oas = []  # Array of OAs
@@ -87,7 +85,7 @@ def run():
                         for (lib_idx, library) in enumerate(libraries):
                             oa_data.append(
                                 {'library': library['library'], 'distance': data['distances'][chunk_idx][lib_idx],
-                                    'duration': data['durations'][0][lib_idx], 'weight': data['weights'][chunk_idx][lib_idx]}
+                                    'duration': data['durations'][chunk_idx][lib_idx], 'weight': data['weights'][chunk_idx][lib_idx]}
                             )
 
                         with open(OUTPUT_DIR + oa['oa'] + '_' + tran + '.json', 'w') as outfile:

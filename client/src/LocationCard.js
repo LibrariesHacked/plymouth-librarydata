@@ -20,7 +20,7 @@ import Typography from '@material-ui/core/Typography';
 import Business from '@material-ui/icons/Business';
 import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
-import MoreVert from '@material-ui/icons/MoreVert';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 // Icons
 import * as icons from '@material-ui/icons';
@@ -47,7 +47,7 @@ const styles = theme => ({
 	flex: {
 		flex: 1,
 	},
-	libraryHeader: {
+	locationHeader: {
 		marginTop: '4px',
 		marginLeft: '10px'
 	},
@@ -91,17 +91,15 @@ class LocationCard extends React.Component {
 				});
 		}
 		// travel time string
-		let travel_message = '';
+		let travel_messages = {};
 		if (this.props.travel_types && location.travel && Object.keys(location.travel).length > 0) {
-			travel_message = this.props.travel_types.map(travel => {
+			this.props.travel_types.forEach(travel => {
 				if (location.travel[travel.travel_type]) {
 					const duration = parseInt(location.travel[travel.travel_type].duration);
 					const duration_human = moment.duration(duration, 'minutes').humanize();
-					return duration_human + ' ' + travel.description.toLowerCase();
-				} else {
-					return '';
+					travel_messages[travel.travel_type] = (duration_human + ' ' + travel.description.toLowerCase());
 				}
-			}).join(', ') + '.';
+			});
 		}
 		return (
 			<Card className={classes.card} elevation={0}>
@@ -109,17 +107,16 @@ class LocationCard extends React.Component {
 					<div className={classes.cardHeader}>
 						<Tooltip title={'See more about ' + location.location_name}>
 							<IconButton onClick={() => this.props.viewLocation(location.location_name)}>
-								<MoreVert />
+								<MoreHoriz />
 							</IconButton>
 						</Tooltip>
-						<Typography className={classes.libraryHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
+						<Typography className={classes.locationHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
 						<span className={classes.flex}></span>
 						<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
 					</div>
 					<Typography variant="body2" gutterBottom>
 						{
-							locationsHelper.checkLocationOpen(location).message + '. ' +
-							(travel_message.length > 4 ? travel_message : '')
+							locationsHelper.checkLocationOpen(location).message
 						}
 					</Typography>
 					{Object.keys(current_event).length > 0 ?
@@ -146,7 +143,9 @@ class LocationCard extends React.Component {
 					{
 						this.props.travel_types.map(travel => {
 							const Icon = icons[travel.icon];
-							return <Tooltip title={'Display ' + travel.description + ' distances'}>
+							return <Tooltip 
+										title={travel_messages && travel_messages[travel.travel_type] ?
+											travel_messages[travel.travel_type] : '' }>
 								<IconButton
 									color={
 										this.props.isochrones &&

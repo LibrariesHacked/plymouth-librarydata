@@ -22,6 +22,7 @@ import moment from 'moment';
 // Custom components
 import List from './List';
 import Location from './Location';
+import LocationAvatar from './LocationAvatar';
 import LocationMap from './LocationMap';
 import Search from './Search';
 
@@ -203,13 +204,13 @@ class App extends Component {
 	}
 
 	// :
-	postcodeSearch = () => {
+	postcodeSearch = (postcode) => {
 		// If we're already tracking GPS then turn this off
 		if (this.state.search_type === 'gps') {
 			clearInterval(this.state.position_update_interval);
-			this.setState({ search_type: '', postcode: '', position_update_interval: null });
+			this.setState({ search_type: '', position_update_interval: null });
 		}
-		this.setState({ search_type: 'postcode' });
+		this.setState({ search_type: 'postcode', postcode: postcode });
 		this.getLocations();
 	}
 
@@ -254,6 +255,15 @@ class App extends Component {
 	// Renders the main app
 	render() {
 		const { classes } = this.props;
+		let nearest_location = null, duration = 1200;
+		this.state.locations.forEach(location => {
+			if (location.travel
+				&& location.travel['foot-walking']
+				&& location.travel['foot-walking'].duration < duration) {
+				nearest_location = location;
+				duration = location.travel['foot-walking'].duration;
+			}
+		});
 		return (
 			<MuiThemeProvider theme={theme}>
 				<div className={classes.root}>
@@ -303,6 +313,12 @@ class App extends Component {
 								postcodeSearch={this.postcodeSearch}
 								updatePostcode={(postcode) => this.setState({ postcode: postcode })}
 							/>
+							{this.state.locations && this.state.locations.length > 0 && nearest_location != null ?
+								<LocationAvatar
+									outline={true}
+									location={nearest_location}
+									viewLocation={() => { }} /> : null
+							}
 						</Toolbar>
 					</AppBar>
 					<Drawer

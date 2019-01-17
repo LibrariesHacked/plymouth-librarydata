@@ -24,7 +24,7 @@ const styles = theme => ({
 		position: 'relative',
 		border: '1px solid #e5e5e5',
 		borderRadius: theme.shape.borderRadius,
-		backgroundColor: fade(theme.palette.common.white, 0.75),
+		backgroundColor: fade(theme.palette.common.white, 0.8),
 		'&:hover': {
 			backgroundColor: fade(theme.palette.common.white, 0.9),
 		},
@@ -51,6 +51,7 @@ const styles = theme => ({
 
 class Search extends React.Component {
 	state = {
+		postcode: ''
 	}
 
 	render() {
@@ -63,13 +64,13 @@ class Search extends React.Component {
 						root: classes.inputRoot,
 						input: classes.inputInput,
 					}}
-					value={this.props.postcode}
-					onChange={(e) => this.props.updatePostcode(e.target.value)}
+					value={this.state.postcode}
+					onChange={(e) => this.setState({ postcode: e.target.value })}
 				/>
 				<Tooltip title={'Search by postcode'}>
 					<IconButton
 						className={classes.iconButton}
-						onClick={() => this.props.postcodeSearch()}>
+						onClick={() => this.props.postcodeSearch(this.state.postcode)}>
 						<SearchIcon />
 					</IconButton>
 				</Tooltip>
@@ -79,7 +80,7 @@ class Search extends React.Component {
 						<IconButton
 							className={classes.iconButton}
 							color="primary"
-							onClick={() => this.props.toggleGPS()}
+							onClick={() => { this.setState({ postcode: '' }); this.props.toggleGPS() }}
 						>
 							{this.props.gps_available && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
 						</IconButton>
