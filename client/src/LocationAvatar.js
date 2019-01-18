@@ -44,18 +44,18 @@ class LocationAvatar extends React.Component {
 		let location_name = '';
 		if (location.location_name && location.location_name.length > 0) location_name = location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()
 		return (
-			<div className={this.props.outline ? classes.outline : ''}>
-			<Tooltip title={location.location_name}>
-				<Avatar
-					aria-label={location.location_name}
-					className={classes.avatar}
-					style={{
-						backgroundColor: (theme.locations[location_name] ? theme.locations[location_name] : '#ccc')
-					}}
-					onClick={this.props.viewLocation}>
-					{this.getInitials(location.location_name)}
-				</Avatar>
-			</Tooltip>
+			<div className={this.props.nearest ? classes.outline : ''}>
+				<Tooltip title={this.props.nearest ? location.location_name : 'Nearest: ' + location.location_name}>
+					<Avatar
+						aria-label={location.location_name}
+						className={classes.avatar}
+						style={{
+							backgroundColor: (theme.locations[location_name] ? theme.locations[location_name] : '#ccc')
+						}}
+						onClick={this.props.viewLocation}>
+						{this.getInitials(location.location_name)}
+					</Avatar>
+				</Tooltip>
 			</div>
 		);
 	}

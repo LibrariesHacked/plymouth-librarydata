@@ -71,8 +71,8 @@ class LocationCard extends React.Component {
 					event.dates.forEach(date => {
 						// Is it currently happening?
 						if (
-							moment(date.start_date).isBefore(moment()) &&
-							moment(date.endDate).isAfter(moment())
+							moment(date.start_date).isBefore(this.props.current_time) &&
+							moment(date.end_date).isAfter(this.props.current_time)
 						) {
 							current_event = event;
 						}

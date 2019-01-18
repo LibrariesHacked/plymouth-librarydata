@@ -103,7 +103,6 @@ class App extends Component {
 		time_update_interval: '',
 		current_position: [],
 		gps_available: false,
-		postcode: '',
 		position_update_interval: '',
 		// The locations displayed in the system.
 		locations: [],
@@ -144,6 +143,7 @@ class App extends Component {
 
 	// logPosition: Retrieve position from gps
 	logPosition = (fitBounds = false) => {
+		this.setState({ loading: true });
 		geoHelper.getCurrentPosition(position => {
 			this.setState({ current_position: position, gps_available: (position.length > 0) });
 			this.getLocations('gps', fitBounds);
@@ -154,18 +154,15 @@ class App extends Component {
 	setCurrentTime = () => this.setState({ current_time: moment() });
 
 	// getLocations:
-	getLocations = (search_type, fitBounds = false) => {
-		this.setState({ loading: true });
+	getLocations = (search_type, fitBounds = false, postcode = '') => {
 
 		if (this.state.current_position && search_type !== 'postcode') {
-			console.log('GPS');
 			locationsHelper.getAllLocationsByCoords(this.state.current_position, results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
 				if (fitBounds) this.fitBounds();
 			});
 		} else if (search_type === 'postcode') {
-			console.log('Postcode');
-			locationsHelper.getAllLocationsByPostcode(this.state.postcode, results => {
+			locationsHelper.getAllLocationsByPostcode(postcode, results => {
 				this.setState({ loading: false, locations: (results.locations || []), current_position: results.coordinates });
 				if (fitBounds) this.fitBounds();
 			});
@@ -207,13 +204,13 @@ class App extends Component {
 	// :
 	postcodeSearch = (postcode) => {
 		// If we're already tracking GPS then turn this off
-		let new_state = { search_type: 'postcode', postcode: postcode };
+		let new_state = { search_type: 'postcode', loading: true };
 		if (this.state.search_type === 'gps') {
 			clearInterval(this.state.position_update_interval);
 			new_state.position_update_interval = null;
 		}
 		this.setState(new_state);
-		this.getLocations('postcode');
+		this.getLocations('postcode', true, postcode);
 	}
 
 	// fitBounds
@@ -309,17 +306,15 @@ class App extends Component {
 							<span className={classes.flex}></span>
 							<Search
 								search_type={this.state.search_type}
-								postcode={this.state.postcode}
 								gps_available={this.state.gps_available}
 								toggleGPS={this.toggleGPS}
-								postcodeSearch={this.postcodeSearch}
-								updatePostcode={(postcode) => this.setState({ postcode: postcode })}
+								postcodeSearch={(postcode) => this.postcodeSearch(postcode)}
 							/>
 							{this.state.locations && this.state.locations.length > 0 && nearest_location != null ?
 								<LocationAvatar
-									outline={true}
+									nearest={true}
 									location={nearest_location}
-									viewLocation={() => { }} /> : null
+									viewLocation={() => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: nearest_location.location_name, list_drawer_open: false })} /> : null
 							}
 						</Toolbar>
 					</AppBar>

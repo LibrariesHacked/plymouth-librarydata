@@ -74,7 +74,7 @@ export function getLocationOpeningHours(location) {
 				hours_open: (location_lookup[date.format('ddd')] ? moment.duration(moment(location_lookup[date.format('ddd')].end, 'HH:mm').diff(moment(location_lookup[date.format('ddd')].start, 'HH:mm'))).hours() : 0),
 			}
 		)
-		date.add('day', 1);
+		date.add(1, 'day');
 	}
 	return opening_hours;
 }
