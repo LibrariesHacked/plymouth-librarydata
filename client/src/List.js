@@ -147,7 +147,7 @@ class List extends React.Component {
 						label={
 							<Badge
 								className={classes.padding}
-								color={open_locations.length > 0 ? 'secondary' : 'default'}
+								color={closed_locations.length > 0 ? 'secondary' : 'default'}
 								badgeContent={closed_locations.length}>
 								Closed
 							</Badge>

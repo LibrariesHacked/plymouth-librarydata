@@ -45,7 +45,7 @@ class LocationAvatar extends React.Component {
 		if (location.location_name && location.location_name.length > 0) location_name = location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()
 		return (
 			<div className={this.props.nearest ? classes.outline : ''}>
-				<Tooltip title={this.props.nearest ? location.location_name : 'Nearest: ' + location.location_name}>
+				<Tooltip title={this.props.nearest ? ('Nearest: ' + location.location_name) : location.location_name}>
 					<Avatar
 						aria-label={location.location_name}
 						className={classes.avatar}

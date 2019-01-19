@@ -10,6 +10,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -42,6 +43,11 @@ const styles = theme => ({
 	cardHeader: {
 		display: 'flex',
 		paddingBottom: 10
+	},
+	divider: {
+		width: 1,
+		height: 28,
+		margin: 8
 	},
 	flex: {
 		flex: 1,
@@ -104,11 +110,13 @@ class LocationCard extends React.Component {
 			<Card className={classes.card} elevation={0}>
 				<CardContent>
 					<div className={classes.cardHeader}>
-						<Tooltip title={'See more about ' + location.location_name}>
-							<IconButton onClick={() => this.props.viewLocation(location.location_name)}>
-								<MoreHoriz />
-							</IconButton>
-						</Tooltip>
+						{this.props.more_option ?
+							<Tooltip title={'See more about ' + location.location_name}>
+								<IconButton onClick={() => this.props.viewLocation(location.location_name)}>
+									<MoreHoriz />
+								</IconButton>
+							</Tooltip> : null
+						}
 						<Typography className={classes.locationHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
 						<span className={classes.flex}></span>
 						<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
@@ -118,14 +126,16 @@ class LocationCard extends React.Component {
 							locationsHelper.checkLocationOpen(location).message
 						}
 					</Typography>
-					{Object.keys(current_event).length > 0 ?
+					{Object.keys(current_event).length > 0 ? // If we have a current event
 						<Chip
 							avatar={<Avatar><Event /></Avatar>}
 							color="primary"
 							label={'Now: ' + current_event.title} /> :
-						<Chip
-							avatar={<Avatar><Event /></Avatar>}
-							label={(Object.keys(next_event).length > 0 ? moment(next_event.date.start_date).format('ddd h:mma') + ' ' + next_event.title : '')} />
+						(Object.keys(next_event).length > 0 ? // If we have a next event
+							<Chip
+								avatar={<Avatar><Event /></Avatar>}
+								label={moment(next_event.date.start_date).format('ddd h:mma') + ' ' + next_event.title}
+							/> : null)
 					}
 				</CardContent>
 				<CardActions>
@@ -139,12 +149,13 @@ class LocationCard extends React.Component {
 							<Business />
 						</IconButton>
 					</Tooltip>
+					<Divider className={classes.divider} />
 					{
 						this.props.travel_types.map(travel => {
 							const Icon = icons[travel.icon];
-							return <Tooltip 
-										title={travel_messages && travel_messages[travel.travel_type] ?
-											travel_messages[travel.travel_type] : '' }>
+							return <Tooltip
+								title={travel_messages && travel_messages[travel.travel_type] ?
+									travel_messages[travel.travel_type] : ''}>
 								<IconButton
 									color={
 										this.props.isochrones &&

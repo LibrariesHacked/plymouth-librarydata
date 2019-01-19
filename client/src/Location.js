@@ -35,7 +35,7 @@ class Location extends React.Component {
 					isochrones={isochrones}
 					toggleIsochrone={this.props.toggleIsochrone}
 					goTo={this.props.goTo}
-					viewLocation={this.props.viewLocation}
+					viewLocation={() => {}}
 				/>
 				<Tabs
 					variant="fullWidth"
