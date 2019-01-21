@@ -61,15 +61,15 @@ const theme = createMuiTheme({
 
 const styles = {
 	appBar: {
-		zIndex: theme.zIndex.drawer + 1,
-		backgroundColor: 'rgba(255, 255, 255, 0)'
+		backgroundColor: 'rgba(255, 255, 255, 0)',
+		zIndex: theme.zIndex.drawer + 1
 	},
 	buttonProgress: {
 		position: 'absolute',
 		top: '50%',
 		left: '50%',
 		marginTop: -10,
-		marginLeft: -10,
+		marginLeft: -10
 	},
 	drawerPaper: {
 		position: 'relative',
@@ -77,7 +77,7 @@ const styles = {
 		backgroundColor: 'rgba(255, 255, 255, 0.8)'
 	},
 	flex: {
-		flex: 1,
+		flex: 1
 	},
 	menuButton: {
 		marginLeft: -12,
@@ -89,7 +89,7 @@ const styles = {
 		overflow: 'hidden',
 		position: 'relative',
 		display: 'flex',
-		width: '100%',
+		width: '100%'
 	},
 	toolbarPadding: theme.mixins.toolbar
 };
@@ -195,7 +195,7 @@ class App extends Component {
 			clearInterval(this.state.position_update_interval);
 			this.setState({ search_type: '', postcode: '', position_update_interval: null });
 		} else {
-			let position_update_interval = setInterval(this.logPosition, 60000);
+			let position_update_interval = setInterval(this.logPosition, 10000);
 			this.setState({ position_update_interval: position_update_interval, search_type: 'gps', postcode: '' });
 			this.logPosition(true);
 		}

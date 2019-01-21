@@ -5,6 +5,7 @@ import moment from 'moment';
 
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -33,7 +34,7 @@ import * as locationsHelper from './helpers/locations';
 
 const styles = theme => ({
 	button: {
-		margin: theme.spacing.unit / 2,
+		margin: theme.spacing.unit
 	},
 	card: {
 		border: '1px solid #e5e5e5',
@@ -97,12 +98,14 @@ class LocationCard extends React.Component {
 		}
 		// travel time string
 		let travel_messages = {};
+		let travel_durations = {};
 		if (this.props.travel_types && location.travel && Object.keys(location.travel).length > 0) {
 			this.props.travel_types.forEach(travel => {
 				if (location.travel[travel.travel_type]) {
 					const duration = parseInt(location.travel[travel.travel_type].duration);
 					const duration_human = moment.duration(duration, 'minutes').humanize();
 					travel_messages[travel.travel_type] = (duration_human + ' ' + travel.description.toLowerCase());
+					travel_durations[travel.travel_type] = duration;
 				}
 			});
 		}
@@ -130,11 +133,11 @@ class LocationCard extends React.Component {
 						<Chip
 							avatar={<Avatar><Event /></Avatar>}
 							color="primary"
-							label={'Now: ' + current_event.title} /> :
+							label={moment(current_event.title + ' ' + next_event.date.end_date).fromNow()} /> :
 						(Object.keys(next_event).length > 0 ? // If we have a next event
 							<Chip
 								avatar={<Avatar><Event /></Avatar>}
-								label={moment(next_event.date.start_date).format('ddd h:mma') + ' ' + next_event.title}
+								label={next_event.title + ' ' + moment(next_event.date.start_date).fromNow()}
 							/> : null)
 					}
 				</CardContent>
@@ -144,7 +147,7 @@ class LocationCard extends React.Component {
 							<LocationOn />
 						</IconButton>
 					</Tooltip>
-					<Tooltip title="Show location building">
+					<Tooltip title="Show building">
 						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [18], [90], [120])}>
 							<Business />
 						</IconButton>
@@ -153,26 +156,33 @@ class LocationCard extends React.Component {
 					{
 						this.props.travel_types.map(travel => {
 							const Icon = icons[travel.icon];
-							return <Tooltip
-								title={travel_messages && travel_messages[travel.travel_type] ?
-									travel_messages[travel.travel_type] : ''}>
-								<IconButton
-									color={
-										this.props.isochrones &&
-											this.props.isochrones[location.location_name] &&
-											this.props.isochrones[location.location_name][travel.travel_type] &&
-											this.props.isochrones[location.location_name][travel.travel_type].selected ? 'primary' : 'default'}
-									className={classes.button}
-									onClick={() => this.props.toggleIsochrone(location.location_name, travel.travel_type)}>
-									{this.props.isochrones &&
-										this.props.isochrones[location.location_name] &&
-										this.props.isochrones[location.location_name][travel.travel_type] ?
-										(this.props.isochrones[location.location_name][travel.travel_type].retrieved ?
-											<Icon /> : <CircularProgress className={classes.progress} size={30} />
-										) : <Icon />}
-									{location.walking_duration ? moment.duration(location.walking_duration, 'seconds').humanize() : ''}
-								</IconButton>
-							</Tooltip>
+							return (
+								<Tooltip
+									title={travel_messages && travel_messages[travel.travel_type] ?
+										travel_messages[travel.travel_type] : ''}>
+									<IconButton
+										color={
+											this.props.isochrones &&
+												this.props.isochrones[location.location_name] &&
+												this.props.isochrones[location.location_name][travel.travel_type] &&
+												this.props.isochrones[location.location_name][travel.travel_type].selected ? 'primary' : 'default'}
+										className={classes.button}
+										onClick={() => this.props.toggleIsochrone(location.location_name, travel.travel_type)}>
+										<Badge
+											invisible={travel_durations && travel_durations[travel.travel_type] ? false : true}
+											variant={travel_durations && travel_durations[travel.travel_type] && travel_durations[travel.travel_type] <= 60 ? 'standard' : 'dot'}
+											badgeContent={travel_durations && travel_durations[travel.travel_type] ? travel_durations[travel.travel_type] : null}
+											color="secondary"
+											max={60}>
+											{this.props.isochrones &&
+												this.props.isochrones[location.location_name] &&
+												this.props.isochrones[location.location_name][travel.travel_type] ?
+												(this.props.isochrones[location.location_name][travel.travel_type].retrieved ?
+													<Icon /> : <CircularProgress className={classes.progress} size={30} />
+												) : <Icon />}
+										</Badge>
+									</IconButton>
+								</Tooltip>)
 						})
 					}
 				</CardActions>

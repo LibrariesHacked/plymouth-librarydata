@@ -105,11 +105,11 @@ class Events extends React.Component {
 										<ListItemText
 											primary={event.title} />
 										<ListItemSecondaryAction>
-										<Tooltip title="Go to website">
-											<IconButton color="secondary" onClick={() => window.open(event.url)}>
-												<OpenInNew />
-											</IconButton>
-										</Tooltip>
+											<Tooltip title="Go to website">
+												<IconButton onClick={() => window.open(event.url)}>
+													<OpenInNew />
+												</IconButton>
+											</Tooltip>
 										</ListItemSecondaryAction>
 									</ListItem>
 									<Collapse in={this.state.event_open === event.title} timeout="auto" unmountOnExit>
@@ -126,7 +126,11 @@ class Events extends React.Component {
 																<Event />
 															</ListItemIcon>
 															<ListItemText
-																primary={moment(date.start_date, 'YYYY-MM-DDTHH:mm:ss+00:00').format('ddd Do MMM h:mma')}
+																primary={
+																	moment(date.start_date, 'YYYY-MM-DDTHH:mm:ss+00:00').format('ddd Do MMM h:mma') + 
+																	' - ' +
+																	moment(date.end_date, 'YYYY-MM-DDTHH:mm:ss+00:00').format('h:mma')
+																}
 															/>
 														</ListItem>)
 												})}

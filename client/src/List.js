@@ -127,8 +127,8 @@ class List extends React.Component {
 				<Tabs
 					variant="fullWidth"
 					value={open_locations.length > 0 ? this.state.open_tab : 1}
-					indicatorColor="primary"
-					textColor="primary"
+					indicatorColor="secondary"
+					textColor="secondary"
 					onChange={(event, value) => this.setState({ open_tab: value })}
 				>
 					<Tab
