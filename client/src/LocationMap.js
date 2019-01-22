@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
+import Popover from '@material-ui/core/Popover';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 // Mapbox GL
 import ReactMapboxGl from 'react-mapbox-gl';
@@ -18,7 +20,12 @@ import LocationAvatar from './LocationAvatar';
 import LocationAvatarCluster from './LocationAvatarCluster';
 import MeAvatar from './MeAvatar';
 
-const styles = {};
+const styles = theme => ({
+	paper: {
+		padding: theme.spacing.unit,
+		border: '1px solid #e5e5e5'
+	}
+});
 
 const Map = ReactMapboxGl({
 	accessToken: 'pk.eyJ1IjoiZGF2ZXJvd2V1ayIsImEiOiJjajRuemx4Mnoxc2lyMzJvNGYxZjVjdnVpIn0.9aupfG_tYU0SHx3S6ZUqvw',
@@ -27,7 +34,7 @@ const Map = ReactMapboxGl({
 	scrollZoom: true,
 	interactive: true,
 	dragRotate: true,
-	attributionControl: true,
+	attributionControl: true
 });
 
 class LocationMap extends Component {
@@ -37,7 +44,10 @@ class LocationMap extends Component {
 		position: this.props.position,
 		zoom: this.props.zoom,
 		pitch: this.props.pitch,
-		bearing: this.props.bearing
+		bearing: this.props.bearing,
+		popover: false,
+		popover_position: null,
+		popover_message: ''
 	};
 
 	componentWillReceiveProps = (nextProps) => {
@@ -49,6 +59,19 @@ class LocationMap extends Component {
 		this.setState(stateUpdate);
 	}
 
+	displayPopover = (e) => {
+		// There may be multiple features, we need to get the one closest to the library
+		let message = '';
+		const features = e.features.sort((a, b) => a.properties.value - b.properties.value);
+		if (features && features.length > 0) {
+			let total_area_km = features[0].properties.total_area_km;
+			let total_pop = features[0].properties.total_pop;
+			let value = Math.round(features[0].properties.value / 60);
+			message = 'Population of ' + total_pop + ' within ' + value + ' minutes.';
+		}
+		this.setState({ popover: true, popover_position: e.point, popover_message:  message });
+	}
+
 	// clusterLocations
 	clusterLocations = (coordinates, points) => (
 		<Marker coordinates={coordinates}>
@@ -58,7 +81,7 @@ class LocationMap extends Component {
 
 	// render
 	render() {
-		const { theme } = this.props;
+		const { theme, classes } = this.props;
 		return (
 			<div>
 				<Map
@@ -70,7 +93,6 @@ class LocationMap extends Component {
 					maxBounds={this.state.max_bounds}
 					fitBounds={this.state.fit_bounds}
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
-					onClick={this.mapClick}
 				>
 					<ZoomControl position="bottom-right" />
 					<Source
@@ -123,6 +145,7 @@ class LocationMap extends Component {
 												'fill-antialias': true,
 												'fill-color': theme.locations[location.replace(' Library', '').replace(/ /g, '').toLowerCase()]
 											}}
+											fillOnClick={(e) => this.displayPopover(e)}
 										/>
 										<GeoJSONLayer // Shows the outlines of the distances
 											data={this.props.isochrones[location][travel].iso}
@@ -171,15 +194,27 @@ class LocationMap extends Component {
 							)
 						}
 					</Cluster>
-					{this.props.current_position && this.props.current_position.length > 0 ? 
+					{this.props.current_position && this.props.current_position.length > 0 ?
 						<Marker
 							key={'mk_me'}
 							style={styles.marker}
 							coordinates={[this.props.current_position[0], this.props.current_position[1]]}>
 							<MeAvatar search_type={this.props.search_type} />
 						</Marker>
-					: null}
+						: null}
 				</Map>
+				<Popover
+					classes={{
+						paper: classes.paper
+					}}
+					elevation={0}
+					open={this.state.popover}
+					anchorReference="anchorPosition"
+					anchorPosition={{ top: this.state.popover_position ? this.state.popover_position.y : 0, left: this.state.popover_position ? this.state.popover_position.x : 0 }}
+					onClose={() => { this.setState({ popover_position: null, popover: false }) }}
+				>
+					<Typography variant="body2">{this.state.popover_message}</Typography>
+				</Popover>
 			</div>
 		);
 	}

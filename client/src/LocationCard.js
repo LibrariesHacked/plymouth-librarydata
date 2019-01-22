@@ -84,13 +84,15 @@ class LocationCard extends React.Component {
 							current_event = event;
 						}
 						// Set next event
-						if (Object.keys(next_event).length === 0) {
-							next_event = event;
-							next_event.date = date;
-						} else {
-							if (next_event.date.start_date > date.start_date) {
+						if (moment(date.start_date).isAfter(this.props.current_time)) {
+							if (Object.keys(next_event).length === 0) {
 								next_event = event;
 								next_event.date = date;
+							} else {
+								if (next_event.date.start_date > date.start_date) {
+									next_event = event;
+									next_event.date = date;
+								}
 							}
 						}
 					});
@@ -172,7 +174,7 @@ class LocationCard extends React.Component {
 											invisible={travel_durations && travel_durations[travel.travel_type] ? false : true}
 											variant={travel_durations && travel_durations[travel.travel_type] && travel_durations[travel.travel_type] <= 60 ? 'standard' : 'dot'}
 											badgeContent={travel_durations && travel_durations[travel.travel_type] ? travel_durations[travel.travel_type] : null}
-											color="secondary"
+											color="primary"
 											max={60}>
 											{this.props.isochrones &&
 												this.props.isochrones[location.location_name] &&
