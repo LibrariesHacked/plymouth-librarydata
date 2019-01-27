@@ -25,6 +25,7 @@ import Location from './Location';
 import LocationAvatar from './LocationAvatar';
 import LocationMap from './LocationMap';
 import Search from './Search';
+import Organisation from './Organisation';
 
 // Helpers
 import * as appdataHelper from './helpers/appdata';
@@ -33,7 +34,7 @@ import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 import * as locationsHelper from './helpers/locations';
 
-const drawerWidth = 380;
+const drawerWidth = 365;
 
 const theme = createMuiTheme({
 	typography: {
@@ -122,9 +123,12 @@ class App extends Component {
 		map_bearing: [0],
 		// UI display variables
 		loading: false,
+		gps_loading: true,
+		postcode_loading: true,
 		main_drawer_open: true,
 		list_drawer_open: true,
 		location_drawer_open: false,
+		organisation_drawer_open: false
 	}
 
 	// componentDidMount: sets up data and any logging
@@ -140,12 +144,12 @@ class App extends Component {
 		let time_update_interval = setInterval(this.setCurrentTime, 5000);
 		this.setState({ time_update_interval: time_update_interval });
 	}
-
+truncate
 	// logPosition: Retrieve position from gps
 	logPosition = (fitBounds = false) => {
-		this.setState({ loading: true });
+		this.setState({ loading: true, gps_loading: true });
 		geoHelper.getCurrentPosition(position => {
-			this.setState({ current_position: position, gps_available: (position.length > 0) });
+			this.setState({ current_position: position, gps_loading: false, gps_available: (position.length > 0) });
 			this.getLocations('gps', fitBounds);
 		});
 	}
@@ -154,21 +158,22 @@ class App extends Component {
 	setCurrentTime = () => this.setState({ current_time: moment() });
 
 	// getLocations:
-	getLocations = (search_type, fitBounds = false, postcode = '') => {
+	getLocations = (search_type, fit = false, postcode = '') => {
 
 		if (this.state.current_position && search_type !== 'postcode') {
 			locationsHelper.getAllLocationsByCoords(this.state.current_position, results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
-				if (fitBounds) this.fitBounds();
+				if (fit) this.fitNearest();
 			});
 		} else if (search_type === 'postcode') {
 			locationsHelper.getAllLocationsByPostcode(postcode, results => {
-				this.setState({ loading: false, locations: (results.locations || []), current_position: results.coordinates });
-				if (fitBounds) this.fitBounds();
+				this.setState({ loading: false, postcode_loading: false, locations: (results.locations || []), current_position: results.coordinates });
+				if (fit) this.fitNearest();
 			});
 		} else { // Just get all the locations
 			locationsHelper.getAllLocations(results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
+				if (fit) this.fitBounds();
 			});
 		}
 	};
@@ -188,7 +193,7 @@ class App extends Component {
 		eventsHelper.getEvents(events => this.setState({ events: events }));
 	};
 
-	// :
+	// toggleGPS
 	toggleGPS = () => {
 		// If we're already tracking GPS then turn this off
 		if (this.state.search_type === 'gps') {
@@ -201,10 +206,10 @@ class App extends Component {
 		}
 	}
 
-	// :
+	// postcodeSearch
 	postcodeSearch = (postcode) => {
 		// If we're already tracking GPS then turn this off
-		let new_state = { search_type: 'postcode', loading: true };
+		let new_state = { search_type: 'postcode', loading: true, postcode_loading: true };
 		if (this.state.search_type === 'gps') {
 			clearInterval(this.state.position_update_interval);
 			new_state.position_update_interval = null;
@@ -215,7 +220,20 @@ class App extends Component {
 
 	// fitBounds
 	fitBounds = () => {
+		// If we fit to bounds we fit to all the locations
+		var bounds = [];
+		this.state.locations.forEach(location => {
+			bounds.push([location.longitude, location.latitude])
+		});
+		this.setState({ map_fit_bounds: bounds });
+	}
 
+	// fitNearest: 
+	fitNearest = () => {
+		const nearest = locationsHelper.getNearestLocation(this.state.locations);
+		const current = this.state.current_position;
+		const bounds = [current, [nearest.longitude, nearest.latitude]];
+		this.setState({ map_fit_bounds: bounds });
 	}
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
@@ -254,15 +272,7 @@ class App extends Component {
 	// Renders the main app
 	render() {
 		const { classes } = this.props;
-		let nearest_location = null, duration = 1200;
-		this.state.locations.forEach(location => {
-			if (location.travel
-				&& location.travel['foot-walking']
-				&& location.travel['foot-walking'].duration < duration) {
-				nearest_location = location;
-				duration = location.travel['foot-walking'].duration;
-			}
-		});
+		const nearest_location = locationsHelper.getNearestLocation(this.state.locations); 
 		return (
 			<MuiThemeProvider theme={theme}>
 				<div className={classes.root}>
@@ -274,7 +284,7 @@ class App extends Component {
 						className={classes.appBar}>
 						<Toolbar>
 							{this.state.list_drawer_open ?
-								<Tooltip title={this.state.list_drawer_open ? 'Close list' : 'Open list'} aria-label="Menu">
+								<Tooltip title={this.state.main_drawer_open ? 'Close list' : 'Open list'} aria-label="Menu">
 									<Fab
 										size="small"
 										disabled={this.state.loading}
@@ -285,20 +295,21 @@ class App extends Component {
 									>
 										{this.state.loading ?
 											<CircularProgress
+												color="secondary"
 												size={20}
 												className={classes.buttonProgress}
 											/> : <Menu />}
 									</Fab>
 								</Tooltip> : null
 							}
-							{this.state.location_drawer_open ?
+							{this.state.location_drawer_open || this.state.organisation_drawer_open ?
 								<Tooltip title="Go back" aria-label="Back">
 									<Fab
 										size="small"
 										color="secondary"
 										className={classes.menuButton}
 										aria-label="Back"
-										onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })} >
+										onClick={() => this.setState({ main_drawer_open: true, location_drawer_open: false, organisation_drawer_open: false, list_drawer_open: true })} >
 										<ArrowBack />
 									</Fab>
 								</Tooltip> : null
@@ -308,13 +319,14 @@ class App extends Component {
 								search_type={this.state.search_type}
 								gps_available={this.state.gps_available}
 								toggleGPS={this.toggleGPS}
-								postcodeSearch={(postcode) => this.postcodeSearch(postcode)}
+								postcodeSearch={this.postcodeSearch}
 							/>
 							{this.state.locations && this.state.locations.length > 0 && nearest_location != null ?
 								<LocationAvatar
 									nearest={true}
 									location={nearest_location}
-									viewLocation={() => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: nearest_location.location_name, list_drawer_open: false })} /> : null
+									viewLocation={() => this.setState({ main_drawer_open: true, organisation_drawer_open: false, location_drawer_open: true, location_name: nearest_location.location_name, list_drawer_open: false })}
+								/> : null
 							}
 						</Toolbar>
 					</AppBar>
@@ -337,6 +349,7 @@ class App extends Component {
 								toggleIsochrone={this.toggleIsochrone}
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
 								viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
+								viewOrganisation={() => this.setState({ main_drawer_open: true, organisation_drawer_open: true, list_drawer_open: false })}
 							/> : null}
 						{this.state.location_drawer_open ?
 							<Location
@@ -351,6 +364,15 @@ class App extends Component {
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
 								close={() => this.setState({ main_drawer_open: true, location_drawer_open: false, list_drawer_open: true })}
 							/> : null}
+						{this.state.organisation_drawer_open ?
+							<Organisation
+								locations={this.state.locations}
+								current_time={this.state.current_time}
+								travel_types={this.state.travel_types}
+								isochrones={this.state.location_isochrones}
+								getIsochrones={(location_name) => this.getLocationIsochrones(location_name)}
+								close={() => this.setState({ main_drawer_open: true, organisation_drawer_open: false, list_drawer_open: true })}
+							/> : null}
 					</Drawer>
 					<LocationMap
 						current_position={this.state.current_position}
@@ -363,7 +385,7 @@ class App extends Component {
 						bearing={this.state.map_bearing}
 						pitch={this.state.map_pitch}
 						zoom={this.state.map_zoom}
-						viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
+						viewLocation={(location_name) => this.setState({ main_drawer_open: true, organisation_drawer_open: false, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
 					/>
 				</div>
 			</MuiThemeProvider >

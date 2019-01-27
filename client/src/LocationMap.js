@@ -64,7 +64,6 @@ class LocationMap extends Component {
 		let message = '';
 		const features = e.features.sort((a, b) => a.properties.value - b.properties.value);
 		if (features && features.length > 0) {
-			let total_area_km = features[0].properties.total_area_km;
 			let total_pop = features[0].properties.total_pop;
 			let value = Math.round(features[0].properties.value / 60);
 			message = 'Population of ' + total_pop + ' within ' + value + ' minutes.';
@@ -126,7 +125,11 @@ class LocationMap extends Component {
 								'0D4F70C21F9327B3E050A00A568A259B', theme.locations.westpark,
 								'#CCCCCC'
 							],
-							'fill-extrusion-height': { 'type': 'identity', 'property': 'max' },
+							'fill-extrusion-height': [
+								'interpolate', ['linear'], ['zoom'],
+								16, 0,
+								16.05, ['get', 'max']
+							],
 							'fill-extrusion-opacity': 0.7
 						}}
 					/>

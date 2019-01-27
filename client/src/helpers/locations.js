@@ -127,3 +127,17 @@ export function getLocationTotalOpeningHoursDay(location, day) {
 	});
 	return total;
 }
+
+// getNearestLocation:
+export function getNearestLocation(locations) {
+	let nearest_location, duration = null;
+	locations.forEach(location => {
+		if (location.travel
+			&& location.travel['foot-walking']
+			&& location.travel['foot-walking'].duration < duration) {
+			nearest_location = location;
+			duration = location.travel['foot-walking'].duration;
+		}
+	});
+	return nearest_location;
+}

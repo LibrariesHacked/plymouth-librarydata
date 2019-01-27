@@ -70,7 +70,7 @@ class Events extends React.Component {
 		});
 		return (
 			<div>
-				<ListSubheader component="div">{'Events'}</ListSubheader>
+				<ListSubheader disableSticky component="div">{'Events'}</ListSubheader>
 				{categories
 					.filter(cat => cat !== 'Libraries')
 					.map((cat, z) => {

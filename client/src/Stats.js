@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Material UI
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -38,7 +39,7 @@ class Stats extends React.Component {
 							let data_values = iso_data.map(f => { return f.total_pop });
 							return (
 								<div key={'travel_stats_' + i}>
-									<ListSubheader>{travel_name + ' distance population'}</ListSubheader>
+									<ListSubheader disableSticky>{travel_name + ' distance population'}</ListSubheader>
 									<br />
 									<Bar
 										data={
@@ -47,9 +48,7 @@ class Stats extends React.Component {
 												datasets: [{
 													label: 'Population',
 													data: data_values,
-													backgroundColor: theme.locations[location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()],
-													borderColor: 'rgba(255, 255, 255, 1)',
-													borderWidth: 1
+													backgroundColor: fade(theme.locations[location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()], 0.6)
 												}]
 											}
 										}

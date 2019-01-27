@@ -29,7 +29,7 @@ class OpeningHours extends React.Component {
 		const hours_total = locationsHelper.getLocationTotalOpeningHours(location);
 		return (
 			<div>
-				<ListSubheader>{'Open ' + hours_total + ' hours per week'}</ListSubheader>
+				<ListSubheader disableSticky>{'Open ' + hours_total + ' hours per week'}</ListSubheader>
 				{opening_hours.map((day, x) => {
 					return (
 						<Chip

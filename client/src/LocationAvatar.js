@@ -10,7 +10,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
 	avatar: {
-		margin: 0,
 		cursor: 'pointer'
 	},
 	outline: {

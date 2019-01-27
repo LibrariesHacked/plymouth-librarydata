@@ -42,8 +42,7 @@ const styles = theme => ({
 		borderRadius: theme.shape.borderRadius,
 	},
 	cardHeader: {
-		display: 'flex',
-		paddingBottom: 10
+		display: 'flex'
 	},
 	divider: {
 		width: 1,
@@ -54,8 +53,7 @@ const styles = theme => ({
 		flex: 1,
 	},
 	locationHeader: {
-		marginTop: '4px',
-		marginLeft: '10px'
+		marginTop: 4
 	},
 	progress: {
 		marginRight: theme.spacing.unit / 2
@@ -115,6 +113,8 @@ class LocationCard extends React.Component {
 			<Card className={classes.card} elevation={0}>
 				<CardContent>
 					<div className={classes.cardHeader}>
+						<Typography className={classes.locationHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
+						<span className={classes.flex}></span>
 						{this.props.more_option ?
 							<Tooltip title={'See more about ' + location.location_name}>
 								<IconButton onClick={() => this.props.viewLocation(location.location_name)}>
@@ -122,8 +122,6 @@ class LocationCard extends React.Component {
 								</IconButton>
 							</Tooltip> : null
 						}
-						<Typography className={classes.locationHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
-						<span className={classes.flex}></span>
 						<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
 					</div>
 					<Typography variant="body2" gutterBottom>
@@ -143,7 +141,7 @@ class LocationCard extends React.Component {
 							/> : null)
 					}
 				</CardContent>
-				<CardActions>
+				<CardActions disableActionSpacing>
 					<Tooltip title="Move to location position">
 						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [12], [0], [0])}>
 							<LocationOn />

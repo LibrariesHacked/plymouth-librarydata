@@ -31,7 +31,7 @@ class Facilities extends React.Component {
 		}
 		return (
 			<div>
-				<ListSubheader>{'Facilities'}</ListSubheader>
+				<ListSubheader disableSticky>{'Facilities'}</ListSubheader>
 				{facilities.map((facility, x) => {
 					const Icon = icons[facility.icon];
 					return (

@@ -18,6 +18,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 // Material Icons
 import * as icons from '@material-ui/icons';
+import BarChart from '@material-ui/icons/BarChart';
 import FilterList from '@material-ui/icons/FilterList';
 import Sort from '@material-ui/icons/Sort';
 
@@ -159,6 +160,9 @@ class List extends React.Component {
 				</Tooltip>
 				<Tooltip title={'Filter locations'}>
 					<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
+				</Tooltip>
+				<Tooltip title={'All stats'}>
+					<Button size="small" variant="outlined" className={classes.button} color={'primary'} onClick={() => this.props.viewOrganisation()}>All stats <BarChart className={classes.rightIcon} /></Button>
 				</Tooltip>
 				{this.props.locations
 					.sort((loc_a, loc_b) => {
