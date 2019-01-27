@@ -214,7 +214,7 @@ class App extends Component {
 			new_state.position_update_interval = null;
 		}
 		this.setState(new_state);
-		this.getLocations('postcode', true, postcode);
+		this.getLocations('postcode', true, postcode.toUpperCase());
 	}
 
 	// fitBounds

@@ -11,7 +11,7 @@ select
 	l.website_url,
 	l.photo_url,
 	array_to_json(array_agg(distinct f.facility_name order by f.facility_name)) as facilities,
-	array_to_json(array_agg(distinct dow.wkday || ' ' || to_char(opening_time, 'HH24:mm') || '-' || to_char(closing_time, 'HH24:mm'))) as opening_hours					
+	array_to_json(array_agg(distinct dow.wkday || ' ' || to_char(opening_time, 'HH24:MI') || '-' || to_char(closing_time, 'HH24:MI'))) as opening_hours					
 from locations l
 join location_facilities lf on lf.location_id = l.id
 join facilities f on f.id = lf.facility_id
