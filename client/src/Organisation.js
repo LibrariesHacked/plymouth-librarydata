@@ -65,14 +65,16 @@ class Organisation extends React.Component {
 					}}
 				/>
 				{this.props.travel_types.map(travel => {
-					// For each travel type we want population within 30 mins
-					let loc_values = Object.keys(this.props.isochrones).map(loc => {
+					// For each travel type we want population within 15 mins
+					let loc_values = Object.keys(isochrones).map(loc => {
 						// Each object is a location
-						if (this.props.isochrones[loc] && this.props.isochrones[loc][travel.travel_type]) {
+						if (this.props.isochrones[loc] && isochrones[loc][travel.travel_type]) {
 							return {
 								location: loc,
-								properties: isoHelper.getIsochroneData(this.props.isochrones[loc][travel.travel_type].iso).find(p => p.value === 1800)
+								properties: isoHelper.getIsochroneData(isochrones[loc][travel.travel_type].iso).find(p => p.value === 900)
 							}
+						} else {
+							return null;
 						}
 					}).filter(loc => (loc && loc.location))
 					const lib_population = {
@@ -87,7 +89,7 @@ class Organisation extends React.Component {
 					};
 					return (
 						<div>
-							<ListSubheader disableSticky>{travel.description + ' 30 min population'}</ListSubheader>
+							<ListSubheader disableSticky>{travel.description + ' within 15 min population'}</ListSubheader>
 							<HorizontalBar
 								data={lib_population}
 								height={this.props.locations.length * 30}

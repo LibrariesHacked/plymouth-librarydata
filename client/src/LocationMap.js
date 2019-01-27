@@ -39,7 +39,6 @@ const Map = ReactMapboxGl({
 
 class LocationMap extends Component {
 	state = {
-		max_bounds: this.props.max_bounds,
 		fit_bounds: this.props.fit_bounds,
 		position: this.props.position,
 		zoom: this.props.zoom,
@@ -56,6 +55,8 @@ class LocationMap extends Component {
 		if (nextProps.zoom.length > 0 && nextProps.zoom[0] !== this.state.zoom[0]) stateUpdate.zoom = nextProps.zoom;
 		if (nextProps.pitch.length > 0 && nextProps.pitch[0] !== this.state.pitch[0]) stateUpdate.pitch = nextProps.pitch;
 		if (nextProps.bearing.length > 0 && nextProps.bearing[0] !== this.state.bearing[0]) stateUpdate.bearing = nextProps.bearing;
+		stateUpdate.fit_bounds = nextProps.fit_bounds;
+		console.log(stateUpdate);
 		this.setState(stateUpdate);
 	}
 
@@ -87,9 +88,9 @@ class LocationMap extends Component {
 					style='style.json'  // eslint-disable-line react/style-prop-object
 					center={this.state.position}
 					zoom={this.state.zoom}
+					maxZoom={17}
 					pitch={this.state.pitch}
 					bearing={this.state.bearing}
-					maxBounds={this.state.max_bounds}
 					fitBounds={this.state.fit_bounds}
 					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
 				>

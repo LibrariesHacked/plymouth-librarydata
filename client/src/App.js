@@ -115,7 +115,6 @@ class App extends Component {
 		// Event data
 		events: [],
 		// Map variables, sent down to the map for updates.
-		map_max_bounds: null,
 		map_fit_bounds: null,
 		map_position: [-4.1429, 50.3732],
 		map_zoom: [12],
@@ -141,7 +140,7 @@ class App extends Component {
 		// This will also retrieve the locations whether position works or not.
 		this.logPosition();
 
-		let time_update_interval = setInterval(this.setCurrentTime, 5000);
+		let time_update_interval = setInterval(this.setCurrentTime, 30000);
 		this.setState({ time_update_interval: time_update_interval });
 	}
 
@@ -163,17 +162,17 @@ class App extends Component {
 		if (this.state.current_position && search_type !== 'postcode') {
 			locationsHelper.getAllLocationsByCoords(this.state.current_position, results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
-				//if (fit) this.fitNearest();
+				if (fit) this.fitNearest();
 			});
 		} else if (search_type === 'postcode') {
 			locationsHelper.getAllLocationsByPostcode(postcode, results => {
 				this.setState({ loading: false, postcode_loading: false, locations: (results.locations || []), current_position: results.coordinates });
-				//if (fit) this.fitNearest();
+				if (fit) this.fitNearest();
 			});
 		} else { // Just get all the locations
 			locationsHelper.getAllLocations(results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
-				//if (fit) this.fitBounds();
+				if (fit) this.fitBounds();
 			});
 		}
 	};
@@ -225,15 +224,17 @@ class App extends Component {
 		this.state.locations.forEach(location => {
 			bounds.push([location.longitude, location.latitude])
 		});
-		//this.setState({ map_fit_bounds: bounds });
+		this.setState({ map_fit_bounds: bounds });
 	}
 
 	// fitNearest: 
 	fitNearest = () => {
 		const nearest = locationsHelper.getNearestLocation(this.state.locations);
-		const current = this.state.current_position;
-		//const bounds = [current, [nearest.longitude, nearest.latitude]];
-		//this.setState({ map_fit_bounds: bounds });
+		if (nearest) {
+			const current = this.state.current_position;
+			const bounds = [current, [nearest.longitude, nearest.latitude]];
+			this.setState({ map_fit_bounds: bounds });
+		}
 	}
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
@@ -380,7 +381,6 @@ class App extends Component {
 						position={this.state.map_position}
 						isochrones={this.state.location_isochrones}
 						locations={this.state.locations}
-						max_bounds={this.state.map_max_bounds}
 						fit_bounds={this.state.map_fit_bounds}
 						bearing={this.state.map_bearing}
 						pitch={this.state.map_pitch}

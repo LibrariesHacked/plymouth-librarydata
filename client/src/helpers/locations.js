@@ -130,7 +130,8 @@ export function getLocationTotalOpeningHoursDay(location, day) {
 
 // getNearestLocation:
 export function getNearestLocation(locations) {
-	let nearest_location, duration = null;
+	let nearest_location = null; 
+	let duration = 1200;
 	locations.forEach(location => {
 		if (location.travel
 			&& location.travel['foot-walking']
