@@ -34,7 +34,7 @@ import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 import * as locationsHelper from './helpers/locations';
 
-const drawerWidth = 365;
+const drawerWidth = 370;
 
 const theme = createMuiTheme({
 	typography: {
@@ -144,13 +144,13 @@ class App extends Component {
 		let time_update_interval = setInterval(this.setCurrentTime, 5000);
 		this.setState({ time_update_interval: time_update_interval });
 	}
-truncate
+
 	// logPosition: Retrieve position from gps
-	logPosition = (fitBounds = false) => {
+	logPosition = (fit = false) => {
 		this.setState({ loading: true, gps_loading: true });
 		geoHelper.getCurrentPosition(position => {
 			this.setState({ current_position: position, gps_loading: false, gps_available: (position.length > 0) });
-			this.getLocations('gps', fitBounds);
+			this.getLocations('gps', fit);
 		});
 	}
 
@@ -163,17 +163,17 @@ truncate
 		if (this.state.current_position && search_type !== 'postcode') {
 			locationsHelper.getAllLocationsByCoords(this.state.current_position, results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
-				if (fit) this.fitNearest();
+				//if (fit) this.fitNearest();
 			});
 		} else if (search_type === 'postcode') {
 			locationsHelper.getAllLocationsByPostcode(postcode, results => {
 				this.setState({ loading: false, postcode_loading: false, locations: (results.locations || []), current_position: results.coordinates });
-				if (fit) this.fitNearest();
+				//if (fit) this.fitNearest();
 			});
 		} else { // Just get all the locations
 			locationsHelper.getAllLocations(results => {
 				this.setState({ loading: false, locations: (results.locations || []) });
-				if (fit) this.fitBounds();
+				//if (fit) this.fitBounds();
 			});
 		}
 	};
@@ -225,15 +225,15 @@ truncate
 		this.state.locations.forEach(location => {
 			bounds.push([location.longitude, location.latitude])
 		});
-		this.setState({ map_fit_bounds: bounds });
+		//this.setState({ map_fit_bounds: bounds });
 	}
 
 	// fitNearest: 
 	fitNearest = () => {
 		const nearest = locationsHelper.getNearestLocation(this.state.locations);
 		const current = this.state.current_position;
-		const bounds = [current, [nearest.longitude, nearest.latitude]];
-		this.setState({ map_fit_bounds: bounds });
+		//const bounds = [current, [nearest.longitude, nearest.latitude]];
+		//this.setState({ map_fit_bounds: bounds });
 	}
 
 	// getLocationIsochrones: fetches the underlying data for an isochrone
