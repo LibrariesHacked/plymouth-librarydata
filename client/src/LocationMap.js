@@ -56,7 +56,6 @@ class LocationMap extends Component {
 		if (nextProps.pitch.length > 0 && nextProps.pitch[0] !== this.state.pitch[0]) stateUpdate.pitch = nextProps.pitch;
 		if (nextProps.bearing.length > 0 && nextProps.bearing[0] !== this.state.bearing[0]) stateUpdate.bearing = nextProps.bearing;
 		stateUpdate.fit_bounds = nextProps.fit_bounds;
-		console.log(stateUpdate);
 		this.setState(stateUpdate);
 	}
 

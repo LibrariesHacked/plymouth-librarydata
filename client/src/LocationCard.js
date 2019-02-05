@@ -133,10 +133,11 @@ class LocationCard extends React.Component {
 						<Chip
 							avatar={<Avatar><Event /></Avatar>}
 							color="primary"
-							label={moment(current_event.title + ' ' + next_event.date.end_date).fromNow()} /> :
+							label={current_event.title + ' ' + moment(next_event.date.end_date).fromNow()} /> :
 						(Object.keys(next_event).length > 0 ? // If we have a next event
 							<Chip
 								avatar={<Avatar><Event /></Avatar>}
+								variant="outlined"
 								label={next_event.title + ' ' + moment(next_event.date.start_date).fromNow()}
 							/> : null)
 					}

@@ -35,7 +35,7 @@ class Facilities extends React.Component {
 				{facilities.map((facility, x) => {
 					const Icon = icons[facility.icon];
 					return (
-						<Tooltip key={'tt_facility_' + x} disableHoverListener title={facility.description}>
+						<Tooltip key={'tt_facility_' + x} title={facility.description}>
 							<IconButton>
 								{Icon ? <Icon /> : null}
 							</IconButton>

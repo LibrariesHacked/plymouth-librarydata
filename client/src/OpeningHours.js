@@ -38,6 +38,7 @@ class OpeningHours extends React.Component {
 							label={day.day_code + ' ' + (day.hours)}
 							color={day.hours === 'Closed' ? 'default' : (x === 0 ? 'primary' : 'secondary')}
 							avatar={<Avatar>{day.date}</Avatar>}
+							variant="outlined"
 						/>
 					)
 				})}

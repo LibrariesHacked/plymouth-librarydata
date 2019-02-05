@@ -69,8 +69,8 @@ export function getLocationOpeningHours(location) {
 				date: date.format('DD'),
 				date_ordinal: date.format('Do'),
 				hours: (location_lookup[date.format('ddd')] ? location_lookup[date.format('ddd')].start + '-' + location_lookup[date.format('ddd')].end : 'Closed'),
-				start: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].start, 'HH:mm').format('ha') : null),
-				end: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].end, 'HH:mm').format('ha') : null),
+				start: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].start, 'HH:mm').format('hh:mma') : null),
+				end: (location_lookup[date.format('ddd')] ? moment(location_lookup[date.format('ddd')].end, 'HH:mm').format('hh:mma') : null),
 				hours_open: (location_lookup[date.format('ddd')] ? moment.duration(moment(location_lookup[date.format('ddd')].end, 'HH:mm').diff(moment(location_lookup[date.format('ddd')].start, 'HH:mm'))).hours() : 0),
 			}
 		)
@@ -86,8 +86,8 @@ export function checkLocationOpen(location) {
 	const opening_hours = getLocationOpeningHours(location);
 	const now = moment();
 	if (opening_hours[0].full === now.format('DD/MM/YYYY')) { // Open today
-		let start = moment(opening_hours[0].full + ' ' + opening_hours[0].start, 'DD/MM/YYYY ha');
-		let end = moment(opening_hours[0].full + ' ' + opening_hours[0].end, 'DD/MM/YYYY ha');
+		let start = moment(opening_hours[0].full + ' ' + opening_hours[0].start, 'DD/MM/YYYY hh:mma');
+		let end = moment(opening_hours[0].full + ' ' + opening_hours[0].end, 'DD/MM/YYYY hh:mma');
 		if (now.isAfter(start) && now.isBefore(end)) { // Currently Open
 			open = true;
 			message = 'Closing in ' + moment.duration(now.diff(end)).humanize();
