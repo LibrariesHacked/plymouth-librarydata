@@ -91,7 +91,7 @@ class LocationMap extends Component {
 					pitch={this.state.pitch}
 					bearing={this.state.bearing}
 					fitBounds={this.state.fit_bounds}
-					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, position: 'absolute' }}
+					containerStyle={{ top: 0, bottom: 0, right: 0, left: 0, height: '100vh', width: '100vw', position: 'absolute' }}
 				>
 					<ZoomControl position="bottom-right" />
 					<Source

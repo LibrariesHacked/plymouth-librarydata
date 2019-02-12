@@ -34,7 +34,7 @@ import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 import * as locationsHelper from './helpers/locations';
 
-const drawerWidth = 370;
+const drawerWidth = 380;
 
 const theme = createMuiTheme({
 	typography: {

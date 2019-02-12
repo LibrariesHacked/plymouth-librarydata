@@ -43,6 +43,11 @@ const styles = theme => ({
 	},
 	padding: {
 		padding: `0 ${theme.spacing.unit * 2}px`,
+	},
+	root: {
+	},
+	tab: {
+		minWidth: 0
 	}
 });
 
@@ -79,7 +84,7 @@ class List extends React.Component {
 			if (events.map(ev => ev.toLowerCase()).indexOf(event.title.toLowerCase()) === -1) events.push(event.title);
 		});
 		return (
-			<div>
+			<div className={classes.root}>
 				<Menu // Menu used to sort
 					id="menu-locationsort"
 					anchorEl={this.state.sort_menu_anchor}
@@ -126,7 +131,8 @@ class List extends React.Component {
 					}
 				</Menu>
 				<Tabs
-					variant="fullWidth"
+					variant="standard"
+					scrollButtons="off"
 					value={open_locations.length > 0 ? this.state.open_tab : 1}
 					indicatorColor="secondary"
 					textColor="secondary"
@@ -134,6 +140,7 @@ class List extends React.Component {
 				>
 					<Tab
 						disabled={open_locations.length === 0}
+						className={classes.tab}
 						label={
 							<Badge
 								className={classes.padding}
@@ -145,12 +152,25 @@ class List extends React.Component {
 					/>
 					<Tab
 						disabled={closed_locations.length === 0}
+						className={classes.tab}
 						label={
 							<Badge
 								className={classes.padding}
 								color={closed_locations.length > 0 ? 'secondary' : 'default'}
 								badgeContent={closed_locations.length}>
 								Closed
+							</Badge>
+						}
+					/>
+					<Tab
+						disabled={closed_locations.length === 0 || open_locations.length === 0}
+						className={classes.tab}
+						label={
+							<Badge
+								className={classes.padding}
+								color={'default'}
+								badgeContent={closed_locations.length + open_locations.length}>
+								All
 							</Badge>
 						}
 					/>

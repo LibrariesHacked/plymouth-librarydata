@@ -4,6 +4,43 @@ import axios from 'axios';
 // Moment for using dates and times
 import moment from 'moment';
 
+const locale_short = {
+	relativeTime: {
+		future: "in %s",
+		past: "%s ago",
+		s: "seconds",
+		m: "1m",
+		mm: "%dm",
+		h: "1h",
+		hh: "%dh",
+		d: "1d",
+		dd: "%dd",
+		M: "1m",
+		MM: "%dm",
+		y: "1y",
+		yy: "%dy"
+	}
+};
+
+const locale_default = {
+	relativeTime: {
+		future: 'in %s',
+		past: '%s ago',
+		s: 'a few seconds',
+		ss: '%d seconds',
+		m: 'a minute',
+		mm: '%d minutes',
+		h: 'an hour',
+		hh: '%d hours',
+		d: 'a day',
+		dd: '%d days',
+		M: 'a month',
+		MM: '%d months',
+		y: 'a year',
+		yy: '%d years'
+	}
+};
+
 // getAllLocations: 
 export function getAllLocations(callback) {
 	axios.get('/api/locations')
@@ -82,6 +119,7 @@ export function getLocationOpeningHours(location) {
 // checkLocationOpen: 
 export function checkLocationOpen(location) {
 	let open = false;
+	let time = null;
 	let message = '';
 	const opening_hours = getLocationOpeningHours(location);
 	const now = moment();
@@ -91,9 +129,15 @@ export function checkLocationOpen(location) {
 		if (now.isAfter(start) && now.isBefore(end)) { // Currently Open
 			open = true;
 			message = 'Closing in ' + moment.duration(now.diff(end)).humanize();
+			moment.locale('en', locale_short);
+			time = moment.duration(now.diff(end)).humanize();
+			moment.locale('en', locale_default);
 		} else {
 			if (now.isBefore(start)) { // Opening today
-				message = 'Opening in ' + moment.duration(now.diff(start)).humanize()
+				message = 'Opening in ' + moment.duration(now.diff(start)).humanize();
+				moment.locale('en', locale_short);
+				time = moment.duration(now.diff(start)).humanize();
+				moment.locale('en', locale_default);
 			}
 		}
 	}
@@ -102,10 +146,13 @@ export function checkLocationOpen(location) {
 		while (x < opening_hours.length && message === '') {
 			let start = moment(opening_hours[x].full + ' ' + opening_hours[x].start, 'DD/MM/YYYY ha');
 			message = 'Opening in ' + moment.duration(now.diff(start)).humanize();
+			moment.locale('en', locale_short);
+			time = moment.duration(now.diff(start)).humanize();
+			moment.locale('en', locale_default);
 			x++;
 		}
 	}
-	return { open: open, message: message };
+	return { open: open, message: message, time: time };
 }
 
 // getLocationTotalOpeningHours:
@@ -130,14 +177,14 @@ export function getLocationTotalOpeningHoursDay(location, day) {
 
 // getNearestLocation:
 export function getNearestLocation(locations) {
-	let nearest_location = null; 
+	let nearest_location = null;
 	let duration = 1200;
 	locations.forEach(location => {
 		if (location.travel
 			&& location.travel['foot-walking']
 			&& parseInt(location.travel['foot-walking'].duration) < duration) {
-				nearest_location = location;
-				duration = location.travel['foot-walking'].duration;
+			nearest_location = location;
+			duration = location.travel['foot-walking'].duration;
 		}
 	});
 	return nearest_location;

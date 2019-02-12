@@ -4,12 +4,10 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 // Material UI
-import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,10 +16,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
+import AccessTime from '@material-ui/icons/AccessTime';
 import Business from '@material-ui/icons/Business';
 import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
 
 // Icons
 import * as icons from '@material-ui/icons';
@@ -33,13 +31,13 @@ import LocationAvatar from './LocationAvatar';
 import * as locationsHelper from './helpers/locations';
 
 const styles = theme => ({
-	button: {
-		margin: theme.spacing.unit
+	avatar: {
+		paddingRight: 10
 	},
 	card: {
 		border: '1px solid #e5e5e5',
-		margin: 5,
-		borderRadius: theme.shape.borderRadius,
+		margin: 3,
+		borderRadius: theme.shape.borderRadius
 	},
 	cardHeader: {
 		display: 'flex'
@@ -50,13 +48,16 @@ const styles = theme => ({
 		margin: 8
 	},
 	flex: {
-		flex: 1,
+		flex: 1
 	},
 	locationHeader: {
-		marginTop: 4
+		marginLeft: 10
 	},
 	progress: {
 		marginRight: theme.spacing.unit / 2
+	},
+	title: {
+		fontSize: 14
 	}
 });
 
@@ -69,6 +70,7 @@ class LocationCard extends React.Component {
 		const { classes, location, events } = this.props;
 		let current_event = {};
 		let next_event = {};
+		let event_message = 'No events coming up';
 		if (events) {
 			events
 				.forEach(event => {
@@ -80,22 +82,26 @@ class LocationCard extends React.Component {
 							moment(date.end_date).isAfter(this.props.current_time)
 						) {
 							current_event = event;
+							event_message = current_event.title + ' ' + moment(date.end_date).fromNow();
 						}
 						// Set next event
 						if (moment(date.start_date).isAfter(this.props.current_time)) {
 							if (Object.keys(next_event).length === 0) {
 								next_event = event;
 								next_event.date = date;
+								event_message = next_event.title + ' ' + moment(date.start_date).fromNow();
 							} else {
 								if (next_event.date.start_date > date.start_date) {
 									next_event = event;
 									next_event.date = date;
+									event_message = next_event.title + ' ' + moment(date.start_date).fromNow();
 								}
 							}
 						}
 					});
 				});
 		}
+		const event_available = ((Object.keys(current_event).length > 0 || Object.keys(next_event).length > 0) ? true : false);
 		// travel time string
 		let travel_messages = {};
 		let travel_durations = {};
@@ -109,40 +115,41 @@ class LocationCard extends React.Component {
 				}
 			});
 		}
+		const location_opening = locationsHelper.checkLocationOpen(location);
 		return (
 			<Card className={classes.card} elevation={0}>
 				<CardContent>
 					<div className={classes.cardHeader}>
+						<div className={classes.avatar}>
+							<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
+						</div>
 						<Typography className={classes.locationHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
 						<span className={classes.flex}></span>
-						{this.props.more_option ?
-							<Tooltip title={'See more about ' + location.location_name}>
-								<IconButton onClick={() => this.props.viewLocation(location.location_name)}>
-									<MoreHoriz />
-								</IconButton>
-							</Tooltip> : null
-						}
-						<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
+						<Tooltip title={location_opening.message}>
+							<IconButton
+								onClick={() => { }}>
+								<Badge
+									invisible={false}
+									variant={'standard'}
+									badgeContent={location_opening.time}
+									color={location_opening.open ? 'primary' : 'secondary'}
+									max={60}>
+									<AccessTime />
+								</Badge>
+							</IconButton>
+						</Tooltip>
 					</div>
-					<Typography variant="body2" gutterBottom>
-						{
-							locationsHelper.checkLocationOpen(location).message
-						}
-					</Typography>
-					{Object.keys(current_event).length > 0 ? // If we have a current event
-						<Chip
-							avatar={<Avatar><Event /></Avatar>}
-							color="primary"
-							label={current_event.title + ' ' + moment(next_event.date.end_date).fromNow()} /> :
-						(Object.keys(next_event).length > 0 ? // If we have a next event
-							<Chip
-								avatar={<Avatar><Event /></Avatar>}
-								variant="outlined"
-								label={next_event.title + ' ' + moment(next_event.date.start_date).fromNow()}
-							/> : null)
-					}
 				</CardContent>
 				<CardActions disableActionSpacing>
+					<Tooltip title={event_message}>
+						<IconButton
+							onClick={() => { }}
+							disabled={!event_available}
+							color={Object.keys(current_event).length > 0 ? 'primary' : 'default'}>
+							<Event />
+						</IconButton>
+					</Tooltip>
+					<Divider className={classes.divider} />
 					<Tooltip title="Move to location position">
 						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [12], [0], [0])}>
 							<LocationOn />
@@ -167,7 +174,6 @@ class LocationCard extends React.Component {
 												this.props.isochrones[location.location_name] &&
 												this.props.isochrones[location.location_name][travel.travel_type] &&
 												this.props.isochrones[location.location_name][travel.travel_type].selected ? 'primary' : 'default'}
-										className={classes.button}
 										onClick={() => this.props.toggleIsochrone(location.location_name, travel.travel_type)}>
 										<Badge
 											invisible={travel_durations && travel_durations[travel.travel_type] ? false : true}

@@ -23,12 +23,18 @@ router.get('/', (req, res, next) => {
 
 	locationHelper.getAllLocations(locations => {
 		if (locations) {
-			geoHelper.getLocationDistances(location_type, location, locations, result => {
+			if (location) {
+				geoHelper.getLocationDistances(location_type, location, locations, result => {
+					response.success = true;
+					response.locations = (result.destinations || locations);
+					response.coordinates = result.coordinates;
+					res.json(response);
+				});
+			} else {
 				response.success = true;
-				response.locations = (result.destinations || locations);
-				response.coordinates = result.coordinates;
+				response.locations = locations;
 				res.json(response);
-			});
+			}
 		} else {
 			response.success = false;
 			res.json(response);
