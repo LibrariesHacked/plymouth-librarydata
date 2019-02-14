@@ -80,7 +80,15 @@ class LocationMap extends Component {
 
 	// render
 	render() {
-		const { theme, classes } = this.props;
+		const { theme, classes, open_tab } = this.props;
+		const open_locations = this.props.locations.filter(location => location.currently_open.open).length;
+		const closed_locations = this.props.locations.filter(location => !location.currently_open.open).length;
+		const locations = this.props.locations.filter(location => {
+			let show = true;
+			if ((open_tab === 0 && open_locations !== 0) && !location.currently_open.open) show = false;
+			if ((open_tab === 1 && closed_locations !== 0) && location.currently_open.open) show = false;
+			return show;
+		})
 		return (
 			<div>
 				<Map
@@ -185,7 +193,7 @@ class LocationMap extends Component {
 					})}
 					<Cluster ClusterMarkerFactory={this.clusterLocations}>
 						{
-							this.props.locations.map((location, key) =>
+							locations.map((location, key) =>
 								<Marker
 									key={'mk_lib_' + key}
 									style={styles.marker}

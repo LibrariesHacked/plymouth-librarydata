@@ -127,7 +127,13 @@ class App extends Component {
 		main_drawer_open: true,
 		list_drawer_open: true,
 		location_drawer_open: false,
-		organisation_drawer_open: false
+		organisation_drawer_open: false,
+		// Location filtering
+		filter: '',
+		filter_type: '',
+		filter_menu: false,
+		filter_menu_anchor: null,
+		open_tab: 0
 	}
 
 	// componentDidMount: sets up data and any logging
@@ -229,7 +235,7 @@ class App extends Component {
 
 	// fitNearest: 
 	fitNearest = () => {
-		const nearest = locationsHelper.getNearestLocation(this.state.locations);
+		const nearest = locationsHelper.getNearestLocation(this.filterLocations(this.state.locations));
 		if (nearest) {
 			const current = this.state.current_position;
 			const bounds = [current, [nearest.longitude, nearest.latitude]];
@@ -270,10 +276,31 @@ class App extends Component {
 		}
 	}
 
+	filterLocations = (locations) => {
+		return locations
+			.filter(location => {
+				let show = true;
+				if (this.state.filter !== '' && this.state.filter_type === 'facility' && location.facilities.indexOf(this.state.filter) === -1) show = false;
+				if (this.state.filter !== '' && this.state.filter_type === 'event' && this.state.events) {
+					let found = false;
+					this.state.events.forEach(event => {
+						if (event.title === this.state.filter && event.location === location.location_name) found = true;
+					});
+					show = found;
+				}
+				return show;
+			});
+	}
+
 	// Renders the main app
 	render() {
 		const { classes } = this.props;
-		const nearest_location = locationsHelper.getNearestLocation(this.state.locations); 
+		let locations = this.state.locations;
+		locations.forEach(location => {
+			location.currently_open = locationsHelper.checkLocationOpen(location);
+		});
+		locations = this.filterLocations(locations);
+		const nearest_location = locationsHelper.getNearestLocation(locations);
 		return (
 			<MuiThemeProvider theme={theme}>
 				<div className={classes.root}>
@@ -322,7 +349,7 @@ class App extends Component {
 								toggleGPS={this.toggleGPS}
 								postcodeSearch={this.postcodeSearch}
 							/>
-							{this.state.locations && this.state.locations.length > 0 && nearest_location != null ?
+							{locations && locations.length > 0 && nearest_location != null ?
 								<LocationAvatar
 									nearest={true}
 									location={nearest_location}
@@ -341,16 +368,24 @@ class App extends Component {
 						<div className={classes.toolbarPadding}></div>
 						{this.state.list_drawer_open ?
 							<List
+								filter={this.state.filter}
+								filter_menu={this.state.filter_menu}
+								filter_menu_anchor={this.state.filter_menu_anchor}
+								open_tab={this.state.open_tab}
 								current_time={this.state.current_time}
-								locations={this.state.locations}
+								locations={locations}
 								facilities={this.state.facilities}
 								travel_types={this.state.travel_types}
 								events={this.state.events}
 								isochrones={this.state.location_isochrones}
 								toggleIsochrone={this.toggleIsochrone}
 								goTo={(position, zoom, pitch, bearing) => this.setState({ map_position: position, map_zoom: zoom, map_pitch: pitch, map_bearing: bearing })}
+								openFilter={(anchor) => this.setState({ filter_menu: true, filter_menu_anchor: anchor })}
+								changeTab={(tab) => this.setState({ open_tab: tab })}
 								viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
 								viewOrganisation={() => this.setState({ main_drawer_open: true, organisation_drawer_open: true, list_drawer_open: false })}
+								setFilter={(filter, filter_type) => this.setState({ filter: filter, filter_type: filter_type, filter_menu: false, filter_menu_anchor: null })}
+								closeFilterMenu={() => this.setState({ filter_menu: false, filter_menu_anchor: null })}
 							/> : null}
 						{this.state.location_drawer_open ?
 							<Location
@@ -376,11 +411,12 @@ class App extends Component {
 							/> : null}
 					</Drawer>
 					<LocationMap
+						open_tab={this.state.open_tab}
 						current_position={this.state.current_position}
 						search_type={this.state.search_type}
 						position={this.state.map_position}
 						isochrones={this.state.location_isochrones}
-						locations={this.state.locations}
+						locations={locations}
 						fit_bounds={this.state.map_fit_bounds}
 						bearing={this.state.map_bearing}
 						pitch={this.state.map_pitch}

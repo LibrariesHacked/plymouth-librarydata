@@ -25,9 +25,6 @@ import Sort from '@material-ui/icons/Sort';
 // Our custom components
 import LocationCard from './LocationCard';
 
-// Helpers
-import * as locationsHelper from './helpers/locations';
-
 // Styles: 
 const styles = theme => ({
 	button: {
@@ -44,47 +41,28 @@ const styles = theme => ({
 	padding: {
 		padding: `0 ${theme.spacing.unit * 2}px`,
 	},
-	root: {
-	},
 	tab: {
 		minWidth: 0
 	}
 });
 
 class List extends React.Component {
-	state = {
-		filter: '',
-		filter_type: '',
-		filter_menu: false,
-		filter_menu_anchor: null,
-		open_tab: 0,
+	state = {		
 		sort: 'name',
 		sort_menu: false,
 		sort_menu_anchor: null
 	}
 
 	render() {
-		const { classes, locations } = this.props;
-		let open_locations = locations
-			.filter(location => {
-				let show = true;
-				if (this.state.filter !== '' && location[this.state.filter] === 'No') show = false;
-				if (!locationsHelper.checkLocationOpen(location).open) show = false;
-				return show;
-			});
-		let closed_locations = locations
-			.filter(location => {
-				let show = true;
-				if (this.state.filter !== '' && location[this.state.filter] === 'No') show = false;
-				if (locationsHelper.checkLocationOpen(location).open) show = false;
-				return show;
-			});
+		const { classes, locations, filter, filter_menu, filter_menu_anchor, open_tab } = this.props;
 		let events = [];
 		this.props.events.forEach(event => {
 			if (events.map(ev => ev.toLowerCase()).indexOf(event.title.toLowerCase()) === -1) events.push(event.title);
 		});
+		const open_locations = locations.filter(location => location.currently_open.open).length;
+		const closed_locations = locations.filter(location => !location.currently_open.open).length;
 		return (
-			<div className={classes.root}>
+			<div>
 				<Menu // Menu used to sort
 					id="menu-locationsort"
 					anchorEl={this.state.sort_menu_anchor}
@@ -95,11 +73,11 @@ class List extends React.Component {
 				</Menu>
 				<Menu // Menu used for filtering the list
 					id="menu-locationfilter"
-					anchorEl={this.state.filter_menu_anchor}
-					open={this.state.filter_menu}
-					onClose={() => this.setState({ filter_menu: false, filter_menu_anchor: null })}
+					anchorEl={filter_menu_anchor}
+					open={filter_menu}
+					onClose={() => this.props.closeFilterMenu()}
 				>
-					<MenuItem onClick={(e) => this.setState({ filter_menu: false, filter: '' })}>Show All</MenuItem>
+					<MenuItem onClick={(e) => this.props.setFilter('')}>Show All</MenuItem>
 					<Divider />
 					<ListSubheader disableSticky={true}>Filter by Facilities</ListSubheader>
 					{this.props.facilities
@@ -108,8 +86,9 @@ class List extends React.Component {
 							const Icon = icons[facility.icon];
 							return Icon ? (
 								<MenuItem
+									key={'itm-' + facility.facility_name.replace(/\s/g, '')}
 									className={classes.menuItem}
-									onClick={() => this.setState({ filter_menu: false, filter: facility.facility_name, filter_type: 'facility' })}>
+									onClick={() => this.props.setFilter(facility.facility_name, 'facility')}>
 									<ListItemIcon>
 										<Icon />
 									</ListItemIcon>
@@ -124,7 +103,7 @@ class List extends React.Component {
 							<Divider />
 							{
 								events.sort().map((event, i) => {
-									return <MenuItem key={'mnu_item_' + i} onClick={() => this.setState({ filter_menu: false, filter: event, filter_type: 'event' })}>{event}</MenuItem>
+									return <MenuItem key={'mnu_item_' + i} onClick={() => this.props.setFilter(event, 'event')}>{event}</MenuItem>
 								})
 							}
 						</div> : null
@@ -133,43 +112,43 @@ class List extends React.Component {
 				<Tabs
 					variant="standard"
 					scrollButtons="off"
-					value={open_locations.length > 0 ? this.state.open_tab : 1}
+					value={open_locations > 0 ? open_tab : 1}
 					indicatorColor="secondary"
 					textColor="secondary"
-					onChange={(event, value) => this.setState({ open_tab: value })}
+					onChange={(event, value) => this.props.changeTab(value)}
 				>
 					<Tab
-						disabled={open_locations.length === 0}
+						disabled={open_locations === 0}
 						className={classes.tab}
 						label={
 							<Badge
 								className={classes.padding}
-								color={open_locations.length > 0 ? 'primary' : 'default'}
-								badgeContent={open_locations.length}>
+								color={open_locations > 0 ? 'primary' : 'default'}
+								badgeContent={open_locations}>
 								Open
 							</Badge>
 						}
 					/>
 					<Tab
-						disabled={closed_locations.length === 0}
+						disabled={closed_locations === 0}
 						className={classes.tab}
 						label={
 							<Badge
 								className={classes.padding}
-								color={closed_locations.length > 0 ? 'secondary' : 'default'}
-								badgeContent={closed_locations.length}>
+								color={closed_locations > 0 ? 'secondary' : 'default'}
+								badgeContent={closed_locations}>
 								Closed
 							</Badge>
 						}
 					/>
 					<Tab
-						disabled={closed_locations.length === 0 || open_locations.length === 0}
+						disabled={closed_locations === 0 || open_locations === 0}
 						className={classes.tab}
 						label={
 							<Badge
 								className={classes.padding}
 								color={'default'}
-								badgeContent={closed_locations.length + open_locations.length}>
+								badgeContent={closed_locations + open_locations}>
 								All
 							</Badge>
 						}
@@ -179,34 +158,26 @@ class List extends React.Component {
 					<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
 				</Tooltip>
 				<Tooltip title={'Filter locations'}>
-					<Button size="small" variant="text" className={classes.button} color={this.state.filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.setState({ filter_menu: true, filter_menu_anchor: e.currentTarget })}>{this.state.filter !== '' ? this.state.filter.substring(0, 18) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
+					<Button size="small" variant="text" className={classes.button} color={filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.props.openFilter(e.currentTarget)}>{filter !== '' ? filter.substring(0, 14) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
 				</Tooltip>
-				<Tooltip title={'All stats'}>
-					<Button size="small" variant="outlined" className={classes.button} color={'primary'} onClick={() => this.props.viewOrganisation()}>All stats <BarChart className={classes.rightIcon} /></Button>
+				<Tooltip title={'Stats'}>
+					<Button size="small" variant="outlined" className={classes.button} color={'primary'} onClick={() => this.props.viewOrganisation()}>Stats <BarChart className={classes.rightIcon} /></Button>
 				</Tooltip>
-				{this.props.locations
+				{locations
 					.sort((loc_a, loc_b) => {
 						if (this.state.sort === 'name') return loc_a.location_name.localeCompare(loc_b.location_name);
 						return -1;
 					})
 					.filter(location => {
 						let show = true;
-						if (this.state.filter !== '' && this.state.filter_type === 'facility' && location.facilities.indexOf(this.state.filter) === -1) show = false;
-						if (this.state.filter !== '' && this.state.filter_type === 'event' && this.props.events) {
-							let found = false;
-							this.props.events.forEach(event => {
-								if (event.title === this.state.filter && event.location === location.location_name) found = true;
-							});
-							show = found;
-						}
-						if ((this.state.open_tab === 0 && open_locations.length !== 0) && !locationsHelper.checkLocationOpen(location).open) show = false;
-						if ((this.state.open_tab === 1 && closed_locations.length !== 0) && locationsHelper.checkLocationOpen(location).open) show = false;
+						if ((open_tab === 0 && open_locations !== 0) && !location.currently_open.open) show = false;
+						if ((open_tab === 1 && closed_locations !== 0) && location.currently_open.open) show = false;
 						return show;
 					})
 					.map(location => {
 						return (
 							<LocationCard
-								key={'crd-location' + location.location_name}
+								key={'crd-location-' + location.location_name.replace(/\s/g, '')}
 								location={location}
 								events={this.props.events.filter(event => event.location === location.location_name)}
 								travel_types={this.props.travel_types}

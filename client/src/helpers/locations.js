@@ -128,13 +128,13 @@ export function checkLocationOpen(location) {
 		let end = moment(opening_hours[0].full + ' ' + opening_hours[0].end, 'DD/MM/YYYY hh:mma');
 		if (now.isAfter(start) && now.isBefore(end)) { // Currently Open
 			open = true;
-			message = 'Closing in ' + moment.duration(now.diff(end)).humanize();
+			message = 'Open for another ' + moment.duration(now.diff(end)).humanize();
 			moment.locale('en', locale_short);
 			time = moment.duration(now.diff(end)).humanize();
 			moment.locale('en', locale_default);
 		} else {
 			if (now.isBefore(start)) { // Opening today
-				message = 'Opening in ' + moment.duration(now.diff(start)).humanize();
+				message = 'Opening today in ' + moment.duration(now.diff(start)).humanize();
 				moment.locale('en', locale_short);
 				time = moment.duration(now.diff(start)).humanize();
 				moment.locale('en', locale_default);

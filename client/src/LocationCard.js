@@ -65,7 +65,6 @@ class LocationCard extends React.Component {
 	state = {
 		expanded: false
 	}
-
 	render() {
 		const { classes, location, events } = this.props;
 		let current_event = {};
@@ -141,14 +140,15 @@ class LocationCard extends React.Component {
 					</div>
 				</CardContent>
 				<CardActions disableActionSpacing>
-					<Tooltip title={event_message}>
-						<IconButton
-							onClick={() => { }}
-							disabled={!event_available}
-							color={Object.keys(current_event).length > 0 ? 'primary' : 'default'}>
-							<Event />
-						</IconButton>
-					</Tooltip>
+					{Object.keys(current_event).length > 0 || Object.keys(next_event).length > 0 ?
+						<Tooltip title={event_message}>
+							<IconButton
+								onClick={() => { }}
+								disabled={!event_available}
+								color={Object.keys(current_event).length > 0 ? 'primary' : 'default'}>
+								<Event />
+							</IconButton>
+						</Tooltip> : null}
 					<Divider className={classes.divider} />
 					<Tooltip title="Move to location position">
 						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [12], [0], [0])}>
