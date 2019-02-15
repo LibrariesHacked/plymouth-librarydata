@@ -158,7 +158,7 @@ class List extends React.Component {
 					<Button size="small" variant="text" className={classes.button} color="secondary" onClick={(e) => this.setState({ sort_menu: true, sort_menu_anchor: e.currentTarget })}>Sort<Sort className={classes.rightIcon} /></Button>
 				</Tooltip>
 				<Tooltip title={'Filter locations'}>
-					<Button size="small" variant="text" className={classes.button} color={filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.props.openFilter(e.currentTarget)}>{filter !== '' ? filter.substring(0, 14) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
+					<Button size="small" variant="text" className={classes.button} color={filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.props.openFilter(e.currentTarget)}>{filter !== '' ? filter.substring(0, 13) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
 				</Tooltip>
 				<Tooltip title={'Stats'}>
 					<Button size="small" variant="outlined" className={classes.button} color={'primary'} onClick={() => this.props.viewOrganisation()}>Stats <BarChart className={classes.rightIcon} /></Button>

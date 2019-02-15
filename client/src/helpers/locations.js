@@ -8,7 +8,8 @@ const locale_short = {
 	relativeTime: {
 		future: "in %s",
 		past: "%s ago",
-		s: "seconds",
+		s: '...',
+		ss: '%ds',
 		m: "1m",
 		mm: "%dm",
 		h: "1h",
@@ -128,7 +129,7 @@ export function checkLocationOpen(location) {
 		let end = moment(opening_hours[0].full + ' ' + opening_hours[0].end, 'DD/MM/YYYY hh:mma');
 		if (now.isAfter(start) && now.isBefore(end)) { // Currently Open
 			open = true;
-			message = 'Open for another ' + moment.duration(now.diff(end)).humanize();
+			message = 'Open for ' + moment.duration(now.diff(end)).humanize();
 			moment.locale('en', locale_short);
 			time = moment.duration(now.diff(end)).humanize();
 			moment.locale('en', locale_default);

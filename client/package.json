@@ -10,9 +10,9 @@
     "chart.js": "^2.7.3",
     "mapbox-gl": "^0.52.0",
     "moment": "^2.24.0",
-    "react": "^16.8.1",
+    "react": "^16.8.2",
     "react-chartjs-2": "^2.7.4",
-    "react-dom": "^16.8.1",
+    "react-dom": "^16.8.2",
     "react-mapbox-gl": "^4.2.0",
     "react-scripts": "^2.1.5",
     "typeface-roboto": "0.0.54"
