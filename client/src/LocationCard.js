@@ -46,7 +46,7 @@ const styles = theme => ({
 		marginLeft: 10
 	},
 	message: {
-    	color: theme.palette.text.secondary,
+		color: theme.palette.text.secondary,
 		fontFamily: theme.typography.fontFamily,
 		fontWeight: theme.typography.fontWeightMedium,
 		fontSize: theme.typography.pxToRem(14),
@@ -122,7 +122,7 @@ class LocationCard extends React.Component {
 						</div>
 						<Typography className={classes.locationHeader} variant="h6" color="secondary" gutterBottom>{location.location_name}</Typography>
 					</div>
-					<Typography className={classes.message}>{location_opening.message + '. ' + event_message}</Typography>
+					<Typography className={classes.message}>{location_opening.message + '. ' + (event_available ? event_message : '')}</Typography>
 				</CardContent>
 				<CardActions disableActionSpacing>
 					<Tooltip title="Move to location position">

@@ -18,7 +18,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 // Material Icons
 import * as icons from '@material-ui/icons';
-import BarChart from '@material-ui/icons/BarChart';
 import FilterList from '@material-ui/icons/FilterList';
 import Sort from '@material-ui/icons/Sort';
 
@@ -92,7 +91,7 @@ class List extends React.Component {
 									<ListItemIcon>
 										<Icon />
 									</ListItemIcon>
-									<ListItemText inset primary={facility.description} />
+									<ListItemText primary={facility.description} />
 								</MenuItem>
 							) : null;
 						})
@@ -123,7 +122,7 @@ class List extends React.Component {
 						label={
 							<Badge
 								className={classes.padding}
-								color="secondary"
+								color='default'
 								badgeContent={open_locations}>
 								Open
 							</Badge>
@@ -135,7 +134,7 @@ class List extends React.Component {
 						label={
 							<Badge
 								className={classes.padding}
-								color={closed_locations > 0 ? 'secondary' : 'default'}
+								color={'default'}
 								badgeContent={closed_locations}>
 								Closed
 							</Badge>

@@ -42,7 +42,7 @@ const drawerWidth = 350;
 
 const theme = createMuiTheme({
 	typography: {
-		useNextVariants: true,
+		useNextVariants: true
 	},
 	palette: {
 		primary: deepOrange,
@@ -79,14 +79,14 @@ const styles = {
 	drawerPaper: {
 		position: 'relative',
 		width: drawerWidth,
-		backgroundColor: 'rgba(255, 255, 255, 0.8)'
+		backgroundColor: 'rgba(255, 255, 255, 0.9)'
 	},
 	flex: {
 		flex: 1
 	},
 	menuButton: {
 		marginLeft: -12,
-		marginRight: 20,
+		marginRight: 20
 	},
 	root: {
 		height: '100%',
