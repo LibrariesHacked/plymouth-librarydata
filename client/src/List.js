@@ -36,7 +36,7 @@ const styles = theme => ({
 	menuItem: {
 		'&:focus': {
 			backgroundColor: theme.palette.primary.main
-		},
+		}
 	},
 	padding: {
 		padding: `0 ${theme.spacing.unit * 2}px`,
@@ -47,7 +47,7 @@ const styles = theme => ({
 });
 
 class List extends React.Component {
-	state = {		
+	state = {
 		sort: 'name',
 		sort_menu: false,
 		sort_menu_anchor: null
@@ -123,7 +123,7 @@ class List extends React.Component {
 						label={
 							<Badge
 								className={classes.padding}
-								color={open_locations > 0 ? 'primary' : 'default'}
+								color="secondary"
 								badgeContent={open_locations}>
 								Open
 							</Badge>
@@ -159,9 +159,6 @@ class List extends React.Component {
 				</Tooltip>
 				<Tooltip title={'Filter locations'}>
 					<Button size="small" variant="text" className={classes.button} color={filter === '' ? 'secondary' : 'primary'} onClick={(e) => this.props.openFilter(e.currentTarget)}>{filter !== '' ? filter.substring(0, 13) : 'Filter'}<FilterList className={classes.rightIcon} /></Button>
-				</Tooltip>
-				<Tooltip title={'Stats'}>
-					<Button size="small" variant="outlined" className={classes.button} color={'primary'} onClick={() => this.props.viewOrganisation()}>Stats <BarChart className={classes.rightIcon} /></Button>
 				</Tooltip>
 				{locations
 					.sort((loc_a, loc_b) => {

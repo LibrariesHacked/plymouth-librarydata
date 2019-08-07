@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
+import IconButton from '@material-ui/core/IconButton';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+import blueGrey from '@material-ui/core/colors/blueGrey';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -14,6 +17,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 // Material Icons
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import BarChart from '@material-ui/icons/BarChart';
 import Menu from '@material-ui/icons/Menu';
 
 // Use moment for opening hours
@@ -34,15 +38,15 @@ import * as geoHelper from './helpers/geo';
 import * as isoHelper from './helpers/isochrones';
 import * as locationsHelper from './helpers/locations';
 
-const drawerWidth = 380;
+const drawerWidth = 350;
 
 const theme = createMuiTheme({
 	typography: {
 		useNextVariants: true,
 	},
 	palette: {
-		primary: { main: 'rgb(143,212,0)', contrastText: '#fff' },
-		secondary: { main: 'rgb(0,120,201)', contrastText: '#fff' }
+		primary: deepOrange,
+		secondary: blueGrey
 	},
 	locations: {
 		central: 'rgb(143, 212, 0)',
@@ -328,7 +332,8 @@ class App extends Component {
 												className={classes.buttonProgress}
 											/> : <Menu />}
 									</Fab>
-								</Tooltip> : null
+								</Tooltip>
+								: null
 							}
 							{this.state.location_drawer_open || this.state.organisation_drawer_open ?
 								<Tooltip title="Go back" aria-label="Back">
@@ -356,6 +361,9 @@ class App extends Component {
 									viewLocation={() => this.setState({ main_drawer_open: true, organisation_drawer_open: false, location_drawer_open: true, location_name: nearest_location.location_name, list_drawer_open: false })}
 								/> : null
 							}
+							<Tooltip title={'Stats'}>
+								<IconButton className={classes.button} color={'primary'} onClick={() => this.setState({ main_drawer_open: true, organisation_drawer_open: true, list_drawer_open: false })}><BarChart /></IconButton>
+							</Tooltip>
 						</Toolbar>
 					</AppBar>
 					<Drawer
@@ -383,7 +391,6 @@ class App extends Component {
 								openFilter={(anchor) => this.setState({ filter_menu: true, filter_menu_anchor: anchor })}
 								changeTab={(tab) => this.setState({ open_tab: tab })}
 								viewLocation={(location_name) => this.setState({ main_drawer_open: true, location_drawer_open: true, location_name: location_name, list_drawer_open: false })}
-								viewOrganisation={() => this.setState({ main_drawer_open: true, organisation_drawer_open: true, list_drawer_open: false })}
 								setFilter={(filter, filter_type) => this.setState({ filter: filter, filter_type: filter_type, filter_menu: false, filter_menu_anchor: null })}
 								closeFilterMenu={() => this.setState({ filter_menu: false, filter_menu_anchor: null })}
 							/> : null}

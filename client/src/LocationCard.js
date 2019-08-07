@@ -9,16 +9,13 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 // Material Icons
-import AccessTime from '@material-ui/icons/AccessTime';
 import Business from '@material-ui/icons/Business';
-import Event from '@material-ui/icons/Event';
 import LocationOn from '@material-ui/icons/LocationOn';
 
 // Icons
@@ -36,22 +33,23 @@ const styles = theme => ({
 	},
 	card: {
 		border: '1px solid #e5e5e5',
-		margin: 3,
+		margin: 10,
 		borderRadius: theme.shape.borderRadius
 	},
 	cardHeader: {
 		display: 'flex'
-	},
-	divider: {
-		width: 1,
-		height: 28,
-		margin: 8
 	},
 	flex: {
 		flex: 1
 	},
 	locationHeader: {
 		marginLeft: 10
+	},
+	message: {
+    	color: theme.palette.text.secondary,
+		fontFamily: theme.typography.fontFamily,
+		fontWeight: theme.typography.fontWeightMedium,
+		fontSize: theme.typography.pxToRem(14),
 	},
 	progress: {
 		marginRight: theme.spacing.unit / 2
@@ -122,34 +120,11 @@ class LocationCard extends React.Component {
 						<div className={classes.avatar}>
 							<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
 						</div>
-						<Typography className={classes.locationHeader} variant="h6" gutterBottom>{location.location_name}</Typography>
-						<span className={classes.flex}></span>
-						<Tooltip title={location_opening.message}>
-							<IconButton
-								onClick={() => { }}>
-								<Badge
-									invisible={false}
-									variant={'standard'}
-									badgeContent={location_opening.time}
-									color={location_opening.open ? 'primary' : 'secondary'}
-									max={60}>
-									<AccessTime />
-								</Badge>
-							</IconButton>
-						</Tooltip>
+						<Typography className={classes.locationHeader} variant="h6" color="secondary" gutterBottom>{location.location_name}</Typography>
 					</div>
+					<Typography className={classes.message}>{location_opening.message + '. ' + event_message}</Typography>
 				</CardContent>
 				<CardActions disableActionSpacing>
-					{Object.keys(current_event).length > 0 || Object.keys(next_event).length > 0 ?
-						<Tooltip title={event_message}>
-							<IconButton
-								onClick={() => { }}
-								disabled={!event_available}
-								color={Object.keys(current_event).length > 0 ? 'primary' : 'default'}>
-								<Event />
-							</IconButton>
-						</Tooltip> : null}
-					<Divider className={classes.divider} />
 					<Tooltip title="Move to location position">
 						<IconButton onClick={() => this.props.goTo([location.longitude, location.latitude], [12], [0], [0])}>
 							<LocationOn />
@@ -160,7 +135,6 @@ class LocationCard extends React.Component {
 							<Business />
 						</IconButton>
 					</Tooltip>
-					<Divider className={classes.divider} />
 					{
 						this.props.travel_types.map(travel => {
 							const Icon = icons[travel.icon];
@@ -179,7 +153,7 @@ class LocationCard extends React.Component {
 											invisible={travel_durations && travel_durations[travel.travel_type] ? false : true}
 											variant={travel_durations && travel_durations[travel.travel_type] && travel_durations[travel.travel_type] <= 60 ? 'standard' : 'dot'}
 											badgeContent={travel_durations && travel_durations[travel.travel_type] ? travel_durations[travel.travel_type] : null}
-											color="primary"
+											color="secondary"
 											max={60}>
 											{this.props.isochrones &&
 												this.props.isochrones[location.location_name] &&

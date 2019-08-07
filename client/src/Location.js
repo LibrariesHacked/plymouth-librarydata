@@ -35,13 +35,13 @@ class Location extends React.Component {
 					isochrones={isochrones}
 					toggleIsochrone={this.props.toggleIsochrone}
 					goTo={this.props.goTo}
-					viewLocation={() => {}}
+					viewLocation={() => { }}
 				/>
 				<Tabs
 					variant="fullWidth"
 					value={this.state.open_tab}
 					indicatorColor="primary"
-					textColor="primary"
+					textColor="secondary"
 					onChange={(e, value) => this.setState({ open_tab: value })}
 				>
 					<Tab label="Details" />
