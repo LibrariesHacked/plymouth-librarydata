@@ -70,6 +70,14 @@ class LocationCard extends React.Component {
 		let event_message = 'No events coming up';
 		if (events) {
 			events
+				.filter(event => {
+					// If we are using an event filter then apply it here
+					if (this.props.filter_type === 'event') {
+						return event.title === this.props.filter;
+					} else {
+						return true;
+					}
+				})
 				.forEach(event => {
 					// Loop through times.
 					event.dates.forEach(date => {

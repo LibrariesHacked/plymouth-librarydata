@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 
 // Material UI
 import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import blueGrey from '@material-ui/core/colors/blueGrey';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
+
+// Colours
+import blueGrey from '@material-ui/core/colors/blueGrey';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 
 // Material Icons
 import ArrowBack from '@material-ui/icons/ArrowBack';
@@ -28,17 +30,17 @@ import List from './List';
 import Location from './Location';
 import LocationAvatar from './LocationAvatar';
 import LocationMap from './LocationMap';
-import Search from './Search';
 import Organisation from './Organisation';
+import Search from './Search';
 
 // Helpers
 import * as appdataHelper from './helpers/appdata';
 import * as eventsHelper from './helpers/events';
 import * as geoHelper from './helpers/geo';
-import * as isoHelper from './helpers/isochrones';
 import * as locationsHelper from './helpers/locations';
+import * as isoHelper from './helpers/isochrones';
 
-const drawerWidth = 350;
+const drawerWidth = 340;
 
 const theme = createMuiTheme({
 	typography: {
@@ -188,19 +190,13 @@ class App extends Component {
 	};
 
 	// getFacilities:
-	getFacilities = () => {
-		appdataHelper.getFacilities(facilities => this.setState({ facilities: facilities }));
-	};
+	getFacilities = () => appdataHelper.getFacilities(facilities => this.setState({ facilities: facilities }));
 
 	// getTravel:
-	getTravel = () => {
-		appdataHelper.getTravel(travel => this.setState({ travel_types: travel }));
-	};
+	getTravel = () => appdataHelper.getTravel(travel => this.setState({ travel_types: travel }));
 
 	// getEvents:
-	getEvents = () => {
-		eventsHelper.getEvents(events => this.setState({ events: events }));
-	};
+	getEvents = () => eventsHelper.getEvents(events => this.setState({ events: events }));
 
 	// toggleGPS
 	toggleGPS = () => {
@@ -377,6 +373,7 @@ class App extends Component {
 						{this.state.list_drawer_open ?
 							<List
 								filter={this.state.filter}
+								filter_type={this.state.filter_type}
 								filter_menu={this.state.filter_menu}
 								filter_menu_anchor={this.state.filter_menu_anchor}
 								open_tab={this.state.open_tab}
@@ -437,7 +434,7 @@ class App extends Component {
 }
 
 App.propTypes = {
-	classes: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(App);
