@@ -1,7 +1,6 @@
 // React
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 // Material UI
 import Avatar from '@material-ui/core/Avatar';
@@ -25,6 +24,8 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Event from '@material-ui/icons/Event';
 import OpenInNew from '@material-ui/icons/OpenInNew';
+
+import moment from 'moment';
 
 // Style: 
 const styles = theme => ({
