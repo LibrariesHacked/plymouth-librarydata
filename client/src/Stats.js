@@ -48,7 +48,7 @@ class Stats extends React.Component {
 												datasets: [{
 													label: 'Population',
 													data: data_values,
-													backgroundColor: fade(theme.locations[location.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()], 0.6)
+													backgroundColor: fade(theme.palette.secondary, 0.6)
 												}]
 											}
 										}
