@@ -39,7 +39,7 @@ class Stats extends React.Component {
 							let data_values = iso_data.map(f => { return f.total_pop });
 							return (
 								<div key={'travel_stats_' + i}>
-									<ListSubheader disableSticky>{travel_name + ' distance population'}</ListSubheader>
+									<ListSubheader disableSticky>{travel_name + ' population'}</ListSubheader>
 									<br />
 									<Bar
 										data={
@@ -48,7 +48,7 @@ class Stats extends React.Component {
 												datasets: [{
 													label: 'Population',
 													data: data_values,
-													backgroundColor: fade(theme.palette.secondary, 0.6)
+													backgroundColor: fade(theme.palette.secondary.main, 0.6)
 												}]
 											}
 										}

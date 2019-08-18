@@ -82,7 +82,7 @@ class Organisation extends React.Component {
 							.map(loc => loc.location.replace(' Library', '')),
 						datasets: [
 							{
-								backgroundColor: loc_values.map(loc => fade(theme.locations[loc.location.replace(' Library', '').replace(/ /g, '').toLowerCase()], 0.6)),
+								backgroundColor: loc_values.map(loc => fade(theme.palette.secondary.main, 0.6)),
 								data: loc_values.map(loc => (loc && loc.properties ? loc.properties.total_pop : 0)),
 							}
 						]
