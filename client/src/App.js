@@ -14,7 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 
 // Colours
-import blueGrey from '@material-ui/core/colors/blueGrey';
+import brown from '@material-ui/core/colors/brown';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
 // Material Icons
@@ -40,7 +40,7 @@ import * as geoHelper from './helpers/geo';
 import * as locationsHelper from './helpers/locations';
 import * as isoHelper from './helpers/isochrones';
 
-const drawerWidth = 340;
+const drawerWidth = 330;
 
 const theme = createMuiTheme({
 	typography: {
@@ -48,7 +48,7 @@ const theme = createMuiTheme({
 	},
 	palette: {
 		primary: deepOrange,
-		secondary: blueGrey
+		secondary: brown
 	},
 	locations: {
 		central: 'rgb(143, 212, 0)',

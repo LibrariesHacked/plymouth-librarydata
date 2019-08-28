@@ -39,14 +39,14 @@ class Organisation extends React.Component {
 			labels: this.props.locations.map(loc => loc.location_name.replace(' Library', '')),
 			datasets: [
 				{
-					backgroundColor: this.props.locations.map(loc => fade(theme.locations[loc.location_name.replace(' Library', '').replace(/ /g, '').toLowerCase()], 0.6)),
+					backgroundColor: this.props.locations.map(loc => fade(theme.palette.secondary.main, 0.6)),
 					data: this.props.locations.map(loc => locationsHelper.getLocationTotalOpeningHours(loc)),
 				}
 			]
 		};
 		return (
 			<div>
-				<ListSubheader disableSticky>{'Opening hours per week (total ' + total_hours + ')'}</ListSubheader>
+				<ListSubheader disableSticky>{'Open ' + total_hours + ' hours per week'}</ListSubheader>
 				<HorizontalBar
 					data={lib_hours}
 					height={this.props.locations.length * 30}

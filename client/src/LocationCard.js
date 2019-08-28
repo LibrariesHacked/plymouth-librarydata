@@ -128,7 +128,7 @@ class LocationCard extends React.Component {
 						<div className={classes.avatar}>
 							<LocationAvatar location={location} viewLocation={() => this.props.viewLocation(location.location_name)} />
 						</div>
-						<Typography className={classes.locationHeader} variant="h6" color="secondary" gutterBottom>{location.location_name}</Typography>
+						<Typography className={classes.locationHeader} variant="h6" color="default" gutterBottom>{location.location_name}</Typography>
 					</div>
 					<Typography className={classes.message}>{location_opening.message + '. ' + (event_available ? event_message : '')}</Typography>
 				</CardContent>

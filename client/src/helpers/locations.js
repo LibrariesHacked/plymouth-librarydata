@@ -135,7 +135,7 @@ export function checkLocationOpen(location) {
 			moment.locale('en', locale_default);
 		} else {
 			if (now.isBefore(start)) { // Opening today
-				message = 'Opening today in ' + moment.duration(now.diff(start)).humanize();
+				message = 'Opening in ' + moment.duration(now.diff(start)).humanize();
 				moment.locale('en', locale_short);
 				time = moment.duration(now.diff(start)).humanize();
 				moment.locale('en', locale_default);
