@@ -148,9 +148,7 @@ class App extends Component {
 		this.getTravel();
 		this.getEvents();
 
-		// Initially we try to trigger a position to request GPS
-		// This will also retrieve the locations whether position works or not.
-		this.logPosition();
+		this.getLocations('', false);
 
 		let time_update_interval = setInterval(this.setCurrentTime, 30000);
 		this.setState({ time_update_interval: time_update_interval });
