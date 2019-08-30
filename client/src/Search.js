@@ -73,16 +73,15 @@ class Search extends React.Component {
 					</IconButton>
 				</Tooltip>
 				<Divider className={classes.divider} />
-				{this.props.gps_available ?
-					<Tooltip title={'Track my location'}>
-						<IconButton
-							className={classes.iconButton}
-							color="primary"
-							onClick={() => { this.setState({ postcode: '' }); this.props.toggleGPS() }}
-						>
-							{this.props.gps_available && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
-						</IconButton>
-					</Tooltip> : null}
+				<Tooltip title={'Track my location'}>
+					<IconButton
+						className={classes.iconButton}
+						color="primary"
+						onClick={() => { this.setState({ postcode: '' }); this.props.toggleGPS() }}
+					>
+						{this.props.gps_available && this.props.search_type === 'gps' ? <MyLocation /> : <LocationSearching />}
+					</IconButton>
+				</Tooltip>
 			</div>
 		);
 	}
