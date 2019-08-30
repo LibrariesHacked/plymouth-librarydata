@@ -87,7 +87,7 @@ class LocationCard extends React.Component {
 							moment(date.end_date).isAfter(this.props.current_time)
 						) {
 							current_event = event;
-							event_message = current_event.title + ' ' + moment(date.end_date).fromNow();
+							event_message = current_event.title + ' ends ' + moment(date.end_date).fromNow();
 						}
 						// Set next event
 						if (moment(date.start_date).isAfter(this.props.current_time)) {
