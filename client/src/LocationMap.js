@@ -65,6 +65,7 @@ class LocationMap extends Component {
 		const features = e.features.sort((a, b) => a.properties.value - b.properties.value);
 		if (features && features.length > 0) {
 			let total_pop = features[0].properties.total_pop;
+			total_pop = total_pop.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 			let value = Math.round(features[0].properties.value / 60);
 			message = 'Population of ' + total_pop + ' within ' + value + ' minutes.';
 		}
