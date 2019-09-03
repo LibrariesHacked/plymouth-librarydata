@@ -15,19 +15,6 @@
     "serve-favicon": "^2.5.0"
   },
   "devDependencies": {},
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all",
-      "ie11"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "scripts": {
     "start": "node app.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
