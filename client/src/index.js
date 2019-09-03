@@ -1,9 +1,9 @@
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+
 // React
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-// Suport IE
-import 'react-app-polyfill/ie11';
 
 // Typeface and style to use throughout app
 import './App.css';
