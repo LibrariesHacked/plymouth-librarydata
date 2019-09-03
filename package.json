@@ -27,7 +27,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
   "scripts": {
     "start": "node app.js",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build",
