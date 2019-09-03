@@ -2,6 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+// Suport IE
+import 'react-app-polyfill/ie11';
+
 // Typeface and style to use throughout app
 import './App.css';
 import 'typeface-roboto';
