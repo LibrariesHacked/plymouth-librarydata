@@ -54,6 +54,34 @@ class Stats extends React.Component {
 										}
 										height={150}
 										options={{
+											tooltips: {
+												callbacks: {
+													label: function (tooltipItem, data) {
+														var value = data.datasets[0].data[tooltipItem.index];
+														value = value.toString();
+														value = value.split(/(?=(?:...)*$)/);
+														value = value.join(',');
+														return value;
+													}
+												}
+											},
+											scales: {
+												yAxes: [{
+													ticks: {
+														beginAtZero: true,
+														userCallback: function (value, index, values) {
+															// Convert the number to a string and splite the string every 3 charaters from the end
+															value = value.toString();
+															value = value.split(/(?=(?:...)*$)/);
+															value = value.join(',');
+															return value;
+														}
+													}
+												}],
+												xAxes: [{
+													ticks: {}
+												}]
+											},
 											maintainAspectRatio: true,
 											legend: {
 												display: false
