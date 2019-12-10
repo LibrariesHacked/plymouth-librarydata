@@ -28,7 +28,7 @@ const styles = theme => ({
 });
 
 const Map = ReactMapboxGl({
-	accessToken: '',
+	accessToken: 'pk.eyJ1IjoiZGF2ZXJvd2V1ayIsImEiOiJjajRuemx4Mnoxc2lyMzJvNGYxZjVjdnVpIn0.9aupfG_tYU0SHx3S6ZUqvw',
 	minZoom: 7,
 	maxZoom: 18,
 	scrollZoom: true,
