@@ -9,7 +9,9 @@ module.exports.getLocationDistances = (location_type, location, destinations, ca
     database: process.env.PGDATABASE,
     password: process.env.PGPASSWORD,
     port: process.env.PGPORT,
-    ssl: true
+    ssl: {
+      rejectUnauthorized: false
+    }
   })
 
   let coordinates = []
