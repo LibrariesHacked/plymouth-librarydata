@@ -14,16 +14,12 @@ module.exports.getFacilities = (callback) => {
     }
   })
 
-  console.log('Running get facilities')
-
-  client.connect((err, res) => {
+  client.connect((err) => {
     if (err) {
-      console.log(err)
       callback([])
       return
     }
     client.query('select * from vw_facilities', (err, res) => {
-      console.log(err)
       client.end()
       if (res && res.rows && res.rows.length > 0) {
         callback(res.rows)
