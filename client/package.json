@@ -13,7 +13,7 @@
     "react-chartjs-2": "^2.11.2",
     "react-dom": "^16.14.0",
     "react-mapbox-gl": "^4.8.6",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^5.0.1",
     "typeface-roboto": "0.0.54"
   },
   "scripts": {
