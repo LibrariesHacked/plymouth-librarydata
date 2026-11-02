@@ -8,7 +8,7 @@
     "axios": "^1.18.0",
     "chart.js": "^2.9.4",
     "mapbox-gl": "^1.13.2",
-    "moment": "^2.29.4",
+    "moment": "^2.31.0",
     "react": "^16.14.0",
     "react-chartjs-2": "^2.11.2",
     "react-dom": "^16.14.0",
